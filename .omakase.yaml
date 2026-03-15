@@ -47,7 +47,7 @@ boilerplate:
   - migrations/embed.go
 
   # docs and config
-  - OMAKASE.md
+  - CONVENTIONS.md
   - .omakase.yaml
 
 user:

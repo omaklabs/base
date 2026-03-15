@@ -92,7 +92,7 @@ server          ←  notes, posts  (domains import server, never the reverse)
 | `queries/` | USER |
 | `migrations/` | BOILERPLATE base (001-005) + USER (timestamp-prefixed) |
 | `assets/` | BOILERPLATE base + USER additions |
-| `OMAKASE.md` | BOILERPLATE |
+| `CONVENTIONS.md` | BOILERPLATE |
 | `.omakase.yaml` | BOILERPLATE (manifest) |
 | `go.mod` / `go.sum` | MIXED |
 
@@ -597,7 +597,7 @@ boilerplate:
   - migrations/embed.go
 
   # docs
-  - OMAKASE.md
+  - CONVENTIONS.md
   - .omakase.yaml
 
 user:
@@ -648,7 +648,7 @@ user:
 
 **Step 16:** Create `.omakase.yaml` manifest.
 
-**Step 17:** Update `OMAKASE.md` — package map, checklists, extension points, naming conventions.
+**Step 17:** Update `CONVENTIONS.md` — package map, checklists, extension points, naming conventions.
 
 ### Phase D: Codegen (Optional, Part 4)
 
@@ -679,7 +679,7 @@ user:
 
 ---
 
-## OMAKASE.md Updates Summary
+## CONVENTIONS.md Updates Summary
 
 | Section | Change |
 |---------|--------|
