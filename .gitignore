@@ -1,0 +1,27 @@
+# Compiled assets
+public/
+
+# Binary
+bin/
+
+# Database
+data/
+*.db
+*.db-wal
+*.db-shm
+
+# Air tmp
+tmp/
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Env
+.env
+.env.local

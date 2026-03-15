@@ -1,0 +1,70 @@
+package components
+
+import (
+	"fmt"
+	"github.com/omakase-dev/go-boilerplate/internal/pagination"
+)
+
+templ Pagination(p pagination.Pagination, baseURL string) {
+	if p.TotalPages > 1 {
+		<nav class="pagination" aria-label="Pagination">
+			if p.HasPrev {
+				<a
+					class="btn"
+					data-variant="ghost"
+					data-size="sm"
+					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page-1)) }
+					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page-1) }
+					hx-target="closest [data-paginated]"
+					hx-swap="outerHTML"
+				>
+					&laquo; Prev
+				</a>
+			} else {
+				<span class="btn" data-variant="ghost" data-size="sm" aria-disabled="true">
+					&laquo; Prev
+				</span>
+			}
+			for _, pg := range p.Pages() {
+				if pg == -1 {
+					<span class="btn" data-variant="ghost" data-size="sm" aria-hidden="true">
+						&hellip;
+					</span>
+				} else if pg == p.Page {
+					<span class="btn" data-variant="primary" data-size="sm" aria-current="page">
+						{ fmt.Sprintf("%d", pg) }
+					</span>
+				} else {
+					<a
+						class="btn"
+						data-variant="ghost"
+						data-size="sm"
+						href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, pg)) }
+						hx-get={ fmt.Sprintf("%s?page=%d", baseURL, pg) }
+						hx-target="closest [data-paginated]"
+						hx-swap="outerHTML"
+					>
+						{ fmt.Sprintf("%d", pg) }
+					</a>
+				}
+			}
+			if p.HasNext {
+				<a
+					class="btn"
+					data-variant="ghost"
+					data-size="sm"
+					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page+1)) }
+					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page+1) }
+					hx-target="closest [data-paginated]"
+					hx-swap="outerHTML"
+				>
+					Next &raquo;
+				</a>
+			} else {
+				<span class="btn" data-variant="ghost" data-size="sm" aria-disabled="true">
+					Next &raquo;
+				</span>
+			}
+		</nav>
+	}
+}

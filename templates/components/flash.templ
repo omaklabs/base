@@ -1,0 +1,21 @@
+package components
+
+import "github.com/omakase-dev/go-boilerplate/internal/view"
+
+// FlashMessage reads a flash message from the request context (placed there by
+// the FlashContext middleware) and renders it. The message auto-dismisses after
+// 4 seconds using Alpine.js transitions.
+templ FlashMessage() {
+	if f := view.GetFlash(ctx); f != nil {
+		<div
+			class="flash"
+			data-variant={ f.Variant }
+			x-data="{ show: true }"
+			x-show="show"
+			x-init="setTimeout(() => show = false, 4000)"
+			x-transition
+		>
+			{ f.Message }
+		</div>
+	}
+}

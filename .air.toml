@@ -1,0 +1,22 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  # Pre-build: generate templ and sqlc before compiling
+  pre_cmd = ["templ generate", "sqlc generate"]
+  cmd = "go build -o ./tmp/app ./cmd/app"
+  bin = "./tmp/app"
+  delay = 1000
+  exclude_dir = ["assets", "tmp", "vendor", "public", "node_modules", "data", "bin"]
+  exclude_regex = ["_test\\.go$", "_templ\\.go$"]
+  include_ext = ["go", "templ", "sql"]
+  include_dir = ["cmd", "internal", "templates", "queries", "migrations"]
+  kill_delay = "0s"
+  send_interrupt = false
+  stop_on_error = true
+
+[log]
+  time = false
+
+[misc]
+  clean_on_exit = true

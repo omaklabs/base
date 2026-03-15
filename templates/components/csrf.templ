@@ -1,0 +1,10 @@
+package components
+
+import "github.com/omakase-dev/go-boilerplate/internal/view"
+
+// CSRFField renders a hidden input containing the CSRF token. Include it inside
+// any <form> that submits via POST/PUT/PATCH/DELETE. The token must have been
+// placed in context by the CSRFContext middleware.
+templ CSRFField() {
+	<input type="hidden" name="gorilla.csrf.Token" value={ view.CSRFToken(ctx) }/>
+}

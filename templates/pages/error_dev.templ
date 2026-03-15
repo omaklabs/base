@@ -1,0 +1,29 @@
+package pages
+
+import "github.com/omakase-dev/go-boilerplate/templates/layouts"
+
+templ ErrorDev(method, path, requestID, errMsg, stackTrace string) {
+	@layouts.Base("Dev Error") {
+		<div class="min-h-screen px-4 py-8 max-w-4xl mx-auto">
+			<h1 class="text-3xl font-bold text-red-600 mb-6">Internal Server Error</h1>
+			<div class="card mb-4" style="border-left: 4px solid #dc2626;">
+				<h2 class="text-lg font-semibold mb-2">Error</h2>
+				<p class="text-red-500 font-mono text-sm">{ errMsg }</p>
+			</div>
+			<div class="card mb-4">
+				<h2 class="text-lg font-semibold mb-2">Request Details</h2>
+				<ul class="space-y-1 text-sm text-muted">
+					<li><span class="font-medium text-text">Method:</span> { method }</li>
+					<li><span class="font-medium text-text">Path:</span> { path }</li>
+					if requestID != "" {
+						<li><span class="font-medium text-text">Request ID:</span> { requestID }</li>
+					}
+				</ul>
+			</div>
+			<div class="card">
+				<h2 class="text-lg font-semibold mb-2">Stack Trace</h2>
+				<pre class="overflow-x-auto text-xs leading-relaxed bg-gray-900 text-gray-100 p-4 rounded"><code>{ stackTrace }</code></pre>
+			</div>
+		</div>
+	}
+}

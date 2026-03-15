@@ -1,0 +1,28 @@
+package components
+
+templ FormField(label string, name string, inputType string, value string, errMsg string) {
+	<div>
+		<label class="label" for={ name }>
+			{ label }
+		</label>
+		if errMsg != "" {
+			<input
+				class="input"
+				type={ inputType }
+				id={ name }
+				name={ name }
+				value={ value }
+				data-error="true"
+			/>
+			<p class="error-text">{ errMsg }</p>
+		} else {
+			<input
+				class="input"
+				type={ inputType }
+				id={ name }
+				name={ name }
+				value={ value }
+			/>
+		}
+	</div>
+}

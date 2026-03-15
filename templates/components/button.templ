@@ -1,0 +1,13 @@
+package components
+
+templ Button(label string, variant string, size string) {
+	<button class="btn" data-variant={ variant } data-size={ size }>
+		{ label }
+	</button>
+}
+
+templ SubmitButton(label string, variant string, size string) {
+	<button class="btn" type="submit" data-variant={ variant } data-size={ size }>
+		{ label }
+	</button>
+}

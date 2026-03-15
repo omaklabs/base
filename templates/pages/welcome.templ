@@ -1,0 +1,52 @@
+package pages
+
+import "github.com/omakase-dev/go-boilerplate/templates/layouts"
+
+templ Welcome() {
+	@layouts.Base("Welcome to Omakase") {
+		<div class="flex items-center justify-center min-h-screen px-4">
+			<div class="w-full max-w-2xl">
+				<div class="text-center mb-8">
+					<h1 class="text-5xl font-bold tracking-tight">Welcome to Omakase</h1>
+					<p class="mt-4 text-lg text-muted">Your server is running. You're ready to build.</p>
+				</div>
+				<div class="card">
+					<h2 class="text-xl font-semibold mb-4">Your Stack</h2>
+					<ul class="space-y-2 text-muted">
+						<li class="flex items-center gap-2">
+							<span class="font-medium text-text">Go</span>
+							<span>&mdash; fast, compiled backend</span>
+						</li>
+						<li class="flex items-center gap-2">
+							<span class="font-medium text-text">HTMX</span>
+							<span>&mdash; hypermedia-driven interactivity</span>
+						</li>
+						<li class="flex items-center gap-2">
+							<span class="font-medium text-text">Alpine.js</span>
+							<span>&mdash; lightweight client-side reactivity</span>
+						</li>
+						<li class="flex items-center gap-2">
+							<span class="font-medium text-text">Tailwind CSS</span>
+							<span>&mdash; utility-first styling</span>
+						</li>
+						<li class="flex items-center gap-2">
+							<span class="font-medium text-text">SQLite</span>
+							<span>&mdash; embedded, zero-config database</span>
+						</li>
+					</ul>
+				</div>
+				<div class="card mt-4">
+					<h2 class="text-xl font-semibold mb-4">Quick Links</h2>
+					<ul class="space-y-2">
+						<li>
+							<a href="/healthz" class="text-primary hover:underline">Health Check (/healthz)</a>
+						</li>
+					</ul>
+				</div>
+				<p class="mt-6 text-center text-sm text-muted">
+					This page is replaced when the agent generates your app.
+				</p>
+			</div>
+		</div>
+	}
+}
