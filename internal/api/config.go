@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/omakase-dev/go-boilerplate/internal/config"
+	"github.com/omaklabs/base/internal/config"
 )
 
 // handleConfigView returns the current config with sensitive values redacted.

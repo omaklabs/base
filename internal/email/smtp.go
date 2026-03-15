@@ -9,7 +9,7 @@ import (
 	"net/smtp"
 	"strings"
 
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
+	"github.com/omaklabs/base/internal/logger"
 )
 
 // SMTPConfig holds the SMTP connection settings.

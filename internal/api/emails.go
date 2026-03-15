@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/internal/email"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/internal/email"
 )
 
 func handleListEmails(emailStore *email.Store) http.HandlerFunc {

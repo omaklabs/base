@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
+	"github.com/omaklabs/base/internal/logger"
 )
 
 // logEntry mirrors logger.Entry for test assertions.

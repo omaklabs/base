@@ -13,8 +13,8 @@ import (
 
 	"github.com/pressly/goose/v3"
 
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/migrations"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/migrations"
 )
 
 // SetupTestDB creates a temporary SQLite database, runs all migrations, and

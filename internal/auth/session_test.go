@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/migrations"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/migrations"
 	"github.com/pressly/goose/v3"
 )
 

@@ -4,8 +4,8 @@
 package main
 
 import (
-	"github.com/omakase-dev/go-boilerplate/internal/notes"
-	"github.com/omakase-dev/go-boilerplate/internal/server"
+	"github.com/omaklabs/base/internal/notes"
+	"github.com/omaklabs/base/internal/server"
 )
 
 // modules lists all domain modules in the app.

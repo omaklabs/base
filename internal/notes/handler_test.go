@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/internal/middleware"
-	"github.com/omakase-dev/go-boilerplate/internal/server"
-	"github.com/omakase-dev/go-boilerplate/internal/testutil"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/internal/middleware"
+	"github.com/omaklabs/base/internal/server"
+	"github.com/omaklabs/base/internal/testutil"
 )
 
 // testUser returns a *db.User suitable for injecting into request context.

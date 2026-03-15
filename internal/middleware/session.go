@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/omakase-dev/go-boilerplate/internal/auth"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
+	"github.com/omaklabs/base/internal/auth"
+	"github.com/omaklabs/base/internal/db"
 )
 
 // Session returns middleware that reads the session_token cookie from the

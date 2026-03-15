@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
+	"github.com/omaklabs/base/internal/logger"
 )
 
 // DevMailer stores emails in the database and logs them to stdout.

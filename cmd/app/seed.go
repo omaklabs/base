@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/omakase-dev/go-boilerplate/internal/config"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
+	"github.com/omaklabs/base/internal/config"
+	"github.com/omaklabs/base/internal/db"
 )
 
 func cmdSeed() {

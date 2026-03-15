@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/omakase-dev/go-boilerplate/internal/db"
+	"github.com/omaklabs/base/internal/db"
 )
 
 // Store provides email persistence backed by the database.

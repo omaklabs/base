@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/omakase-dev/go-boilerplate/internal/flash"
-	"github.com/omakase-dev/go-boilerplate/internal/view"
+	"github.com/omaklabs/base/internal/flash"
+	"github.com/omaklabs/base/internal/view"
 )
 
 // FlashContext is middleware that reads a flash cookie from the request (if

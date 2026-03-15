@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/csrf"
-	"github.com/omakase-dev/go-boilerplate/internal/view"
+	"github.com/omaklabs/base/internal/view"
 )
 
 // CSRFContext is middleware that extracts the CSRF token provided by the

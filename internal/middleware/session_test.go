@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/omakase-dev/go-boilerplate/internal/db"
+	"github.com/omaklabs/base/internal/db"
 )
 
 func TestCurrentUserReturnsNilWhenNoUser(t *testing.T) {

@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	"github.com/omakase-dev/go-boilerplate/internal/pagination"
+	"github.com/omaklabs/base/internal/pagination"
 )
 
 func Pagination(p pagination.Pagination, baseURL string) templ.Component {

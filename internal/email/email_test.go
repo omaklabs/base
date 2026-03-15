@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
-	"github.com/omakase-dev/go-boilerplate/internal/testutil"
+	"github.com/omaklabs/base/internal/logger"
+	"github.com/omaklabs/base/internal/testutil"
 )
 
 func TestDevMailerStoresInDB(t *testing.T) {

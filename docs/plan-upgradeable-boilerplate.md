@@ -112,8 +112,8 @@ import (
     "context"
 
     "github.com/go-chi/chi/v5"
-    "github.com/omakase-dev/go-boilerplate/internal/db"
-    "github.com/omakase-dev/go-boilerplate/internal/jobs"
+    "github.com/omaklabs/base/internal/db"
+    "github.com/omaklabs/base/internal/jobs"
 )
 
 // Module describes a domain package's contributions to the app.
@@ -164,7 +164,7 @@ type Seed struct {
 // internal/notes/module.go — USER
 package notes
 
-import "github.com/omakase-dev/go-boilerplate/internal/server"
+import "github.com/omaklabs/base/internal/server"
 
 // Module describes the notes domain.
 var Module = server.Module{
@@ -187,8 +187,8 @@ var Module = server.Module{
 package main
 
 import (
-    "github.com/omakase-dev/go-boilerplate/internal/notes"
-    "github.com/omakase-dev/go-boilerplate/internal/server"
+    "github.com/omaklabs/base/internal/notes"
+    "github.com/omaklabs/base/internal/server"
 )
 
 // modules lists all domain modules in the app.
@@ -349,10 +349,10 @@ package notes                  // ← same package as handler.go
 
 import (
     "fmt"
-    "github.com/omakase-dev/go-boilerplate/internal/db"
-    "github.com/omakase-dev/go-boilerplate/internal/pagination"
-    "github.com/omakase-dev/go-boilerplate/templates/components"
-    "github.com/omakase-dev/go-boilerplate/templates/layouts"
+    "github.com/omaklabs/base/internal/db"
+    "github.com/omaklabs/base/internal/pagination"
+    "github.com/omaklabs/base/templates/components"
+    "github.com/omaklabs/base/templates/layouts"
 )
 
 templ NotesList(notes []db.Note, p pagination.Pagination, baseURL string) {
@@ -431,9 +431,9 @@ Generated output:
 package main
 
 import (
-    "github.com/omakase-dev/go-boilerplate/internal/notes"
-    "github.com/omakase-dev/go-boilerplate/internal/posts"
-    "github.com/omakase-dev/go-boilerplate/internal/server"
+    "github.com/omaklabs/base/internal/notes"
+    "github.com/omaklabs/base/internal/posts"
+    "github.com/omaklabs/base/internal/server"
 )
 
 var modules = []server.Module{

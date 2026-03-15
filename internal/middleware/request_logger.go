@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
+	"github.com/omaklabs/base/internal/logger"
 )
 
 // responseWriter wraps http.ResponseWriter to capture the status code and

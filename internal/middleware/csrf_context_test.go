@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/omakase-dev/go-boilerplate/internal/view"
+	"github.com/omaklabs/base/internal/view"
 )
 
 func TestCSRFContextPutsTokenInContext(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/internal/jobs"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/internal/jobs"
 )
 
 // Module describes a domain package's contributions to the app.

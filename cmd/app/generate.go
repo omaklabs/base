@@ -51,7 +51,7 @@ type domainData struct {
 	Lower      string // "post"
 	LowerPlur  string // "posts"
 	Table      string // "posts"
-	ModulePath string // "github.com/omakase-dev/go-boilerplate"
+	ModulePath string // "github.com/omaklabs/base"
 	Timestamp  string // "20260315143000"
 }
 
@@ -193,14 +193,14 @@ func writeTemplate(path, tmplStr string, data domainData) error {
 func getModulePath() string {
 	data, err := os.ReadFile("go.mod")
 	if err != nil {
-		return "github.com/omakase-dev/go-boilerplate"
+		return "github.com/omaklabs/base"
 	}
 	for _, line := range strings.Split(string(data), "\n") {
 		if strings.HasPrefix(line, "module ") {
 			return strings.TrimSpace(strings.TrimPrefix(line, "module "))
 		}
 	}
-	return "github.com/omakase-dev/go-boilerplate"
+	return "github.com/omaklabs/base"
 }
 
 func isValidName(name string) bool {

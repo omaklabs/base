@@ -10,12 +10,12 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/internal/flash"
-	"github.com/omakase-dev/go-boilerplate/internal/middleware"
-	"github.com/omakase-dev/go-boilerplate/internal/pagination"
-	"github.com/omakase-dev/go-boilerplate/internal/server"
-	"github.com/omakase-dev/go-boilerplate/internal/validate"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/internal/flash"
+	"github.com/omaklabs/base/internal/middleware"
+	"github.com/omaklabs/base/internal/pagination"
+	"github.com/omaklabs/base/internal/server"
+	"github.com/omaklabs/base/internal/validate"
 )
 
 // Mount registers all note routes on the given router.

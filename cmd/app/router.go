@@ -7,12 +7,12 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/csrf"
 
-	"github.com/omakase-dev/go-boilerplate/assets"
-	"github.com/omakase-dev/go-boilerplate/internal/api"
-	"github.com/omakase-dev/go-boilerplate/internal/config"
-	"github.com/omakase-dev/go-boilerplate/internal/email"
-	"github.com/omakase-dev/go-boilerplate/internal/middleware"
-	"github.com/omakase-dev/go-boilerplate/internal/server"
+	"github.com/omaklabs/base/assets"
+	"github.com/omaklabs/base/internal/api"
+	"github.com/omaklabs/base/internal/config"
+	"github.com/omaklabs/base/internal/email"
+	"github.com/omaklabs/base/internal/middleware"
+	"github.com/omaklabs/base/internal/server"
 )
 
 func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.Deps, emailStore *email.Store, reloadFn ...func() error) *chi.Mux {

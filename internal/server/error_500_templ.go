@@ -8,7 +8,7 @@ package server
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/omakase-dev/go-boilerplate/templates/layouts"
+import "github.com/omaklabs/base/templates/layouts"
 
 func Error500() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {

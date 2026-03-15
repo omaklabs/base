@@ -10,10 +10,10 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/internal/pagination"
-	"github.com/omakase-dev/go-boilerplate/templates/components"
-	"github.com/omakase-dev/go-boilerplate/templates/layouts"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/internal/pagination"
+	"github.com/omaklabs/base/templates/components"
+	"github.com/omaklabs/base/templates/layouts"
 )
 
 func truncate(s string, max int) string {

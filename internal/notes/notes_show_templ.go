@@ -10,9 +10,9 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/templates/components"
-	"github.com/omakase-dev/go-boilerplate/templates/layouts"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/templates/components"
+	"github.com/omaklabs/base/templates/layouts"
 )
 
 func NotesShow(note db.Note) templ.Component {

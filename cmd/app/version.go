@@ -6,9 +6,9 @@ import (
 
 	"github.com/pressly/goose/v3"
 
-	"github.com/omakase-dev/go-boilerplate/internal/config"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/migrations"
+	"github.com/omaklabs/base/internal/config"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/migrations"
 )
 
 func cmdVersion() {

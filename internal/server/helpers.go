@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/omakase-dev/go-boilerplate/internal/middleware"
+	"github.com/omaklabs/base/internal/middleware"
 )
 
 // IsHTMX checks if the request was made via HTMX.

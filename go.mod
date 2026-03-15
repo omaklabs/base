@@ -1,4 +1,4 @@
-module github.com/omakase-dev/go-boilerplate
+module github.com/omaklabs/base
 
 go 1.25.7
 

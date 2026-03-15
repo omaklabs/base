@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/omakase-dev/go-boilerplate/internal/db"
+	"github.com/omaklabs/base/internal/db"
 )
 
 // JobHandler is the function signature that job processors must implement.

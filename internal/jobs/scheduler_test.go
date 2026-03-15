@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/omakase-dev/go-boilerplate/internal/testutil"
+	"github.com/omaklabs/base/internal/testutil"
 )
 
 func TestSchedulerEnqueuesJobs(t *testing.T) {

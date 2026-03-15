@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
+	"github.com/omaklabs/base/internal/logger"
 )
 
 func handleLogStream(log *logger.Logger) http.HandlerFunc {

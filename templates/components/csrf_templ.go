@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/omakase-dev/go-boilerplate/internal/view"
+import "github.com/omaklabs/base/internal/view"
 
 // CSRFField renders a hidden input containing the CSRF token. Include it inside
 // any <form> that submits via POST/PUT/PATCH/DELETE. The token must have been

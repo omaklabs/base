@@ -14,12 +14,12 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/omakase-dev/go-boilerplate/internal/config"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
-	"github.com/omakase-dev/go-boilerplate/internal/email"
-	"github.com/omakase-dev/go-boilerplate/internal/jobs"
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
-	"github.com/omakase-dev/go-boilerplate/migrations"
+	"github.com/omaklabs/base/internal/config"
+	"github.com/omaklabs/base/internal/db"
+	"github.com/omaklabs/base/internal/email"
+	"github.com/omaklabs/base/internal/jobs"
+	"github.com/omaklabs/base/internal/logger"
+	"github.com/omaklabs/base/migrations"
 	"github.com/pressly/goose/v3"
 )
 
