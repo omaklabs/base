@@ -1,3 +1,7 @@
+// Package testutil provides test helpers for handler and integration tests.
+// SetupTestDB(t) creates a temp SQLite database with all migrations applied.
+// CreateTestUser(t, q, email) creates a user fixture. Always use these
+// helpers instead of writing raw test setup.
 package testutil
 
 import (

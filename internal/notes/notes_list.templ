@@ -1,0 +1,82 @@
+package notes
+
+import (
+	"fmt"
+	"github.com/omakase-dev/go-boilerplate/internal/db"
+	"github.com/omakase-dev/go-boilerplate/internal/pagination"
+	"github.com/omakase-dev/go-boilerplate/templates/components"
+	"github.com/omakase-dev/go-boilerplate/templates/layouts"
+)
+
+func truncate(s string, max int) string {
+	if len(s) <= max {
+		return s
+	}
+	return s[:max] + "..."
+}
+
+templ NotesList(notes []db.Note, p pagination.Pagination, baseURL string) {
+	@layouts.App() {
+		<div class="p-8" id="notes-content" data-paginated>
+			@components.FlashMessage()
+			<div class="flex items-center justify-between mb-6">
+				<h1 class="text-2xl font-bold">Notes</h1>
+				<a href="/notes/new" class="btn" data-variant="primary" data-size="md">
+					New Note
+				</a>
+			</div>
+			if len(notes) == 0 {
+				@components.Card() {
+					<p class="text-muted">No notes yet. Create your first note!</p>
+				}
+			} else {
+				<div class="space-y-4">
+					for _, note := range notes {
+						@components.Card() {
+							<a href={ templ.SafeURL(fmt.Sprintf("/notes/%d", note.ID)) } class="block">
+								<h2 class="text-lg font-semibold">{ note.Title }</h2>
+								<p class="text-muted mt-1">{ truncate(note.Body, 100) }</p>
+								<p class="text-sm text-muted mt-2">{ note.CreatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
+							</a>
+						}
+					}
+				</div>
+			}
+			<div class="mt-6">
+				@components.Pagination(p, baseURL)
+			</div>
+		</div>
+	}
+}
+
+templ NotesListPartial(notes []db.Note, p pagination.Pagination, baseURL string) {
+	<div class="p-8" id="notes-content" data-paginated>
+		@components.FlashMessage()
+		<div class="flex items-center justify-between mb-6">
+			<h1 class="text-2xl font-bold">Notes</h1>
+			<a href="/notes/new" class="btn" data-variant="primary" data-size="md">
+				New Note
+			</a>
+		</div>
+		if len(notes) == 0 {
+			@components.Card() {
+				<p class="text-muted">No notes yet. Create your first note!</p>
+			}
+		} else {
+			<div class="space-y-4">
+				for _, note := range notes {
+					@components.Card() {
+						<a href={ templ.SafeURL(fmt.Sprintf("/notes/%d", note.ID)) } class="block">
+							<h2 class="text-lg font-semibold">{ note.Title }</h2>
+							<p class="text-muted mt-1">{ truncate(note.Body, 100) }</p>
+							<p class="text-sm text-muted mt-2">{ note.CreatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
+						</a>
+					}
+				}
+			</div>
+		}
+		<div class="mt-6">
+			@components.Pagination(p, baseURL)
+		</div>
+	</div>
+}

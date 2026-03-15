@@ -1,3 +1,7 @@
+// Package jobs provides a SQLite-backed background job queue.
+// Register handlers with Queue.Register(), enqueue work with Queue.Enqueue(),
+// and start processing with Queue.Process(). Use Scheduler for recurring tasks.
+// Never process work inline in HTTP handlers — always enqueue a job.
 package jobs
 
 import (

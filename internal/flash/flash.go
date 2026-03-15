@@ -1,3 +1,6 @@
+// Package flash provides cookie-based flash messages.
+// Set() stores a message, middleware.FlashContext reads it into the
+// view context, and templates render it via components.FlashMessage().
 package flash
 
 import (

@@ -52,3 +52,11 @@ func RequireAuth(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+// WithUser returns a copy of r whose context carries the given user. This is
+// exported so that tests can inject an authenticated user without setting up a
+// full session cookie flow.
+func WithUser(r *http.Request, user *db.User) *http.Request {
+	ctx := context.WithValue(r.Context(), userKey, user)
+	return r.WithContext(ctx)
+}

@@ -35,6 +35,15 @@ type Job struct {
 	CreatedAt   time.Time
 }
 
+type Note struct {
+	ID        int64
+	UserID    int64
+	Title     string
+	Body      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type Session struct {
 	ID        string
 	UserID    int64

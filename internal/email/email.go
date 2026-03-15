@@ -1,3 +1,6 @@
+// Package email provides the Mailer interface for sending email.
+// DevMailer logs emails in development. SMTPMailer sends via SMTP in production.
+// All emails are persisted to the database via Store before sending.
 package email
 
 import "context"

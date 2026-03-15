@@ -1,3 +1,7 @@
+// Package middleware provides HTTP middleware for the application.
+// One middleware per file. Stack order is set in cmd/app/router.go.
+// Includes: RequestID, RequestLogger, Recovery, BodyLimit, Session,
+// CSRFContext, FlashContext, InternalAPIKey, RequireAuth.
 package middleware
 
 import (

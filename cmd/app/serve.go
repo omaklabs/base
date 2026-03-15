@@ -14,6 +14,7 @@ import (
 	"github.com/omakase-dev/go-boilerplate/internal/email"
 	"github.com/omakase-dev/go-boilerplate/internal/jobs"
 	"github.com/omakase-dev/go-boilerplate/internal/logger"
+	"github.com/omakase-dev/go-boilerplate/internal/server"
 )
 
 func cmdServe() {
@@ -48,7 +49,6 @@ func cmdServe() {
 			Encryption: cfg.Mail.Encryption,
 		}, appLogger)
 	}
-	_ = mailer // available for use by handlers/jobs
 
 	// Start background job worker
 	jobCtx, jobCancel := context.WithCancel(context.Background())
@@ -59,6 +59,26 @@ func cmdServe() {
 		}
 	}()
 
+	deps := &server.Deps{
+		Queries: queries,
+		Queue:   queue,
+		Mailer:  mailer,
+		Logger:  appLogger,
+		IsDev:   cfg.IsDev(),
+	}
+
+	// Register jobs and schedules from all domain modules (defined in app.go)
+	for _, m := range modules {
+		for _, j := range m.Jobs {
+			queue.Register(j.Type, j.Handler)
+		}
+		for _, s := range m.Schedules {
+			sched := jobs.NewScheduler(queue)
+			sched.Add(s)
+			go sched.Start(jobCtx)
+		}
+	}
+
 	reloadFn := func() error {
 		if err := config.LoadDotEnv(".env"); err != nil {
 			return err
@@ -68,7 +88,7 @@ func cmdServe() {
 		return nil
 	}
 
-	router := buildRouter(cfg, dbConn, cfg.DatabasePath, queries, queue, emailStore, appLogger, reloadFn)
+	router := buildRouter(cfg, dbConn, cfg.DatabasePath, deps, emailStore, reloadFn)
 
 	// Graceful shutdown
 	srv := &http.Server{Addr: cfg.Addr, Handler: router}

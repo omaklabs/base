@@ -1,3 +1,6 @@
+// Package config loads application configuration from environment variables.
+// Load() reads env vars, LoadDotEnv() parses .env files, Redacted() returns
+// a safe-to-log view, and schema.go defines config documentation.
 package config
 
 import (

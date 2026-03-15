@@ -1,0 +1,56 @@
+# .omakase.yaml — boilerplate file ownership manifest
+# Files listed under 'boilerplate' are safe to overwrite during upgrades.
+# Files not listed are assumed user-owned.
+version: "1.0.0"
+
+boilerplate:
+  # cmd/app — all except app.go
+  - cmd/app/main.go
+  - cmd/app/serve.go
+  - cmd/app/router.go
+  - cmd/app/routes.go
+  - cmd/app/migrate.go
+  - cmd/app/seed.go
+  - cmd/app/doctor.go
+  - cmd/app/version.go
+
+  # internal infrastructure
+  - internal/server/**
+  - internal/middleware/**
+  - internal/db/connection.go
+  - internal/db/db.go
+  - internal/jobs/**
+  - internal/email/**
+  - internal/storage/**
+  - internal/auth/**
+  - internal/validate/**
+  - internal/pagination/**
+  - internal/flash/**
+  - internal/view/**
+  - internal/logger/**
+  - internal/api/**
+  - internal/config/**
+  - internal/testutil/**
+  - internal/conventions/**
+
+  # shared templates
+  - templates/layouts/**
+  - templates/components/**
+  - templates/icons/**
+
+  # base migrations
+  - migrations/001_*.sql
+  - migrations/002_*.sql
+  - migrations/003_*.sql
+  - migrations/004_*.sql
+  - migrations/005_*.sql
+  - migrations/embed.go
+
+  # docs and config
+  - OMAKASE.md
+  - .omakase.yaml
+
+user:
+  - cmd/app/app.go
+  - internal/notes/**
+  - queries/**

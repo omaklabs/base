@@ -9,21 +9,6 @@ import (
 	"github.com/omakase-dev/go-boilerplate/internal/db"
 )
 
-// SeedFunc is a function that seeds data into the database.
-// The agent adds seed functions here when building features.
-type SeedFunc func(ctx context.Context, q *db.Queries) error
-
-// seeds is the registry of seed functions.
-// The agent appends to this slice when adding new domain seed data.
-var seeds = []struct {
-	Name string
-	Fn   SeedFunc
-}{
-	// Example (agent adds entries like this):
-	// {"users", seedUsers},
-	// {"posts", seedPosts},
-}
-
 func cmdSeed() {
 	cfg := config.Load()
 	dbConn, err := db.Connect(cfg.DatabasePath)
@@ -40,9 +25,23 @@ func cmdSeed() {
 	queries := db.New(dbConn)
 	ctx := context.Background()
 
+	// Collect seeds from all domain modules (defined in app.go)
+	var seeds []struct {
+		Name string
+		Fn   func(ctx context.Context, q *db.Queries) error
+	}
+	for _, m := range modules {
+		for _, s := range m.Seeds {
+			seeds = append(seeds, struct {
+				Name string
+				Fn   func(ctx context.Context, q *db.Queries) error
+			}{Name: s.Name, Fn: s.Fn})
+		}
+	}
+
 	if len(seeds) == 0 {
 		fmt.Println("no seed functions registered")
-		fmt.Println("add seed functions in cmd/server/seed.go")
+		fmt.Println("add Seeds to your domain Module in app.go")
 		return
 	}
 

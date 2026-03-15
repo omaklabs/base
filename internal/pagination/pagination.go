@@ -1,3 +1,6 @@
+// Package pagination provides page calculation for list views.
+// Use FromRequest(r, total) in handlers to parse page/per_page query params.
+// Pass the resulting Pagination struct to templates for rendering page links.
 package pagination
 
 import (

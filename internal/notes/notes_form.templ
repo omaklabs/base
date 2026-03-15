@@ -1,0 +1,61 @@
+package notes
+
+import (
+	"fmt"
+	"github.com/omakase-dev/go-boilerplate/internal/db"
+	"github.com/omakase-dev/go-boilerplate/internal/validate"
+	"github.com/omakase-dev/go-boilerplate/templates/components"
+	"github.com/omakase-dev/go-boilerplate/templates/layouts"
+)
+
+templ NotesForm(note *db.Note, errors validate.Errors, title string, body string) {
+	@layouts.App() {
+		<div class="p-8">
+			<div class="mb-6">
+				<a href="/notes" class="text-primary hover:underline text-sm">&larr; Back to Notes</a>
+			</div>
+			@components.Card() {
+				if note == nil {
+					<h1 class="text-2xl font-bold mb-6">New Note</h1>
+					<form method="POST" action="/notes" class="space-y-4">
+						@components.CSRFField()
+						@noteFormFields(errors, title, body)
+						@components.SubmitButton("Create Note", "primary", "md")
+					</form>
+				} else {
+					<h1 class="text-2xl font-bold mb-6">Edit Note</h1>
+					<form method="POST" action={ templ.SafeURL(fmt.Sprintf("/notes/%d", note.ID)) } class="space-y-4">
+						<input type="hidden" name="_method" value="PUT"/>
+						@components.CSRFField()
+						@noteFormFields(errors, title, body)
+						@components.SubmitButton("Update Note", "primary", "md")
+					</form>
+				}
+			}
+		</div>
+	}
+}
+
+templ noteFormFields(errors validate.Errors, title string, body string) {
+	@components.FormField("Title", "title", "text", title, errors.Error("title"))
+	<div>
+		<label class="label" for="body">Body</label>
+		if errors.Error("body") != "" {
+			<textarea
+				class="input"
+				id="body"
+				name="body"
+				rows="8"
+				data-error="true"
+			>{ body }</textarea>
+			<p class="error-text">{ errors.Error("body") }</p>
+		} else {
+			<textarea
+				class="input"
+				id="body"
+				name="body"
+				rows="8"
+			>{ body }</textarea>
+		}
+	</div>
+}

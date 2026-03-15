@@ -1,12 +1,16 @@
-package handlers
+package server
 
 import (
 	"net/http"
 	"runtime/debug"
 
 	"github.com/omakase-dev/go-boilerplate/internal/middleware"
-	"github.com/omakase-dev/go-boilerplate/templates/pages"
 )
+
+// IsHTMX checks if the request was made via HTMX.
+func IsHTMX(r *http.Request) bool {
+	return r.Header.Get("HX-Request") == "true"
+}
 
 // RenderError renders a 500 error page. In dev mode, includes error details
 // such as the error message, stack trace, and request information.
@@ -17,15 +21,23 @@ func RenderError(w http.ResponseWriter, r *http.Request, err error, isDev bool) 
 	if isDev {
 		stack := string(debug.Stack())
 		requestID := middleware.RequestIDFromContext(r.Context())
-		pages.ErrorDev(r.Method, r.URL.Path, requestID, err.Error(), stack).Render(r.Context(), w)
+		ErrorDev(r.Method, r.URL.Path, requestID, err.Error(), stack).Render(r.Context(), w)
 		return
 	}
 
-	pages.Error500().Render(r.Context(), w)
+	Error500().Render(r.Context(), w)
 }
 
 // RenderNotFound renders a 404 page.
 func RenderNotFound(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
-	pages.Error404().Render(r.Context(), w)
+	Error404().Render(r.Context(), w)
+}
+
+// HandleNotFound returns a handler that renders the 404 page.
+func HandleNotFound() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		Error404().Render(r.Context(), w)
+	}
 }

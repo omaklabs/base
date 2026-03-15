@@ -1,3 +1,6 @@
+// Package api provides the internal management API mounted at /internal/*.
+// Protected by middleware.InternalAPIKey. Endpoints for health, config,
+// jobs, emails, and log streaming. Never expose to end users.
 package api
 
 import (

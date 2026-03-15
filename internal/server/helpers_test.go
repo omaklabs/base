@@ -1,4 +1,4 @@
-package handlers
+package server
 
 import (
 	"errors"
@@ -7,6 +7,42 @@ import (
 	"strings"
 	"testing"
 )
+
+func TestIsHTMX(t *testing.T) {
+	tests := []struct {
+		name   string
+		header string
+		want   bool
+	}{
+		{"with HX-Request header", "true", true},
+		{"without HX-Request header", "", false},
+		{"with wrong value", "false", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := httptest.NewRequest("GET", "/", nil)
+			if tt.header != "" {
+				r.Header.Set("HX-Request", tt.header)
+			}
+			if got := IsHTMX(r); got != tt.want {
+				t.Errorf("IsHTMX() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestHandleNotFound(t *testing.T) {
+	handler := HandleNotFound()
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("GET", "/nonexistent", nil)
+
+	handler.ServeHTTP(w, r)
+
+	if w.Code != http.StatusNotFound {
+		t.Errorf("expected status 404, got %d", w.Code)
+	}
+}
 
 func TestRenderErrorDevMode(t *testing.T) {
 	w := httptest.NewRecorder()

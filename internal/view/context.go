@@ -1,3 +1,7 @@
+// Package view provides context carriers for template rendering.
+// CSRF tokens and flash messages are injected by middleware and
+// read by templates via CSRFToken(ctx) and GetFlash(ctx).
+// This is a thin context-passing layer — no business logic.
 package view
 
 import (

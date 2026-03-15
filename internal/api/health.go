@@ -9,9 +9,8 @@ import (
 	"time"
 )
 
-var startTime = time.Now()
-
 func handleHealth(dbConn *sql.DB, dbPath string) http.HandlerFunc {
+	startTime := time.Now()
 	return func(w http.ResponseWriter, r *http.Request) {
 		var mem runtime.MemStats
 		runtime.ReadMemStats(&mem)

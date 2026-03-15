@@ -1,3 +1,6 @@
+// Package logger provides structured JSON logging with SSE fan-out.
+// Use Info(), Warn(), Error() for application logging. Subscribe() returns
+// a channel for real-time log streaming. Never use fmt.Println or log.Printf.
 package logger
 
 import (

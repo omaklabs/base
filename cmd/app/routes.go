@@ -11,13 +11,19 @@ import (
 	"github.com/omakase-dev/go-boilerplate/internal/email"
 	"github.com/omakase-dev/go-boilerplate/internal/jobs"
 	"github.com/omakase-dev/go-boilerplate/internal/logger"
+	"github.com/omakase-dev/go-boilerplate/internal/server"
 )
 
 func cmdRoutes() {
 	cfg := config.Load()
 
 	// Build router with nil db — we only need the route tree
-	router := buildRouter(cfg, nil, "", &db.Queries{}, jobs.NewQueue(&db.Queries{}), email.NewStore(&db.Queries{}), logger.New(nil))
+	deps := &server.Deps{
+		Queries: &db.Queries{},
+		Queue:   jobs.NewQueue(&db.Queries{}),
+		Logger:  logger.New(nil),
+	}
+	router := buildRouter(cfg, nil, "", deps, email.NewStore(&db.Queries{}))
 
 	fmt.Println("Registered routes:")
 	fmt.Println()

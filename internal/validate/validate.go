@@ -1,3 +1,7 @@
+// Package validate provides form validation for HTTP handlers.
+// Create a Validator with New(), call check methods (Required, MinLength,
+// Email, etc.), then check HasErrors(). Pass Errors() to templates for
+// inline error display. Always validate in handlers before querying the DB.
 package validate
 
 import (

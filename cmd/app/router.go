@@ -10,18 +10,15 @@ import (
 	"github.com/omakase-dev/go-boilerplate/assets"
 	"github.com/omakase-dev/go-boilerplate/internal/api"
 	"github.com/omakase-dev/go-boilerplate/internal/config"
-	"github.com/omakase-dev/go-boilerplate/internal/db"
 	"github.com/omakase-dev/go-boilerplate/internal/email"
-	"github.com/omakase-dev/go-boilerplate/internal/handlers"
-	"github.com/omakase-dev/go-boilerplate/internal/jobs"
-	"github.com/omakase-dev/go-boilerplate/internal/logger"
 	"github.com/omakase-dev/go-boilerplate/internal/middleware"
+	"github.com/omakase-dev/go-boilerplate/internal/server"
 )
 
-func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, queries *db.Queries, queue *jobs.Queue, emailStore *email.Store, appLogger *logger.Logger, reloadFn ...func() error) *chi.Mux {
+func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.Deps, emailStore *email.Store, reloadFn ...func() error) *chi.Mux {
 	router := chi.NewRouter()
 	router.Use(middleware.RequestID)
-	router.Use(middleware.RequestLogger(appLogger))
+	router.Use(middleware.RequestLogger(deps.Logger))
 	router.Use(middleware.Recovery(nil))
 	router.Use(middleware.BodyLimit(10 << 20)) // 10 MB
 	router.Use(csrf.Protect(
@@ -48,11 +45,18 @@ func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, queries *db.Q
 		} else {
 			rFn = func() error { return nil }
 		}
-		api.Mount(r, dbConn, dbPath, queue, emailStore, appLogger, cfg, rFn)
+		api.Mount(r, dbConn, dbPath, deps.Queue, emailStore, deps.Logger, cfg, rFn)
 	})
 
-	// App handlers
-	handlers.Mount(router, queries, queue)
+	// App routes — mount all domain modules from app.go
+	router.Get("/", server.HandleWelcome())
+	for _, m := range modules {
+		if m.Mount != nil {
+			m := m // capture loop variable
+			router.Route(m.Path, func(r chi.Router) { m.Mount(r, deps) })
+		}
+	}
+	router.NotFound(server.HandleNotFound())
 
 	// Embedded assets
 	router.Handle("/assets/*", http.StripPrefix("/assets/",

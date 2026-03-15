@@ -1,3 +1,7 @@
+// Package storage provides a file storage interface with Put, Get, Delete,
+// Exists, and URL methods. Local filesystem implementation included.
+// Use ParseUpload() and GenerateKey() for handling file uploads.
+// Never use os.* directly for file operations — use this interface.
 package storage
 
 import (
