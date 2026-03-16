@@ -1,11 +1,14 @@
 package layouts
 
+import "github.com/omaklabs/base/internal/view"
+
 templ Base(title string) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta name="csrf-token" content={ view.CSRFToken(ctx) }/>
 			<title>{ title }</title>
 			<link rel="stylesheet" href="/assets/css/app.css"/>
 			<script src="/assets/js/htmx.min.js"></script>

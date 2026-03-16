@@ -3,7 +3,7 @@ public/
 
 # Binary
 bin/
-app
+/app
 
 # Database
 data/
