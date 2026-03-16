@@ -43,7 +43,6 @@ boilerplate:
   - migrations/002_*.sql
   - migrations/003_*.sql
   - migrations/004_*.sql
-  - migrations/005_*.sql
   - migrations/embed.go
 
   # docs and config
@@ -52,5 +51,5 @@ boilerplate:
 
 user:
   - cmd/app/app.go
-  - internal/notes/**
+  - internal/<domain>/**
   - queries/**

@@ -91,7 +91,7 @@ func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.
 				HttpOnly: true,
 				SameSite: http.SameSiteLaxMode,
 			})
-			http.Redirect(w, r, "/notes", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 		})
 	}
 

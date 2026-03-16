@@ -41,7 +41,6 @@ cmd/app/
 
 internal/
   server/              Shared infrastructure (Deps, helpers, error pages)
-  notes/               Reference domain (handler + templates + module)
   middleware/           HTTP middleware (one per file)
   db/                  Database connection + SQLC-generated code
   jobs/                Background job queue
@@ -84,7 +83,6 @@ This creates:
 
 ```go
 var modules = []server.Module{
-    notes.Module,
     posts.Module,
 }
 ```

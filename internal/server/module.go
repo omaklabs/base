@@ -12,10 +12,10 @@ import (
 // Each domain exports a Module var. The boilerplate iterates these
 // for route mounting, job registration, seed execution, etc.
 type Module struct {
-	// Name is a human-readable identifier (e.g., "notes", "billing").
+	// Name is a human-readable identifier (e.g., "posts", "billing").
 	Name string
 
-	// Path is the URL prefix (e.g., "/notes", "/billing").
+	// Path is the URL prefix (e.g., "/posts", "/billing").
 	Path string
 
 	// Mount registers the domain's routes on the given router.
