@@ -19,7 +19,7 @@ Read this file in full before making any changes. It is the single source of tru
 | Background jobs | SQLite-backed job queue (`internal/jobs`) | No Redis, no external queue. |
 | CSRF | `gorilla/csrf` | Token injected into context via middleware. |
 | Sessions | Cookie + SQLite (`internal/auth`) | Strategy-agnostic session management. |
-| Build tooling | Go only | No Node.js, no npm, no JavaScript build tools. |
+| Build tooling | Go + Tailwind CLI | No Node.js, no npm. Tailwind CSS standalone CLI compiles CSS. |
 
 ---
 
@@ -101,7 +101,7 @@ templates/
 | `queries/` | SQLC query files (`.sql`). One file per domain. | Write raw SQL in Go files. Write queries here, then run `sqlc generate`. |
 | `cmd/app` | CLI entry point (`main.go`), server startup (`serve.go`), router construction (`router.go`), module registration (`app.go`), migration commands (`migrate.go`), route listing (`routes.go`), seed data (`seed.go`), diagnostics (`doctor.go`), version (`version.go`). Only `app.go` is user-edited; all other files are boilerplate. | Put business logic here. This package wires dependencies and delegates to `internal/`. |
 | `cmd/icongen` | Icon code generator. Reads `lucideIcons` slice and writes `templates/icons/lucide_gen.go`. | Edit the generated output. Edit the source `lucideIcons` slice in this file, then run `go run ./cmd/icongen`. |
-| `assets/` | Static assets (CSS, JS, images). Embedded and served at `/assets/*`. | Add build tooling for assets. |
+| `assets/` | Static assets (CSS, JS, images). Embedded and served at `/assets/*`. `app.tailwind.css` is the Tailwind source; `app.css` is the compiled output (run `make css`). | Edit `app.css` directly. Edit `app.tailwind.css` then run `make css`. |
 
 ---
 
@@ -416,7 +416,18 @@ These are the exact locations where new code is added:
 
 ---
 
-## 14. Pre-Commit Checklist
+## 14. Build & Pre-Commit Checklist
+
+Use `make build` for a full build (generates code, compiles CSS, compiles Go). Individual targets:
+
+```
+make build           Full build (generate + css + go build)
+make dev             Build and start the server
+make css             Compile Tailwind CSS
+make css-watch       Watch and recompile Tailwind CSS
+make generate        Run templ generate + sqlc generate
+make test            Run all tests
+```
 
 Before committing any change, always run:
 
@@ -433,6 +444,11 @@ templ generate
 If you added or changed `queries/*.sql` files, first run:
 ```
 sqlc generate
+```
+
+If you added or changed `assets/css/app.tailwind.css`, first run:
+```
+make css
 ```
 
 If you added icons to `cmd/icongen/main.go`, first run:

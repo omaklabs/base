@@ -11,7 +11,7 @@ No CGO. No Node.js. No ORM. One binary, one database file.
 ```bash
 git clone https://github.com/omaklabs/base.git myapp
 cd myapp
-go build -o app ./cmd/app
+make build
 ./app serve
 ```
 
@@ -19,9 +19,20 @@ Visit `http://localhost:8080`.
 
 ## Commands
 
+**Build:**
+```
+make build               Full build (generate + css + go build)
+make dev                 Build and start the server
+make css                 Compile Tailwind CSS
+make css-watch           Watch Tailwind CSS for changes
+make generate            Run templ generate + sqlc generate
+make test                Run all tests
+```
+
+**App CLI:**
 ```
 ./app serve              Start the HTTP server
-./app generate domain <name>    Scaffold a full domain (handler, templates, queries, migration)
+./app generate domain <name>    Scaffold a full domain
 ./app generate migration <name> Create a timestamped migration file
 ./app migrate up         Run pending migrations
 ./app migrate down       Rollback last migration
