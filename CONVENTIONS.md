@@ -30,7 +30,7 @@ Read this file in full before making any changes. It is the single source of tru
 The codebase separates **boilerplate** (infrastructure, upgradeable) from **user** (domain logic, never overwritten). See `.omakase.yaml` for the full manifest.
 
 - **Boilerplate files** (`cmd/app/*.go` except `app.go`, `internal/server/`, `internal/middleware/`, etc.) — safe to overwrite during upgrades.
-- **User files** (`cmd/app/app.go`, `internal/notes/`, `internal/posts/`, `queries/`, user migrations) — never touched by upgrades.
+- **User files** (`cmd/app/app.go`, `internal/<domain>/`, `queries/`, user migrations) — never touched by upgrades.
 - **`cmd/app/app.go`** — the ONE file in `cmd/app/` that users edit. Contains the `modules` list.
 
 ### Module Pattern
@@ -38,10 +38,10 @@ The codebase separates **boilerplate** (infrastructure, upgradeable) from **user
 Each domain exports a `server.Module` var describing its routes, jobs, seeds. The boilerplate iterates the `modules` list in `app.go` for all registration.
 
 ```go
-// internal/notes/module.go
+// internal/<domain>/module.go
 var Module = server.Module{
-    Name:  "notes",
-    Path:  "/notes",
+    Name:  "<domain>",
+    Path:  "/<domain>",
     Mount: Mount,
 }
 ```
@@ -49,7 +49,7 @@ var Module = server.Module{
 ```go
 // cmd/app/app.go — the ONLY file users edit in cmd/app/
 var modules = []server.Module{
-    notes.Module,
+    <domain>.Module,
 }
 ```
 
@@ -58,13 +58,13 @@ var modules = []server.Module{
 Page templates live inside their domain package, not in a separate `templates/pages/` directory. Shared layouts and components stay in `templates/`.
 
 ```
-internal/notes/
-├── handler.go          ← handlers
-├── handler_test.go     ← tests
-├── module.go           ← Module var
-├── notes_list.templ    ← page templates (co-located)
-├── notes_show.templ
-└── notes_form.templ
+internal/<domain>/
+├── handler.go              ← handlers
+├── handler_test.go         ← tests
+├── module.go               ← Module var
+├── <domain>_list.templ     ← page templates (co-located)
+├── <domain>_show.templ
+└── <domain>_form.templ
 
 templates/
 ├── layouts/            ← shared (boilerplate)
@@ -83,7 +83,7 @@ templates/
 | `internal/auth` | Session create / validate / delete, expired session cleanup | Add authentication strategy here. This package is strategy-agnostic -- the agent adds login/signup logic in domain handlers. |
 | `internal/middleware` | HTTP middleware chain. Each middleware lives in its own file: `request_id.go`, `request_logger.go`, `recovery.go`, `body_limit.go`, `session.go`, `csrf_context.go`, `flash.go`, `internal_key.go` | Combine multiple middlewares into one file. |
 | `internal/server` | Shared HTTP infrastructure: `Deps` struct (dependency injection), `Module` type (domain registration), `IsHTMX()`, `RenderError()`, `RenderNotFound()`, `HandleNotFound()`, `HandleWelcome()`. Co-located templates: `welcome.templ`, `error_*.templ`. | Import domain packages from here. Server is a leaf dependency — domains import it, not the other way around. |
-| `internal/notes` | Notes domain: `Module` var, `Mount()` + all CRUD handlers, co-located page templates. Reference domain for the agent to copy. | Put non-notes logic here. One package per domain. |
+| `internal/<domain>` | User domain packages. Each exports a `Module` var, `Mount()` + CRUD handlers, co-located page templates. Follow the conventions in Section 4. | Mix domains. One package per domain. |
 | `internal/jobs` | Job queue (`queue.go`), scheduler (`scheduler.go`). `Queue.Register()`, `Queue.Enqueue()`, `Queue.Process()`. `Scheduler.Add()`, `Scheduler.Start()`. | Process work inline in handlers. Always enqueue a job instead. |
 | `internal/email` | `Mailer` interface (`email.go`), `DevMailer` (logs, no SMTP), `SMTPMailer` (production), `Store` (DB persistence) | Call SMTP directly. Always go through the `Mailer` interface. |
 | `internal/logger` | Structured JSON logger with SSE fan-out. Methods: `Info()`, `Warn()`, `Error()`. | Use `fmt.Println` or `log.Printf` in application code. Always use the logger. |
@@ -131,7 +131,6 @@ Follow every step in order. Do not skip any.
 7. **Register module** -- Add one line to `cmd/app/app.go`:
    ```go
    var modules = []server.Module{
-       notes.Module,
        <domain>.Module,  // ← add here
    }
    ```
@@ -181,8 +180,8 @@ Follow every step in order. Do not skip any.
 2. **Register via Module** -- Add to the `Jobs` field in your domain's `Module` var:
    ```go
    var Module = server.Module{
-       Name:  "notes",
-       Path:  "/notes",
+       Name:  "<domain>",
+       Path:  "/<domain>",
        Mount: Mount,
        Jobs: []server.Job{
            {Type: "my_job", Handler: handleMyJob},

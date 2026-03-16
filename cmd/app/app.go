@@ -4,13 +4,10 @@
 package main
 
 import (
-	"github.com/omaklabs/base/internal/notes"
 	"github.com/omaklabs/base/internal/server"
 )
 
 // modules lists all domain modules in the app.
 // Add a domain: import the package, append its Module here.
 // Remove a domain: delete the line and remove the import.
-var modules = []server.Module{
-	notes.Module,
-}
+var modules = []server.Module{}
