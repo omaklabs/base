@@ -23,7 +23,164 @@ Read this file in full before making any changes. It is the single source of tru
 
 ---
 
-## 2. Architecture Overview
+## 2. Design Philosophy -- Deep Modules
+
+> From John Ousterhout's *A Philosophy of Software Design*: **The best modules are deep — they hide significant complexity behind a simple interface.**
+
+Every package, function, and type must justify its existence by providing a **simple interface that hides meaningful implementation complexity**. This is the central design principle for all code in this project.
+
+### The Rule
+
+```
+Module Depth = (Complexity Hidden) / (Interface Exposed)
+```
+
+A **deep module** has a small, simple public API that hides substantial logic — parsing, validation, state management, external API calls, error handling, retries, caching. A **shallow module** exposes an interface almost as complex as its implementation — it adds indirection without absorbing complexity. **Do not create shallow modules.**
+
+### Deep vs. Shallow in Go
+
+```go
+// ✅ DEEP: Simple call, complex implementation hidden inside.
+// Internally: builds HTTP client, paginates API, parses response,
+// normalizes data, handles retries, updates multiple fields.
+func (c *Competitor) Scrape(ctx context.Context, q *db.Queries) error {
+    data, err := fetchAndParse(c.URL)
+    if err != nil {
+        return fmt.Errorf("scraping %s: %w", c.URL, err)
+    }
+    return q.UpdateCompetitor(ctx, db.UpdateCompetitorParams{
+        ID:           c.ID,
+        Name:         data.Name,
+        Pricing:      data.Pricing,
+        Features:     data.Features,
+        LastScrapedAt: sql.NullTime{Time: time.Now(), Valid: true},
+    })
+}
+
+// ❌ SHALLOW: Wrapper that just delegates — adds a layer without hiding anything.
+func ScrapeCompetitor(ctx context.Context, q *db.Queries, c *Competitor) error {
+    return c.Scrape(ctx, q) // Why does this function exist?
+}
+
+// ❌ SHALLOW: Function that does almost nothing.
+func UpdateCompetitorName(ctx context.Context, q *db.Queries, id int64, name string) error {
+    return q.UpdateCompetitorName(ctx, db.UpdateCompetitorNameParams{ID: id, Name: name})
+    // This is just the SQLC call with a worse interface.
+}
+```
+
+### Decision Framework
+
+Before creating a new package, type, or exported function, answer:
+
+1. **What complexity does it hide?** If the answer is "not much" or "it just delegates," don't create it.
+2. **Is the interface simpler than the implementation?** If the public API has as many concepts as the internals, the module is shallow.
+3. **Does it have a reason to change independently?** If it always changes in lockstep with another module, merge them.
+4. **Can I name it with a specific noun/verb?** Vague names (`Manager`, `Handler`, `Processor`, `Service`, `Utils`) usually signal shallow design.
+
+### Where Depth Belongs
+
+| Layer | Deep (✅) | Shallow (❌) |
+|-------|-----------|-------------|
+| **Domain function** | `SyncIntegration()` — hides HTTP client, pagination, parsing, retry, error recovery | `WrapQuery()` — trivial wrapper around a SQLC call |
+| **Package** | `internal/jobs` — hides SQLite queue, polling, retry, scheduling behind `Enqueue()` / `Process()` | `internal/utils` — grab-bag of unrelated helpers |
+| **Middleware** | `SessionMiddleware` — hides cookie parsing, DB lookup, expiry, context injection | A middleware that just calls `next.ServeHTTP(w, r)` with one header set |
+| **Handler** | Thin — delegates to deep domain functions (handlers are *supposed* to be shallow; depth lives in domain logic) | Fat handler with business logic that should be in a domain function |
+| **Job handler** | Thin wrapper calling a deep domain function (correct use of a shallow layer — infrastructure glue) | Job handler containing all the business logic (inverts the depth) |
+
+### Information Hiding Checklist
+
+When designing a function or package's public interface, hide:
+
+- **Implementation details** — Callers shouldn't know *how* you fetch, parse, or sync
+- **Error handling & retries** — Callers call one function; the module handles failures
+- **Data format transformations** — Accept domain types, return domain types
+- **External service protocols** — HTTP details, API pagination, auth tokens stay internal
+- **Performance optimizations** — Caching, batch processing, connection pooling stay internal
+- **Temporal coupling** — "Call A before B" should be enforced internally, not by the caller
+
+```go
+// ✅ DEEP: Hides all the above. Caller just writes: integration.Sync(ctx, q)
+func (i *Integration) Sync(ctx context.Context, q *db.Queries) error {
+    client := i.buildAuthenticatedClient()      // hides auth protocol
+    data, err := client.FetchAllPages()          // hides pagination
+    if err != nil {
+        return fmt.Errorf("fetching data: %w", err)
+    }
+    results := processInBatches(data)            // hides batching strategy
+    if err := cacheResults(ctx, results); err != nil { // hides caching layer
+        return fmt.Errorf("caching results: %w", err)
+    }
+    return q.UpdateIntegrationSyncedAt(ctx, db.UpdateIntegrationSyncedAtParams{
+        ID: i.ID, LastSyncedAt: sql.NullTime{Time: time.Now(), Valid: true},
+    })
+}
+```
+
+### Anti-Patterns to Reject
+
+**1. Pass-Through Functions**
+```go
+// ❌ Function that just calls another function with the same signature.
+func CreateUser(ctx context.Context, q *db.Queries, p db.CreateUserParams) (db.User, error) {
+    return q.CreateUser(ctx, p)
+}
+// Just call q.CreateUser directly.
+```
+
+**2. Premature Extraction**
+```go
+// ❌ Package extracted for a single use case that only one domain will ever need.
+package nameutil
+
+func Normalize(name string) string {
+    return strings.TrimSpace(strings.Title(name))
+}
+// Just inline this where it's used. Extract when a second caller needs it.
+```
+
+**3. Needless Indirection Layers**
+```go
+// ❌ Repository pattern wrapping SQLC — SQLC IS the repository.
+type UserRepository struct{ q *db.Queries }
+func (r *UserRepository) Find(ctx context.Context, id int64) (db.User, error) {
+    return r.q.GetUser(ctx, id)
+}
+// This adds a layer that hides nothing. SQLC already provides this interface.
+```
+
+**4. Config Objects for Simple Cases**
+```go
+// ❌ Over-engineered configuration.
+type ScrapingConfig struct {
+    Timeout time.Duration
+    Retries int
+}
+// Just use function parameters or constants until complexity warrants a struct.
+```
+
+**5. Shallow Packages**
+```go
+// ❌ Package with one exported function that does one trivial thing.
+package slugify
+
+func Slugify(s string) string {
+    return strings.ToLower(strings.ReplaceAll(s, " ", "-"))
+}
+// Put this in the package that uses it. A whole package for one liner is shallow.
+```
+
+### The Litmus Test
+
+Before creating any new package, type, or exported function:
+
+> **"Does this hide more complexity than it introduces?"**
+>
+> If yes → create it. If no → inline it, merge it, or delete it.
+
+---
+
+## 3. Architecture Overview
 
 ### File Ownership
 
@@ -74,7 +231,7 @@ templates/
 
 ---
 
-## 3. Package Responsibility Map
+## 4. Package Responsibility Map
 
 | Package | Owns | Never |
 |---------|------|-------|
@@ -105,7 +262,7 @@ templates/
 
 ---
 
-## 4. How to Add a New Domain (Step-by-Step Checklist)
+## 5. How to Add a New Domain (Step-by-Step Checklist)
 
 Follow every step in order. Do not skip any.
 
@@ -141,7 +298,7 @@ Follow every step in order. Do not skip any.
 
 ---
 
-## 5. How to Remove a Domain
+## 6. How to Remove a Domain
 
 1. **Remove from modules** -- Delete the line from `cmd/app/app.go`.
 2. **Delete package** -- Delete `internal/<domain>/` (handlers, templates, module, tests — all in one directory).
@@ -151,7 +308,7 @@ Follow every step in order. Do not skip any.
 
 ---
 
-## 6. How to Add Configuration for a Feature
+## 7. How to Add Configuration for a Feature
 
 1. **Add fields** to the `Config` struct in `internal/config/config.go`. Add env var loading in the `Load()` function using the `envOr()` helper.
 
@@ -163,7 +320,7 @@ Follow every step in order. Do not skip any.
 
 ---
 
-## 7. How to Add a Background Job
+## 8. How to Add a Background Job
 
 1. **Define the handler function** inside your domain package:
    ```go
@@ -204,7 +361,7 @@ Follow every step in order. Do not skip any.
 
 ---
 
-## 8. How to Send Email
+## 9. How to Send Email
 
 1. **Build the message:**
    ```go
@@ -231,7 +388,7 @@ Follow every step in order. Do not skip any.
 
 ---
 
-## 9. How to Add Icons
+## 10. How to Add Icons
 
 1. **Use an existing Lucide icon:** Call `@icons.IconName("size")` in a templ file, where `IconName` is the PascalCase version of the Lucide name and `size` is a data-size value (e.g., `"sm"`, `"md"`, `"lg"`).
    ```
@@ -250,7 +407,7 @@ Follow every step in order. Do not skip any.
 
 ---
 
-## 10. Conventions
+## 11. Conventions
 
 ### Error Handling
 
@@ -357,7 +514,7 @@ func handleListPosts(deps *server.Deps) http.HandlerFunc {
 
 ---
 
-## 11. What You Must Never Do
+## 12. What You Must Never Do
 
 - Use GORM or any ORM.
 - Write raw SQL strings in handler files. All queries go in `queries/*.sql` and are accessed via SQLC-generated methods.
@@ -378,7 +535,7 @@ func handleListPosts(deps *server.Deps) http.HandlerFunc {
 
 ---
 
-## 12. CLI Commands
+## 13. CLI Commands
 
 ```
 ./app serve              Start the HTTP server (default command)
@@ -395,7 +552,47 @@ func handleListPosts(deps *server.Deps) http.HandlerFunc {
 
 ---
 
-## 13. Extension Points
+## 14. Change Log
+
+When making significant changes to architecture, database schema, or infrastructure packages, document the decision in `changelog/`.
+
+### What to Log
+
+- Database schema changes (new tables, column renames, index changes)
+- Infrastructure package restructuring (new packages in `internal/`, changed interfaces)
+- Major refactors affecting multiple domains
+- New architectural patterns introduced
+
+### ADR Format
+
+Create a new file: `changelog/YYYY-MM-DD-short-title.md`
+
+```markdown
+# Title
+
+## Context
+
+What is the background? What problem are we solving?
+
+## Decision
+
+What change was made?
+
+## Consequences
+
+- What are the implications?
+- What migrations or follow-up work is needed?
+```
+
+### When NOT to Log
+
+- Adding a new domain (the migration and code are self-documenting)
+- Bug fixes (the commit message is enough)
+- Adding icons, templates, or queries (routine additions)
+
+---
+
+## 15. Extension Points
 
 These are the exact locations where new code is added:
 
@@ -416,7 +613,7 @@ These are the exact locations where new code is added:
 
 ---
 
-## 14. Build & Pre-Commit Checklist
+## 16. Build & Pre-Commit Checklist
 
 Use `make build` for a full build (generates code, compiles CSS, compiles Go). Individual targets:
 

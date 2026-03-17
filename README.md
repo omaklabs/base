@@ -119,7 +119,7 @@ var modules = []server.Module{
 
 ## For AI Agents
 
-Read `CONVENTIONS.md` for the full conventions guide. It covers:
+Read `AGENTS.md` for the full conventions guide. It covers:
 - Handler patterns (parse, validate, query, render)
 - Naming conventions
 - Error handling rules
