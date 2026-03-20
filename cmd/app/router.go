@@ -105,9 +105,15 @@ func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.
 	}
 	router.NotFound(server.HandleNotFound())
 
-	// Embedded assets
-	router.Handle("/assets/*", http.StripPrefix("/assets/",
-		http.FileServer(http.FS(assets.Files))))
+	// Assets: serve from filesystem in dev (instant CSS/JS changes without rebuild),
+	// embedded FS in production (single binary, no external files).
+	if cfg.IsDev() {
+		router.Handle("/assets/*", http.StripPrefix("/assets/",
+			http.FileServer(http.Dir("assets"))))
+	} else {
+		router.Handle("/assets/*", http.StripPrefix("/assets/",
+			http.FileServer(http.FS(assets.Files))))
+	}
 
 	return router
 }
