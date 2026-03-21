@@ -10,12 +10,42 @@ templ Base(title string) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<meta name="csrf-token" content={ view.CSRFToken(ctx) }/>
 			<title>{ title }</title>
-			<link rel="stylesheet" href="/assets/css/app.css"/>
+			if view.IsDev(ctx) {
+				<script src="/assets/js/tailwindcss-browser.js"></script>
+				<style type="text/tailwindcss">
+					@theme {
+						--color-background:             #09090b;
+						--color-foreground:             #f4f4f5;
+						--color-card:                   #18181b;
+						--color-card-foreground:        #f4f4f5;
+						--color-primary:                #f97316;
+						--color-primary-foreground:     #ffffff;
+						--color-secondary:              #27272a;
+						--color-secondary-foreground:   #a1a1aa;
+						--color-muted:                  #27272a;
+						--color-muted-foreground:       #a1a1aa;
+						--color-accent:                 #27272a;
+						--color-accent-foreground:      #f4f4f5;
+						--color-destructive:            #ef4444;
+						--color-destructive-foreground: #ffffff;
+						--color-success:                #22c55e;
+						--color-success-foreground:     #ffffff;
+						--color-warning:                #eab308;
+						--color-warning-foreground:     #ffffff;
+						--color-border:                 #27272a;
+						--color-input:                  #27272a;
+						--color-ring:                   #f97316;
+					}
+					[x-cloak] { display: none !important; }
+				</style>
+			} else {
+				<link rel="stylesheet" href="/assets/css/app.compiled.css"/>
+			}
 			<script src="/assets/js/htmx.min.js"></script>
 			<script defer src="/assets/js/alpine.min.js"></script>
 			<script defer src="/assets/js/app.js"></script>
 		</head>
-		<body class="h-full bg-background text-text antialiased" hx-boost="true">
+		<body class="h-full bg-background text-foreground antialiased" hx-boost="true">
 			{ children... }
 		</body>
 	</html>

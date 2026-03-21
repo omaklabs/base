@@ -1,13 +1,20 @@
 package components
 
-templ Card() {
-	<div class="card">
-		{ children... }
-	</div>
+func cardClasses(padding string) string {
+	base := "bg-card text-card-foreground border border-border rounded-xl"
+	switch padding {
+	case "none":
+		return cx(base)
+	case "sm":
+		return cx(base, "p-4")
+	default:
+		return cx(base, "p-6")
+	}
 }
 
-templ CardNoPadding() {
-	<div class="card" data-padding="none">
+// Card renders a content container. Optional padding: "sm", "none" (default has p-6).
+templ Card(padding ...string) {
+	<div class={ cardClasses(firstOr(padding, "default")) }>
 		{ children... }
 	</div>
 }

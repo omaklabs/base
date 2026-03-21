@@ -7,12 +7,10 @@ import (
 
 templ Pagination(p pagination.Pagination, baseURL string) {
 	if p.TotalPages > 1 {
-		<nav class="pagination" aria-label="Pagination">
+		<nav class="flex items-center gap-1" aria-label="Pagination">
 			if p.HasPrev {
 				<a
-					class="btn"
-					data-variant="ghost"
-					data-size="sm"
+					class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm"}) }
 					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page-1)) }
 					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page-1) }
 					hx-target="closest [data-paginated]"
@@ -21,24 +19,22 @@ templ Pagination(p pagination.Pagination, baseURL string) {
 					&laquo; Prev
 				</a>
 			} else {
-				<span class="btn" data-variant="ghost" data-size="sm" aria-disabled="true">
+				<span class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm", Disabled: true}) } aria-disabled="true">
 					&laquo; Prev
 				</span>
 			}
 			for _, pg := range p.Pages() {
 				if pg == -1 {
-					<span class="btn" data-variant="ghost" data-size="sm" aria-hidden="true">
+					<span class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm"}) } aria-hidden="true">
 						&hellip;
 					</span>
 				} else if pg == p.Page {
-					<span class="btn" data-variant="primary" data-size="sm" aria-current="page">
+					<span class={ buttonClasses(ButtonProps{Variant: "primary", Size: "sm"}) } aria-current="page">
 						{ fmt.Sprintf("%d", pg) }
 					</span>
 				} else {
 					<a
-						class="btn"
-						data-variant="ghost"
-						data-size="sm"
+						class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm"}) }
 						href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, pg)) }
 						hx-get={ fmt.Sprintf("%s?page=%d", baseURL, pg) }
 						hx-target="closest [data-paginated]"
@@ -50,9 +46,7 @@ templ Pagination(p pagination.Pagination, baseURL string) {
 			}
 			if p.HasNext {
 				<a
-					class="btn"
-					data-variant="ghost"
-					data-size="sm"
+					class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm"}) }
 					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page+1)) }
 					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page+1) }
 					hx-target="closest [data-paginated]"
@@ -61,7 +55,7 @@ templ Pagination(p pagination.Pagination, baseURL string) {
 					Next &raquo;
 				</a>
 			} else {
-				<span class="btn" data-variant="ghost" data-size="sm" aria-disabled="true">
+				<span class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm", Disabled: true}) } aria-disabled="true">
 					Next &raquo;
 				</span>
 			}

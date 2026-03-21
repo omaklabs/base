@@ -43,7 +43,7 @@ func Error404() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex items-center justify-center min-h-screen\"><div class=\"text-center\"><h1 class=\"text-6xl font-bold text-muted\">404</h1><h2 class=\"mt-4 text-2xl font-semibold\">Page not found</h2><p class=\"mt-2 text-muted\">The page you are looking for does not exist or has been moved.</p><a href=\"/\" class=\"inline-block mt-6 text-primary hover:underline\">Go back home</a></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex items-center justify-center min-h-screen\"><div class=\"text-center\"><h1 class=\"text-6xl font-bold text-muted-foreground\">404</h1><h2 class=\"mt-4 text-2xl font-semibold\">Page not found</h2><p class=\"mt-2 text-muted-foreground\">The page you are looking for does not exist or has been moved.</p><a href=\"/\" class=\"inline-block mt-6 text-primary hover:underline\">Go back home</a></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -15,6 +15,7 @@ type contextKey int
 const (
 	csrfTokenKey contextKey = iota
 	flashKey
+	isDevKey
 )
 
 // Flash holds a single flash message to display on the next page load.
@@ -45,4 +46,15 @@ func WithFlash(ctx context.Context, f *Flash) context.Context {
 func GetFlash(ctx context.Context) *Flash {
 	f, _ := ctx.Value(flashKey).(*Flash)
 	return f
+}
+
+// WithIsDev returns a copy of ctx carrying the development mode flag.
+func WithIsDev(ctx context.Context, isDev bool) context.Context {
+	return context.WithValue(ctx, isDevKey, isDev)
+}
+
+// IsDev reports whether the app is running in development mode.
+func IsDev(ctx context.Context) bool {
+	v, _ := ctx.Value(isDevKey).(bool)
+	return v
 }

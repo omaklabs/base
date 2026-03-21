@@ -1,0 +1,55 @@
+package components
+
+import "strconv"
+
+// TextareaProps configures a Textarea with full control.
+type TextareaProps struct {
+	Name     string
+	ID       string
+	Value    string
+	Rows     int // default 4
+	HasError bool
+	Disabled bool
+	Required bool
+	Class    string
+}
+
+func textareaID(p TextareaProps) string {
+	if p.ID != "" {
+		return p.ID
+	}
+	return p.Name
+}
+
+func textareaRows(p TextareaProps) string {
+	if p.Rows > 0 {
+		return strconv.Itoa(p.Rows)
+	}
+	return "4"
+}
+
+func textareaClasses(p TextareaProps) string {
+	base := "w-full bg-background border border-input rounded-lg text-foreground outline-none transition-colors focus:border-ring px-3 py-2 text-sm"
+	var errClass string
+	if p.HasError {
+		errClass = "border-destructive focus:border-destructive"
+	}
+	return cx(base, errClass, p.Class)
+}
+
+// Textarea renders a <textarea>. Simple API: name.
+templ Textarea(name string) {
+	@TextareaWith(TextareaProps{Name: name})
+}
+
+// TextareaWith renders a <textarea> with full props control.
+templ TextareaWith(props TextareaProps) {
+	<textarea
+		id={ textareaID(props) }
+		name={ props.Name }
+		rows={ textareaRows(props) }
+		class={ textareaClasses(props) }
+		disabled?={ props.Disabled }
+		required?={ props.Required }
+	>{ props.Value }</textarea>
+}

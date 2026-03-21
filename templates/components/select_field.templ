@@ -1,0 +1,55 @@
+package components
+
+// SelectOption represents a single <option> in a SelectField.
+type SelectOption struct {
+	Value    string
+	Label    string
+	Selected bool
+}
+
+// SelectFieldProps configures a SelectField with full control.
+type SelectFieldProps struct {
+	Name     string
+	ID       string
+	Options  []SelectOption
+	HasError bool
+	Disabled bool
+	Required bool
+	Class    string
+}
+
+func selectID(p SelectFieldProps) string {
+	if p.ID != "" {
+		return p.ID
+	}
+	return p.Name
+}
+
+func selectClasses(p SelectFieldProps) string {
+	base := "w-full bg-background border border-input rounded-lg text-foreground outline-none transition-colors focus:border-ring h-10 px-3 text-sm"
+	var errClass string
+	if p.HasError {
+		errClass = "border-destructive focus:border-destructive"
+	}
+	return cx(base, errClass, p.Class)
+}
+
+// SelectField renders a <select> dropdown. Simple API: name + options.
+templ SelectField(name string, options []SelectOption) {
+	@SelectFieldWith(SelectFieldProps{Name: name, Options: options})
+}
+
+// SelectFieldWith renders a <select> with full props control.
+templ SelectFieldWith(props SelectFieldProps) {
+	<select
+		id={ selectID(props) }
+		name={ props.Name }
+		class={ selectClasses(props) }
+		disabled?={ props.Disabled }
+		required?={ props.Required }
+	>
+		for _, opt := range props.Options {
+			<option value={ opt.Value } selected?={ opt.Selected }>{ opt.Label }</option>
+		}
+	</select>
+}

@@ -8,13 +8,13 @@ build: generate css
 dev: build
 	./app serve
 
-# Compile Tailwind CSS from source
+# Compile Tailwind CSS for production (dev uses browser CDN instead)
 css:
-	tailwindcss -i assets/css/app.tailwind.css -o assets/css/app.css
+	tailwindcss -i assets/css/app.css -o assets/css/app.compiled.css --minify
 
-# Watch and recompile Tailwind CSS (run in a separate terminal)
+# Watch and recompile Tailwind CSS for production
 css-watch:
-	tailwindcss -i assets/css/app.tailwind.css -o assets/css/app.css --watch
+	tailwindcss -i assets/css/app.css -o assets/css/app.compiled.css --watch
 
 # Run all code generators (templ + sqlc)
 generate:
@@ -33,8 +33,8 @@ clean:
 help:
 	@echo "make build       Full build (generate + css + go build)"
 	@echo "make dev         Build and start the server"
-	@echo "make css         Compile Tailwind CSS"
-	@echo "make css-watch   Watch and recompile Tailwind CSS"
+	@echo "make css         Compile Tailwind CSS for production"
+	@echo "make css-watch   Watch and recompile Tailwind CSS for production"
 	@echo "make generate    Run templ generate + sqlc generate"
 	@echo "make lint        Run golangci-lint"
 	@echo "make test        Run all tests"

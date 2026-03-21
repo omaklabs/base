@@ -2,14 +2,26 @@ package components
 
 import "github.com/omaklabs/base/internal/view"
 
-// FlashMessage reads a flash message from the request context (placed there by
-// the FlashContext middleware) and renders it. The message auto-dismisses after
-// 4 seconds using Alpine.js transitions.
+func flashClasses(variant string) string {
+	base := "px-4 py-3 rounded-lg text-sm font-medium border"
+	switch variant {
+	case "error":
+		return cx(base, "bg-destructive/10 border-destructive/20 text-destructive")
+	case "warning":
+		return cx(base, "bg-warning/10 border-warning/20 text-warning")
+	case "info":
+		return cx(base, "bg-primary/10 border-primary/20 text-primary")
+	default: // success
+		return cx(base, "bg-success/10 border-success/20 text-success")
+	}
+}
+
+// FlashMessage reads a flash from the request context and renders it.
+// Auto-dismisses after 4 seconds using Alpine.js.
 templ FlashMessage() {
 	if f := view.GetFlash(ctx); f != nil {
 		<div
-			class="flash"
-			data-variant={ f.Variant }
+			class={ flashClasses(f.Variant) }
 			x-data="{ show: true }"
 			x-show="show"
 			x-init="setTimeout(() => show = false, 4000)"

@@ -1,0 +1,12 @@
+package components
+
+// EmptyState renders a centered message for empty lists/tables.
+// Children slot is for the icon.
+templ EmptyState(message string) {
+	<div class="flex flex-col items-center justify-center py-12 text-center">
+		<div class="mb-4 text-muted-foreground">
+			{ children... }
+		</div>
+		<p class="text-muted-foreground">{ message }</p>
+	</div>
+}

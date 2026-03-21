@@ -57,7 +57,22 @@ func Base(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</title><link rel=\"stylesheet\" href=\"/assets/css/app.css\"><script src=\"/assets/js/htmx.min.js\"></script><script defer src=\"/assets/js/alpine.min.js\"></script><script defer src=\"/assets/js/app.js\"></script></head><body class=\"h-full bg-background text-text antialiased\" hx-boost=\"true\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</title>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if view.IsDev(ctx) {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<script src=\"/assets/js/tailwindcss-browser.js\"></script> <style type=\"text/tailwindcss\">\n\t\t\t\t\t@theme {\n\t\t\t\t\t\t--color-background:             #09090b;\n\t\t\t\t\t\t--color-foreground:             #f4f4f5;\n\t\t\t\t\t\t--color-card:                   #18181b;\n\t\t\t\t\t\t--color-card-foreground:        #f4f4f5;\n\t\t\t\t\t\t--color-primary:                #f97316;\n\t\t\t\t\t\t--color-primary-foreground:     #ffffff;\n\t\t\t\t\t\t--color-secondary:              #27272a;\n\t\t\t\t\t\t--color-secondary-foreground:   #a1a1aa;\n\t\t\t\t\t\t--color-muted:                  #27272a;\n\t\t\t\t\t\t--color-muted-foreground:       #a1a1aa;\n\t\t\t\t\t\t--color-accent:                 #27272a;\n\t\t\t\t\t\t--color-accent-foreground:      #f4f4f5;\n\t\t\t\t\t\t--color-destructive:            #ef4444;\n\t\t\t\t\t\t--color-destructive-foreground: #ffffff;\n\t\t\t\t\t\t--color-success:                #22c55e;\n\t\t\t\t\t\t--color-success-foreground:     #ffffff;\n\t\t\t\t\t\t--color-warning:                #eab308;\n\t\t\t\t\t\t--color-warning-foreground:     #ffffff;\n\t\t\t\t\t\t--color-border:                 #27272a;\n\t\t\t\t\t\t--color-input:                  #27272a;\n\t\t\t\t\t\t--color-ring:                   #f97316;\n\t\t\t\t\t}\n\t\t\t\t\t[x-cloak] { display: none !important; }\n\t\t\t\t</style>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<link rel=\"stylesheet\" href=\"/assets/css/app.compiled.css\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script src=\"/assets/js/htmx.min.js\"></script><script defer src=\"/assets/js/alpine.min.js\"></script><script defer src=\"/assets/js/app.js\"></script></head><body class=\"h-full bg-background text-foreground antialiased\" hx-boost=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -65,7 +80,7 @@ func Base(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -10,9 +10,22 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/omaklabs/base/internal/view"
 
-// FlashMessage reads a flash message from the request context (placed there by
-// the FlashContext middleware) and renders it. The message auto-dismisses after
-// 4 seconds using Alpine.js transitions.
+func flashClasses(variant string) string {
+	base := "px-4 py-3 rounded-lg text-sm font-medium border"
+	switch variant {
+	case "error":
+		return cx(base, "bg-destructive/10 border-destructive/20 text-destructive")
+	case "warning":
+		return cx(base, "bg-warning/10 border-warning/20 text-warning")
+	case "info":
+		return cx(base, "bg-primary/10 border-primary/20 text-primary")
+	default: // success
+		return cx(base, "bg-success/10 border-success/20 text-success")
+	}
+}
+
+// FlashMessage reads a flash from the request context and renders it.
+// Auto-dismisses after 4 seconds using Alpine.js.
 func FlashMessage() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -35,16 +48,21 @@ func FlashMessage() templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if f := view.GetFlash(ctx); f != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flash\" data-variant=\"")
+			var templ_7745c5c3_Var2 = []any{flashClasses(f.Variant)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(f.Variant)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/flash.templ`, Line: 12, Col: 27}
+				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var2).String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/flash.templ`, Line: 1, Col: 0}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -52,12 +70,12 @@ func FlashMessage() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(f.Message)
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(f.Message)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/flash.templ`, Line: 18, Col: 14}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/flash.templ`, Line: 30, Col: 14}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

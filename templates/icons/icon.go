@@ -14,6 +14,20 @@ var (
 	mu          sync.RWMutex
 )
 
+// sizeClasses maps size tokens to inline Tailwind classes.
+func sizeClasses(size string) string {
+	switch size {
+	case "sm":
+		return "w-4 h-4 shrink-0"
+	case "lg":
+		return "w-6 h-6 shrink-0"
+	case "xl":
+		return "w-8 h-8 shrink-0"
+	default: // "md" or empty
+		return "w-5 h-5 shrink-0"
+	}
+}
+
 // Register adds a custom icon. Call this during app initialization.
 // The svgInner should be the inner SVG content (path elements, etc.)
 func Register(name, svgInner string) {
@@ -31,7 +45,7 @@ func Custom(name, size string) templ.Component {
 	if !ok {
 		return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 			// Dev placeholder — visible red box with icon name
-			_, err := fmt.Fprintf(w, `<span class="inline-flex items-center justify-center rounded bg-error-500/20 text-error-500 text-xs px-1" data-size="%s" title="icon not found: %s">?%s</span>`, size, name, name)
+			_, err := fmt.Fprintf(w, `<span class="inline-flex items-center justify-center rounded bg-destructive/20 text-destructive text-xs px-1 %s" title="icon not found: %s">?%s</span>`, sizeClasses(size), name, name)
 			return err
 		})
 	}
@@ -42,7 +56,7 @@ func Custom(name, size string) templ.Component {
 // This is used by both generated Lucide icons and custom icons.
 func renderIcon(size, inner string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		_, err := fmt.Fprintf(w, `<svg class="icon" data-size="%s" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">%s</svg>`, size, inner)
+		_, err := fmt.Fprintf(w, `<svg class="%s" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">%s</svg>`, sizeClasses(size), inner)
 		return err
 	})
 }

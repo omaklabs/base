@@ -8,7 +8,10 @@ package server
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/omaklabs/base/templates/layouts"
+import (
+	"github.com/omaklabs/base/templates/components"
+	"github.com/omaklabs/base/templates/layouts"
+)
 
 func Welcome() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -43,7 +46,59 @@ func Welcome() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex items-center justify-center min-h-screen px-4\"><div class=\"w-full max-w-2xl\"><div class=\"text-center mb-8\"><h1 class=\"text-5xl font-bold tracking-tight\">Welcome to Omakase</h1><p class=\"mt-4 text-lg text-muted\">Your server is running. You're ready to build.</p></div><div class=\"card\"><h2 class=\"text-xl font-semibold mb-4\">Your Stack</h2><ul class=\"space-y-2 text-muted\"><li class=\"flex items-center gap-2\"><span class=\"font-medium text-text\">Go</span> <span>&mdash; fast, compiled backend</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-text\">HTMX</span> <span>&mdash; hypermedia-driven interactivity</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-text\">Alpine.js</span> <span>&mdash; lightweight client-side reactivity</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-text\">Tailwind CSS</span> <span>&mdash; utility-first styling</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-text\">SQLite</span> <span>&mdash; embedded, zero-config database</span></li></ul></div><div class=\"card mt-4\"><h2 class=\"text-xl font-semibold mb-4\">Quick Links</h2><ul class=\"space-y-2\"><li><a href=\"/healthz\" class=\"text-primary hover:underline\">Health Check (/healthz)</a></li></ul></div><p class=\"mt-6 text-center text-sm text-muted\">This page is replaced when the agent generates your app.</p></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex items-center justify-center min-h-screen px-4\"><div class=\"w-full max-w-2xl\"><div class=\"text-center mb-8\"><h1 class=\"text-5xl font-bold tracking-tight\">Welcome to Omakase</h1><p class=\"mt-4 text-lg text-muted-foreground\">Your server is running. You're ready to build.</p></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<h2 class=\"text-xl font-semibold mb-4\">Your Stack</h2><ul class=\"space-y-2 text-muted-foreground\"><li class=\"flex items-center gap-2\"><span class=\"font-medium text-foreground\">Go</span> <span>&mdash; fast, compiled backend</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-foreground\">HTMX</span> <span>&mdash; hypermedia-driven interactivity</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-foreground\">Alpine.js</span> <span>&mdash; lightweight client-side reactivity</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-foreground\">Tailwind CSS</span> <span>&mdash; utility-first styling</span></li><li class=\"flex items-center gap-2\"><span class=\"font-medium text-foreground\">SQLite</span> <span>&mdash; embedded, zero-config database</span></li></ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = components.Card().Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"mt-4\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var4 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<h2 class=\"text-xl font-semibold mb-4\">Quick Links</h2><ul class=\"space-y-2\"><li><a href=\"/healthz\" class=\"text-primary hover:underline\">Health Check (/healthz)</a></li></ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = components.Card().Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><p class=\"mt-6 text-center text-sm text-muted-foreground\">This page is replaced when the agent generates your app.</p></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

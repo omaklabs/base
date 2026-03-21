@@ -22,11 +22,8 @@ func TestRenderIcon(t *testing.T) {
 	c := renderIcon("md", `<path d="M5 12h14"/>`)
 	out := renderToString(t, c)
 
-	if !strings.Contains(out, `class="icon"`) {
-		t.Error("expected class=\"icon\" in output")
-	}
-	if !strings.Contains(out, `data-size="md"`) {
-		t.Error("expected data-size=\"md\" in output")
+	if !strings.Contains(out, `class="w-5 h-5 shrink-0"`) {
+		t.Error("expected inline size classes for md in output")
 	}
 	if !strings.Contains(out, `<path d="M5 12h14"/>`) {
 		t.Error("expected SVG path content in output")
@@ -47,8 +44,8 @@ func TestRegisterAndCustom(t *testing.T) {
 	if !strings.Contains(out, `<svg`) {
 		t.Error("expected <svg> element in custom icon output")
 	}
-	if !strings.Contains(out, `data-size="lg"`) {
-		t.Error("expected data-size=\"lg\" in custom icon output")
+	if !strings.Contains(out, `class="w-6 h-6 shrink-0"`) {
+		t.Error("expected inline size classes for lg in custom icon output")
 	}
 	if !strings.Contains(out, `<rect width="20" height="20" x="2" y="2"/>`) {
 		t.Error("expected custom SVG content in output")
@@ -100,11 +97,8 @@ func TestGeneratedIconExists(t *testing.T) {
 			if !strings.Contains(out, `<svg`) {
 				t.Errorf("%s: expected <svg> element", tt.name)
 			}
-			if !strings.Contains(out, `class="icon"`) {
-				t.Errorf("%s: expected class=\"icon\"", tt.name)
-			}
-			if !strings.Contains(out, `data-size="md"`) {
-				t.Errorf("%s: expected data-size=\"md\"", tt.name)
+			if !strings.Contains(out, `class="w-5 h-5 shrink-0"`) {
+				t.Errorf("%s: expected inline size classes for md", tt.name)
 			}
 			// Every icon must have at least one SVG child element
 			hasChild := strings.Contains(out, "<path") ||
@@ -141,12 +135,16 @@ func TestMenuIconContent(t *testing.T) {
 }
 
 func TestDifferentSizes(t *testing.T) {
-	sizes := []string{"xs", "sm", "md", "lg", "xl"}
-	for _, size := range sizes {
+	sizes := map[string]string{
+		"sm": "w-4 h-4 shrink-0",
+		"md": "w-5 h-5 shrink-0",
+		"lg": "w-6 h-6 shrink-0",
+		"xl": "w-8 h-8 shrink-0",
+	}
+	for size, expected := range sizes {
 		out := renderToString(t, Plus(size))
-		expected := `data-size="` + size + `"`
-		if !strings.Contains(out, expected) {
-			t.Errorf("expected %s in output for size %s", expected, size)
+		if !strings.Contains(out, `class="`+expected+`"`) {
+			t.Errorf("expected class=%q in output for size %s, got: %s", expected, size, out)
 		}
 	}
 }

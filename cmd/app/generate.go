@@ -554,15 +554,14 @@ templ {{.PascalPlur}}List({{.LowerPlur}} []db.{{.Pascal}}, p pagination.Paginati
 	@layouts.App() {
 		<div class="p-8" id="{{.LowerPlur}}-content" data-paginated>
 			@components.FlashMessage()
-			<div class="flex items-center justify-between mb-6">
-				<h1 class="text-2xl font-bold">{{.PascalPlur}}</h1>
-				<a href="/{{.LowerPlur}}/new" class="btn" data-variant="primary" data-size="md">
+			@components.PageHeader("{{.PascalPlur}}") {
+				@components.LinkButton("primary", "/{{.LowerPlur}}/new") {
 					New {{.Pascal}}
-				</a>
-			</div>
+				}
+			}
 			if len({{.LowerPlur}}) == 0 {
 				@components.Card() {
-					<p class="text-muted">No {{.LowerPlur}} yet. Create your first {{.Lower}}!</p>
+					<p class="text-muted-foreground">No {{.LowerPlur}} yet. Create your first {{.Lower}}!</p>
 				}
 			} else {
 				<div class="space-y-4">
@@ -570,7 +569,7 @@ templ {{.PascalPlur}}List({{.LowerPlur}} []db.{{.Pascal}}, p pagination.Paginati
 						@components.Card() {
 							<a href={ templ.SafeURL(fmt.Sprintf("/{{.LowerPlur}}/%d", item.ID)) } class="block">
 								<h2 class="text-lg font-semibold">{ item.Title }</h2>
-								<p class="text-sm text-muted mt-2">{ item.CreatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
+								<p class="text-sm text-muted-foreground mt-2">{ item.CreatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
 							</a>
 						}
 					}
@@ -586,15 +585,14 @@ templ {{.PascalPlur}}List({{.LowerPlur}} []db.{{.Pascal}}, p pagination.Paginati
 templ {{.PascalPlur}}ListPartial({{.LowerPlur}} []db.{{.Pascal}}, p pagination.Pagination, baseURL string) {
 	<div class="p-8" id="{{.LowerPlur}}-content" data-paginated>
 		@components.FlashMessage()
-		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-2xl font-bold">{{.PascalPlur}}</h1>
-			<a href="/{{.LowerPlur}}/new" class="btn" data-variant="primary" data-size="md">
+		@components.PageHeader("{{.PascalPlur}}") {
+			@components.LinkButton("primary", "/{{.LowerPlur}}/new") {
 				New {{.Pascal}}
-			</a>
-		</div>
+			}
+		}
 		if len({{.LowerPlur}}) == 0 {
 			@components.Card() {
-				<p class="text-muted">No {{.LowerPlur}} yet. Create your first {{.Lower}}!</p>
+				<p class="text-muted-foreground">No {{.LowerPlur}} yet. Create your first {{.Lower}}!</p>
 			}
 		} else {
 			<div class="space-y-4">
@@ -602,7 +600,7 @@ templ {{.PascalPlur}}ListPartial({{.LowerPlur}} []db.{{.Pascal}}, p pagination.P
 					@components.Card() {
 						<a href={ templ.SafeURL(fmt.Sprintf("/{{.LowerPlur}}/%d", item.ID)) } class="block">
 							<h2 class="text-lg font-semibold">{ item.Title }</h2>
-							<p class="text-sm text-muted mt-2">{ item.CreatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
+							<p class="text-sm text-muted-foreground mt-2">{ item.CreatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
 						</a>
 					}
 				}
@@ -635,18 +633,11 @@ templ {{.PascalPlur}}Show({{.Lower}} db.{{.Pascal}}) {
 				<div class="flex items-start justify-between">
 					<h1 class="text-2xl font-bold">{ {{.Lower}}.Title }</h1>
 					<div class="flex gap-2">
-						<a
-							href={ templ.SafeURL(fmt.Sprintf("/{{.LowerPlur}}/%d/edit", {{.Lower}}.ID)) }
-							class="btn"
-							data-variant="ghost"
-							data-size="sm"
-						>
+						@components.LinkButton("ghost", fmt.Sprintf("/{{.LowerPlur}}/%d/edit", {{.Lower}}.ID), "sm") {
 							Edit
-						</a>
+						}
 						<button
-							class="btn"
-							data-variant="ghost"
-							data-size="sm"
+							class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors h-9 px-3 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
 							hx-delete={ fmt.Sprintf("/{{.LowerPlur}}/%d", {{.Lower}}.ID) }
 							hx-confirm="Are you sure you want to delete this {{.Lower}}?"
 						>
@@ -655,7 +646,7 @@ templ {{.PascalPlur}}Show({{.Lower}} db.{{.Pascal}}) {
 					</div>
 				</div>
 				<div class="mt-4 whitespace-pre-wrap">{ {{.Lower}}.Body }</div>
-				<div class="mt-6 text-sm text-muted">
+				<div class="mt-6 text-sm text-muted-foreground">
 					<p>Created: { {{.Lower}}.CreatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
 					<p>Updated: { {{.Lower}}.UpdatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
 				</div>
@@ -687,7 +678,9 @@ templ {{.PascalPlur}}Form({{.Lower}} *db.{{.Pascal}}, errors validate.Errors, ti
 					<form method="POST" action="/{{.LowerPlur}}" class="space-y-4">
 						@components.CSRFField()
 						@{{.Lower}}FormFields(errors, title, body)
-						@components.SubmitButton("Create {{.Pascal}}", "primary", "md")
+						@components.SubmitButton("primary") {
+							Create {{.Pascal}}
+						}
 					</form>
 				} else {
 					<h1 class="text-2xl font-bold mb-6">Edit {{.Pascal}}</h1>
@@ -695,7 +688,9 @@ templ {{.PascalPlur}}Form({{.Lower}} *db.{{.Pascal}}, errors validate.Errors, ti
 						<input type="hidden" name="_method" value="PUT"/>
 						@components.CSRFField()
 						@{{.Lower}}FormFields(errors, title, body)
-						@components.SubmitButton("Update {{.Pascal}}", "primary", "md")
+						@components.SubmitButton("primary") {
+							Update {{.Pascal}}
+						}
 					</form>
 				}
 			}
@@ -706,24 +701,11 @@ templ {{.PascalPlur}}Form({{.Lower}} *db.{{.Pascal}}, errors validate.Errors, ti
 templ {{.Lower}}FormFields(errors validate.Errors, title string, body string) {
 	@components.FormField("Title", "title", "text", title, errors.Error("title"))
 	<div>
-		<label class="label" for="body">Body</label>
-		if errors.Error("body") != "" {
-			<textarea
-				class="input"
-				id="body"
-				name="body"
-				rows="8"
-				data-error="true"
-			>{ body }</textarea>
-			<p class="error-text">{ errors.Error("body") }</p>
-		} else {
-			<textarea
-				class="input"
-				id="body"
-				name="body"
-				rows="8"
-			>{ body }</textarea>
+		@components.Label("body") {
+			Body
 		}
+		@components.TextareaWith(components.TextareaProps{Name: "body", Value: body, Rows: 8, HasError: errors.Error("body") != ""})
+		@components.ErrorText(errors.Error("body"))
 	</div>
 }
 `

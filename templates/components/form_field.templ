@@ -1,0 +1,18 @@
+package components
+
+// FormField renders a complete form field: Label + Input + ErrorText.
+// This is the most common way to add a form field — one call instead of three.
+templ FormField(label string, name string, inputType string, value string, errMsg string) {
+	<div>
+		@Label(name) {
+			{ label }
+		}
+		@InputWith(InputProps{
+			Type:     inputType,
+			Name:     name,
+			Value:    value,
+			HasError: errMsg != "",
+		})
+		@ErrorText(errMsg)
+	</div>
+}

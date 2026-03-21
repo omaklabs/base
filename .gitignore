@@ -23,6 +23,9 @@ tmp/
 *.swp
 *.swo
 
+# Go build cache (Tailwind scans all non-ignored files; this avoids scanning thousands of cache entries)
+.gocache/
+
 # Env
 .env
 .env.local

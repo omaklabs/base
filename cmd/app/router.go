@@ -16,6 +16,7 @@ import (
 	"github.com/omaklabs/base/internal/email"
 	"github.com/omaklabs/base/internal/middleware"
 	"github.com/omaklabs/base/internal/server"
+	"github.com/omaklabs/base/internal/view"
 )
 
 func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.Deps, emailStore *email.Store, reloadFn ...func() error) *chi.Mux {
@@ -44,6 +45,14 @@ func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.
 	router.Use(middleware.Session(dbConn))
 	router.Use(middleware.CSRFContext)
 	router.Use(middleware.FlashContext)
+	// Inject dev mode flag so templates can conditionally load CDN vs compiled CSS
+	isDev := cfg.IsDev()
+	router.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ctx := view.WithIsDev(r.Context(), isDev)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	})
 
 	// Health check
 	router.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {

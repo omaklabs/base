@@ -1,28 +1,63 @@
 package components
 
-templ FormField(label string, name string, inputType string, value string, errMsg string) {
-	<div>
-		<label class="label" for={ name }>
-			{ label }
-		</label>
-		if errMsg != "" {
-			<input
-				class="input"
-				type={ inputType }
-				id={ name }
-				name={ name }
-				value={ value }
-				data-error="true"
-			/>
-			<p class="error-text">{ errMsg }</p>
-		} else {
-			<input
-				class="input"
-				type={ inputType }
-				id={ name }
-				name={ name }
-				value={ value }
-			/>
-		}
-	</div>
+// InputProps configures an Input with full control.
+type InputProps struct {
+	Type        string // "text", "email", "password", "number", etc.
+	Name        string
+	ID          string // defaults to Name if empty
+	Value       string
+	Placeholder string
+	Size        string // "sm", "md", "lg"
+	HasError    bool
+	Disabled    bool
+	Required    bool
+	Class       string
+}
+
+func inputID(p InputProps) string {
+	if p.ID != "" {
+		return p.ID
+	}
+	return p.Name
+}
+
+func inputClasses(p InputProps) string {
+	base := "w-full bg-background border border-input rounded-lg text-foreground outline-none transition-colors focus:border-ring"
+
+	size := firstOr([]string{p.Size}, "md")
+	var sizeClass string
+	switch size {
+	case "sm":
+		sizeClass = "h-9 px-3 text-sm"
+	case "lg":
+		sizeClass = "h-11 px-4 text-base"
+	default:
+		sizeClass = "h-10 px-3 text-sm"
+	}
+
+	var errClass string
+	if p.HasError {
+		errClass = "border-destructive focus:border-destructive"
+	}
+
+	return cx(base, sizeClass, errClass, p.Class)
+}
+
+// Input renders an <input> field. Simple API: type + placeholder.
+templ Input(inputType string, placeholder string) {
+	@InputWith(InputProps{Type: inputType, Placeholder: placeholder})
+}
+
+// InputWith renders an <input> with full props control.
+templ InputWith(props InputProps) {
+	<input
+		type={ firstOr([]string{props.Type}, "text") }
+		id={ inputID(props) }
+		name={ props.Name }
+		value={ props.Value }
+		placeholder={ props.Placeholder }
+		class={ inputClasses(props) }
+		disabled?={ props.Disabled }
+		required?={ props.Required }
+	/>
 }
