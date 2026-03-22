@@ -1,0 +1,229 @@
+package design
+
+import "github.com/omaklabs/base/templates/components"
+import "github.com/omaklabs/base/templates/layouts"
+
+templ DesignPage() {
+	@layouts.Base("Design System") {
+		<div class="min-h-screen bg-background text-foreground p-8 max-w-4xl mx-auto space-y-10">
+			<div>
+				<h1 class="text-3xl font-bold mb-2">Design System</h1>
+				<p class="text-muted-foreground">Tokens and components available in this project. Colors update automatically from your @theme.</p>
+			</div>
+
+			<!-- Color Tokens (dynamically scanned from CSS variables) -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Color Tokens</h2>
+				<div id="color-tokens" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+					<!-- Populated by JavaScript -->
+				</div>
+			</section>
+
+			<!-- Typography -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Typography</h2>
+				@components.Card() {
+					<div class="space-y-3">
+						<div class="flex items-baseline justify-between">
+							<span class="text-2xl font-bold">Page Title</span>
+							<code class="text-xs text-muted-foreground font-mono">text-2xl font-bold</code>
+						</div>
+						<div class="flex items-baseline justify-between">
+							<span class="text-lg font-semibold">Section Heading</span>
+							<code class="text-xs text-muted-foreground font-mono">text-lg font-semibold</code>
+						</div>
+						<div class="flex items-baseline justify-between">
+							<span class="text-sm">Body Text</span>
+							<code class="text-xs text-muted-foreground font-mono">text-sm</code>
+						</div>
+						<div class="flex items-baseline justify-between">
+							<span class="text-sm text-muted-foreground">Muted Text</span>
+							<code class="text-xs text-muted-foreground font-mono">text-muted-foreground</code>
+						</div>
+						<div class="flex items-baseline justify-between">
+							<span class="text-xs text-muted-foreground/60">Caption / Timestamp</span>
+							<code class="text-xs text-muted-foreground font-mono">text-muted-foreground/60</code>
+						</div>
+					</div>
+				}
+			</section>
+
+			<!-- Buttons -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Buttons</h2>
+				@components.Card() {
+					<div class="space-y-4">
+						<div>
+							<p class="text-xs text-muted-foreground mb-2 font-medium">Variants</p>
+							<div class="flex flex-wrap gap-2">
+								@components.Button("primary") { Primary }
+								@components.Button("secondary") { Secondary }
+								@components.Button("destructive") { Destructive }
+								@components.Button("ghost") { Ghost }
+								@components.Button("outline") { Outline }
+							</div>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground mb-2 font-medium">Sizes</p>
+							<div class="flex flex-wrap gap-2 items-center">
+								@components.Button("primary", "sm") { Small }
+								@components.Button("primary", "md") { Medium }
+								@components.Button("primary", "lg") { Large }
+							</div>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground mb-2 font-medium">States</p>
+							<div class="flex flex-wrap gap-2 items-center">
+								@components.ButtonWith(components.ButtonProps{Variant: "primary", Loading: true}) { Loading... }
+								@components.ButtonWith(components.ButtonProps{Variant: "secondary", Disabled: true}) { Disabled }
+								@components.ButtonWith(components.ButtonProps{Variant: "primary", FullWidth: true}) { Full Width }
+							</div>
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground mb-2 font-medium">Links as Buttons</p>
+							<div class="flex flex-wrap gap-2">
+								@components.LinkButton("primary", "#") { Primary Link }
+								@components.LinkButton("outline", "#") { Outline Link }
+							</div>
+						</div>
+					</div>
+				}
+			</section>
+
+			<!-- Form Elements -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Form Elements</h2>
+				@components.Card() {
+					<div class="space-y-4">
+						@components.FormField("Text Input", "demo_text", "text", "", "")
+						@components.FormField("Email (with error)", "demo_email", "email", "invalid", "Please enter a valid email")
+						<div>
+							@components.Label("demo_textarea") { Textarea }
+							@components.TextareaWith(components.TextareaProps{Name: "demo_textarea", Rows: 3})
+						</div>
+						<div>
+							@components.Label("demo_select") { Select }
+							@components.SelectField("demo_select", []components.SelectOption{
+								{Value: "1", Label: "Option 1"},
+								{Value: "2", Label: "Option 2", Selected: true},
+								{Value: "3", Label: "Option 3"},
+							})
+						</div>
+					</div>
+				}
+			</section>
+
+			<!-- Cards -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Cards</h2>
+				<div class="space-y-3">
+					@components.Card() {
+						<p class="font-semibold">Default Card</p>
+						<p class="text-sm text-muted-foreground mt-1">Default padding (p-6)</p>
+					}
+					@components.Card("sm") {
+						<p class="font-semibold">Small Padding Card</p>
+						<p class="text-sm text-muted-foreground mt-1">Small padding (p-4)</p>
+					}
+				</div>
+			</section>
+
+			<!-- Badges -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Badges</h2>
+				@components.Card() {
+					<div class="flex flex-wrap gap-2">
+						@components.Badge("default") { Default }
+						@components.Badge("success") { Success }
+						@components.Badge("destructive") { Error }
+						@components.Badge("warning") { Warning }
+					</div>
+				}
+			</section>
+
+			<!-- Navigation -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Navigation</h2>
+				@components.Card() {
+					<div class="space-y-1 w-56">
+						@components.NavItem("#", true) {
+							Dashboard (active)
+						}
+						@components.NavItem("#", false) {
+							Users
+						}
+						@components.NavItem("#", false) {
+							Settings
+						}
+					</div>
+				}
+			</section>
+
+			<!-- Page Header -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Page Header</h2>
+				@components.Card() {
+					@components.PageHeader("Items") {
+						@components.LinkButton("primary", "#") { New Item }
+					}
+				}
+			</section>
+
+			<!-- Empty State -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Empty State</h2>
+				@components.Card() {
+					@components.EmptyState("No items yet. Create your first item!") {
+						<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+					}
+				}
+			</section>
+		</div>
+
+		<!-- JavaScript: dynamically scan CSS custom properties for color tokens -->
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const container = document.getElementById('color-tokens');
+				if (!container) return;
+
+				// Get all stylesheets and find --color-* properties from @theme
+				const colors = [];
+				const seen = new Set();
+
+				// Scan all style elements for @theme declarations
+				document.querySelectorAll('style').forEach(style => {
+					const text = style.textContent || '';
+					const matches = text.matchAll(/--color-([a-z-]+):\s*([^;]+)/g);
+					for (const m of matches) {
+						const name = m[1];
+						const value = m[2].trim();
+						if (!seen.has(name)) {
+							seen.add(name);
+							// Resolve the actual computed color
+							const computed = getComputedStyle(document.documentElement).getPropertyValue('--color-' + name).trim();
+							colors.push({ name, value, computed: computed || value });
+						}
+					}
+				});
+
+				// Render swatches
+				colors.forEach(c => {
+					const el = document.createElement('div');
+					el.className = 'flex items-center gap-2';
+					el.innerHTML = `
+						<div class="w-10 h-10 rounded-lg border border-border shrink-0" style="background: ${c.computed}"></div>
+						<div class="min-w-0">
+							<p class="text-xs font-medium truncate">${c.name}</p>
+							<p class="text-[10px] text-muted-foreground font-mono">${c.value}</p>
+						</div>
+					`;
+					container.appendChild(el);
+				});
+
+				if (colors.length === 0) {
+					container.innerHTML = '<p class="text-muted-foreground text-sm col-span-full">No @theme color tokens found.</p>';
+				}
+			});
+		</script>
+	}
+}
