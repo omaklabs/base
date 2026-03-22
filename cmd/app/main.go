@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"sort"
+	"strings"
 )
 
 // version is set at build time via ldflags
@@ -96,18 +99,87 @@ Build commands:
 		}
 	}
 
-	// Show project structure summary
+	// Scan and show domains
+	if domains := scanDomains(); len(domains) > 0 {
+		fmt.Println("\nDomain packages:")
+		for _, d := range domains {
+			fmt.Printf("  %s\n", d)
+		}
+	}
+
+	// Scan and show components
+	if comps := scanDir("templates/components", ".templ"); len(comps) > 0 {
+		fmt.Printf("\nComponents (%d): %s\n", len(comps), strings.Join(comps, ", "))
+	}
+
+	// Scan and show queries
+	if queries := scanDir("queries", ".sql"); len(queries) > 0 {
+		fmt.Printf("Queries (%d): %s\n", len(queries), strings.Join(queries, ", "))
+	}
+
+	// Scan and show migrations
+	if migs := scanDir("migrations", ".sql"); len(migs) > 0 {
+		fmt.Printf("Migrations: %d total", len(migs))
+		if len(migs) > 0 {
+			fmt.Printf(" (latest: %s)", migs[len(migs)-1])
+		}
+		fmt.Println()
+	}
+
+	// Show project structure
 	fmt.Println("\nProject structure:")
-	fmt.Println("  cmd/app/             Application entry point and CLI commands")
-	fmt.Println("  internal/<domain>/   Domain packages (handler, module, templates)")
-	fmt.Println("  internal/db/         SQLC generated code (do not edit)")
-	fmt.Println("  internal/middleware/  HTTP middleware")
-	fmt.Println("  internal/server/     Shared infrastructure (Deps, Module, error pages)")
-	fmt.Println("  templates/layouts/   Layout wrappers (base.templ, app.templ)")
-	fmt.Println("  templates/components/Shadcn-style UI components (Button, Card, Input, etc.)")
-	fmt.Println("  templates/icons/     Icon system (lucide_gen.go)")
-	fmt.Println("  queries/             SQLC query definitions (.sql)")
-	fmt.Println("  migrations/          Goose migration files (.sql)")
-	fmt.Println("  assets/              Static assets (CSS, JS, images)")
+	fmt.Println("  cmd/app/              CLI commands and app entry point")
+	fmt.Println("  internal/<domain>/    Domain packages (handler + templates)")
+	fmt.Println("  internal/db/          SQLC generated code (do not edit)")
+	fmt.Println("  internal/middleware/   HTTP middleware")
+	fmt.Println("  internal/server/      Shared infrastructure")
+	fmt.Println("  templates/layouts/    Layout wrappers")
+	fmt.Println("  templates/components/ UI components (shadcn-style)")
+	fmt.Println("  templates/icons/      Icon system")
+	fmt.Println("  queries/              SQLC query definitions")
+	fmt.Println("  migrations/           Goose migrations")
+	fmt.Println("  assets/               Static assets (CSS, JS)")
+}
+
+// scanDomains finds domain packages by looking for module.go in internal/*/.
+func scanDomains() []string {
+	var domains []string
+	entries, err := os.ReadDir("internal")
+	if err != nil {
+		return nil
+	}
+	skip := map[string]bool{"db": true, "server": true, "middleware": true, "config": true, "view": true, "flash": true, "validate": true, "pagination": true, "testutil": true, "storage": true, "email": true, "jobs": true, "logger": true, "auth": true}
+	for _, e := range entries {
+		if !e.IsDir() || skip[e.Name()] {
+			continue
+		}
+		if _, err := os.Stat(filepath.Join("internal", e.Name(), "module.go")); err == nil {
+			domains = append(domains, e.Name())
+		}
+	}
+	sort.Strings(domains)
+	return domains
+}
+
+// scanDir lists files with a given extension in a directory, returning base names without extension.
+func scanDir(dir, ext string) []string {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil
+	}
+	var names []string
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ext) {
+			continue
+		}
+		// Skip generated files
+		if strings.HasSuffix(e.Name(), "_templ.go") || strings.HasSuffix(e.Name(), ".sql.go") {
+			continue
+		}
+		name := strings.TrimSuffix(e.Name(), ext)
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
 }
 
