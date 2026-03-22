@@ -37,11 +37,22 @@ func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.
 		})
 	}
 
-	router.Use(csrf.Protect(
-		[]byte(cfg.CSRFKey),
-		csrf.Secure(!cfg.IsDev()),
-		csrf.Path("/"),
-	))
+	if !cfg.IsDev() {
+		// Production: full CSRF protection
+		router.Use(csrf.Protect(
+			[]byte(cfg.CSRFKey),
+			csrf.Secure(true),
+			csrf.Path("/"),
+		))
+	} else {
+		// Development: CSRF enabled but permissive (trust all origins)
+		router.Use(csrf.Protect(
+			[]byte(cfg.CSRFKey),
+			csrf.Secure(false),
+			csrf.Path("/"),
+			csrf.TrustedOrigins([]string{"http://*", "https://*"}),
+		))
+	}
 	router.Use(middleware.Session(dbConn))
 	router.Use(middleware.CSRFContext)
 	router.Use(middleware.FlashContext)
