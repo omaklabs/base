@@ -313,11 +313,19 @@ func (d domainData) HasFieldType(typ string) bool {
 }
 
 // ListFields returns up to 3 fields for display in list views.
+// Text fields are excluded because they are too long for card summaries.
 func (d domainData) ListFields() []Field {
-	if len(d.Fields) <= 3 {
-		return d.Fields
+	var filtered []Field
+	for _, f := range d.Fields {
+		if f.Type == "text" {
+			continue
+		}
+		filtered = append(filtered, f)
+		if len(filtered) >= 3 {
+			break
+		}
 	}
-	return d.Fields[:3]
+	return filtered
 }
 
 // FirstStringField returns the name of the first string/text field, or "" if none.
@@ -1155,7 +1163,14 @@ templ {{.PascalPlur}}List({{.LowerPlur}} []db.{{.Pascal}}, p pagination.Paginati
 							<a href={ templ.SafeURL(fmt.Sprintf("/{{.LowerPlur}}/%d", item.ID)) } class="block">
 {{- range .ListFields}}
 {{- if eq .Type "bool"}}
-								<p class="text-sm text-muted-foreground">{{.Pascal}}: if item.{{snakeToPascalIdent .Column}} { Yes } else { No }</p>
+								<p class="text-sm text-muted-foreground">
+									{{.Pascal}}:
+									if item.{{snakeToPascalIdent .Column}} {
+										<span class="text-success">Yes</span>
+									} else {
+										<span class="text-muted-foreground">No</span>
+									}
+								</p>
 {{- else if eq .Type "int"}}
 								<p class="text-sm">{{.Pascal}}: { fmt.Sprintf("%d", item.{{snakeToPascalIdent .Column}}) }</p>
 {{- else if eq .Type "float"}}
@@ -1200,7 +1215,14 @@ templ {{.PascalPlur}}ListPartial({{.LowerPlur}} []db.{{.Pascal}}, p pagination.P
 						<a href={ templ.SafeURL(fmt.Sprintf("/{{.LowerPlur}}/%d", item.ID)) } class="block">
 {{- range .ListFields}}
 {{- if eq .Type "bool"}}
-							<p class="text-sm text-muted-foreground">{{.Pascal}}: if item.{{snakeToPascalIdent .Column}} { Yes } else { No }</p>
+							<p class="text-sm text-muted-foreground">
+								{{.Pascal}}:
+								if item.{{snakeToPascalIdent .Column}} {
+									<span class="text-success">Yes</span>
+								} else {
+									<span class="text-muted-foreground">No</span>
+								}
+							</p>
 {{- else if eq .Type "int"}}
 							<p class="text-sm">{{.Pascal}}: { fmt.Sprintf("%d", item.{{snakeToPascalIdent .Column}}) }</p>
 {{- else if eq .Type "float"}}
@@ -1261,7 +1283,14 @@ templ {{.PascalPlur}}Show({{.Lower}} db.{{.Pascal}}) {
 				<div class="mt-4 space-y-2">
 {{- range .Fields}}
 {{- if eq .Type "bool"}}
-					<p><span class="font-semibold">{{.Pascal}}:</span> if {{$.Lower}}.{{snakeToPascalIdent .Column}} { Yes } else { No }</p>
+					<p>
+						<span class="font-semibold">{{.Pascal}}:</span>
+						if {{$.Lower}}.{{snakeToPascalIdent .Column}} {
+							<span class="text-success">Yes</span>
+						} else {
+							<span class="text-muted-foreground">No</span>
+						}
+					</p>
 {{- else if eq .Type "int"}}
 					<p><span class="font-semibold">{{.Pascal}}:</span> { fmt.Sprintf("%d", {{$.Lower}}.{{snakeToPascalIdent .Column}}) }</p>
 {{- else if eq .Type "float"}}
