@@ -45,7 +45,7 @@ func inputType(p InputProps) string {
 }
 
 func inputClasses(p InputProps) string {
-	base := "w-full bg-background border border-input rounded-lg text-foreground outline-none transition-colors focus:border-ring"
+	base := "w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring"
 
 	size := p.Size
 	if size == "" {

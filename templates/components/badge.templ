@@ -15,7 +15,7 @@ func badgeDefaults(props []BadgeProps) BadgeProps {
 }
 
 func badgeClasses(p BadgeProps) string {
-	base := "inline-flex px-2 py-0.5 rounded-md text-xs font-medium"
+	base := "inline-flex px-2 py-0.5 rounded-[calc(var(--radius)-2px)] text-xs font-medium"
 	var variantClass string
 	switch p.Variant {
 	case "success":

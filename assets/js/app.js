@@ -1,6 +1,18 @@
 // Omakase Go — minimal JS entry point
 // Alpine.js and HTMX are loaded via separate script tags in base.templ
 
+// Apply saved theme preference before first paint to avoid flash.
+// Default: dark (set on <html class="dark"> in base.templ).
+// ThemeToggle component saves preference to localStorage.
+(function () {
+  var theme = localStorage.getItem("theme");
+  if (theme === "light") {
+    document.documentElement.classList.remove("dark");
+  } else if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+  }
+})();
+
 // Allow HTMX to swap 422 (validation error) responses so that
 // server-rendered form errors are displayed to the user.
 document.addEventListener("DOMContentLoaded", function () {

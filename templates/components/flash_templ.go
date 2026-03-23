@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import "github.com/omaklabs/base/internal/view"
 
 func flashClasses(variant string) string {
-	base := "px-4 py-3 rounded-lg text-sm font-medium border flex items-center justify-between gap-2"
+	base := "px-4 py-3 rounded-[--radius] text-sm font-medium border flex items-center justify-between gap-2"
 	switch variant {
 	case "error":
 		return cx(base, "bg-destructive/10 border-destructive/20 text-destructive")

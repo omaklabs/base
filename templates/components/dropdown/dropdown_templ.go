@@ -200,7 +200,7 @@ func Content(props ...Props) templ.Component {
 		if len(props) > 0 {
 			p = props[0]
 		}
-		var templ_7745c5c3_Var6 = []any{"absolute z-50 mt-2 min-w-[12rem] bg-card border border-border rounded-lg shadow-lg py-1 " + alignClass(p.Align)}
+		var templ_7745c5c3_Var6 = []any{"absolute z-50 mt-2 min-w-[12rem] bg-popover text-popover-foreground border border-border rounded-[--radius] shadow-lg py-1 " + alignClass(p.Align)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

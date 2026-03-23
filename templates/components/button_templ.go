@@ -36,7 +36,7 @@ func buttonType(p ButtonProps) string {
 }
 
 func buttonClasses(p ButtonProps) string {
-	base := "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer select-none"
+	base := "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--radius] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer select-none"
 
 	if p.Disabled {
 		base = cx(base, "opacity-50 pointer-events-none")

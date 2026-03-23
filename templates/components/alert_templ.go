@@ -23,7 +23,7 @@ func alertDefaults(props []AlertProps) AlertProps {
 }
 
 func alertClasses(p AlertProps) string {
-	base := "px-4 py-3 rounded-lg text-sm border"
+	base := "px-4 py-3 rounded-[--radius] text-sm border"
 	var variant string
 	switch p.Variant {
 	case "destructive":

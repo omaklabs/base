@@ -15,7 +15,7 @@ func cardDefaults(props []CardProps) CardProps {
 }
 
 func cardClasses(p CardProps) string {
-	base := "bg-card text-card-foreground border border-border rounded-xl"
+	base := "bg-card text-card-foreground border border-border rounded-[calc(var(--radius)+4px)]"
 	switch p.Padding {
 	case "none":
 		return cx(base, p.Class)

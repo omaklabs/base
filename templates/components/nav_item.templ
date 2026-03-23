@@ -16,7 +16,7 @@ func navItemDefaults(props []NavItemProps) NavItemProps {
 }
 
 func navItemClasses(p NavItemProps) string {
-	base := "flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors duration-100"
+	base := "flex items-center gap-2.5 px-2.5 py-1.5 rounded-[calc(var(--radius)-2px)] text-sm transition-colors duration-100"
 	if p.Active {
 		return cx(base, "bg-accent text-accent-foreground font-medium", p.Class)
 	}

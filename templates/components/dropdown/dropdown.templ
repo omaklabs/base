@@ -65,7 +65,7 @@ templ Content(props ...Props) {
 	<div
 		data-content
 		role="menu"
-		class={ "absolute z-50 mt-2 min-w-[12rem] bg-card border border-border rounded-lg shadow-lg py-1 " + alignClass(p.Align) }
+		class={ "absolute z-50 mt-2 min-w-[12rem] bg-popover text-popover-foreground border border-border rounded-[--radius] shadow-lg py-1 " + alignClass(p.Align) }
 	>
 		{ children... }
 	</div>

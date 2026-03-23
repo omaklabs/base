@@ -13,7 +13,7 @@ import (
 
 templ Base(title string) {
 	<!DOCTYPE html>
-	<html lang="en">
+	<html lang="en" class="dark">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -23,29 +23,84 @@ templ Base(title string) {
 				<script src="/assets/js/tailwindcss-browser.js"></script>
 				<style type="text/tailwindcss">
 					@theme {
-						--color-background:             #09090b;
-						--color-foreground:             #f4f4f5;
-						--color-card:                   #18181b;
-						--color-card-foreground:        #f4f4f5;
-						--color-primary:                #f97316;
-						--color-primary-foreground:     #ffffff;
-						--color-secondary:              #27272a;
-						--color-secondary-foreground:   #a1a1aa;
-						--color-muted:                  #27272a;
-						--color-muted-foreground:       #a1a1aa;
-						--color-accent:                 #27272a;
-						--color-accent-foreground:      #f4f4f5;
-						--color-destructive:            #ef4444;
-						--color-destructive-foreground: #ffffff;
-						--color-success:                #22c55e;
-						--color-success-foreground:     #ffffff;
-						--color-warning:                #eab308;
-						--color-warning-foreground:     #ffffff;
-						--color-border:                 #27272a;
-						--color-input:                  #27272a;
-						--color-ring:                   #f97316;
+						--radius: 0.625rem;
+						--color-background: oklch(1 0 0);
+						--color-foreground: oklch(0.145 0 0);
+						--color-card: oklch(1 0 0);
+						--color-card-foreground: oklch(0.145 0 0);
+						--color-popover: oklch(1 0 0);
+						--color-popover-foreground: oklch(0.145 0 0);
+						--color-primary: oklch(0.205 0 0);
+						--color-primary-foreground: oklch(0.985 0 0);
+						--color-secondary: oklch(0.97 0 0);
+						--color-secondary-foreground: oklch(0.205 0 0);
+						--color-muted: oklch(0.97 0 0);
+						--color-muted-foreground: oklch(0.556 0 0);
+						--color-accent: oklch(0.97 0 0);
+						--color-accent-foreground: oklch(0.205 0 0);
+						--color-destructive: oklch(0.577 0.245 27.325);
+						--color-destructive-foreground: oklch(0.985 0 0);
+						--color-success: oklch(0.723 0.219 149.579);
+						--color-success-foreground: oklch(0.985 0 0);
+						--color-warning: oklch(0.795 0.184 86.047);
+						--color-warning-foreground: oklch(0.205 0 0);
+						--color-border: oklch(0.922 0 0);
+						--color-input: oklch(0.922 0 0);
+						--color-ring: oklch(0.708 0 0);
+						--color-chart-1: oklch(0.646 0.222 41.116);
+						--color-chart-2: oklch(0.6 0.118 184.704);
+						--color-chart-3: oklch(0.398 0.07 227.392);
+						--color-chart-4: oklch(0.828 0.189 84.429);
+						--color-chart-5: oklch(0.769 0.188 70.08);
+						--color-sidebar: oklch(0.985 0 0);
+						--color-sidebar-foreground: oklch(0.145 0 0);
+						--color-sidebar-primary: oklch(0.205 0 0);
+						--color-sidebar-primary-foreground: oklch(0.985 0 0);
+						--color-sidebar-accent: oklch(0.97 0 0);
+						--color-sidebar-accent-foreground: oklch(0.205 0 0);
+						--color-sidebar-border: oklch(0.922 0 0);
+						--color-sidebar-ring: oklch(0.708 0 0);
+					}
+					.dark {
+						--color-background: oklch(0.145 0 0);
+						--color-foreground: oklch(0.985 0 0);
+						--color-card: oklch(0.205 0 0);
+						--color-card-foreground: oklch(0.985 0 0);
+						--color-popover: oklch(0.269 0 0);
+						--color-popover-foreground: oklch(0.985 0 0);
+						--color-primary: oklch(0.922 0 0);
+						--color-primary-foreground: oklch(0.205 0 0);
+						--color-secondary: oklch(0.269 0 0);
+						--color-secondary-foreground: oklch(0.985 0 0);
+						--color-muted: oklch(0.269 0 0);
+						--color-muted-foreground: oklch(0.708 0 0);
+						--color-accent: oklch(0.371 0 0);
+						--color-accent-foreground: oklch(0.985 0 0);
+						--color-destructive: oklch(0.704 0.191 22.216);
+						--color-destructive-foreground: oklch(0.985 0 0);
+						--color-success: oklch(0.723 0.219 149.579);
+						--color-success-foreground: oklch(0.145 0 0);
+						--color-warning: oklch(0.795 0.184 86.047);
+						--color-warning-foreground: oklch(0.145 0 0);
+						--color-border: oklch(1 0 0 / 10%);
+						--color-input: oklch(1 0 0 / 15%);
+						--color-ring: oklch(0.556 0 0);
+						--color-chart-1: oklch(0.488 0.243 264.376);
+						--color-chart-2: oklch(0.696 0.17 162.48);
+						--color-chart-3: oklch(0.769 0.188 70.08);
+						--color-chart-4: oklch(0.627 0.265 303.9);
+						--color-chart-5: oklch(0.645 0.246 16.439);
+						--color-sidebar: oklch(0.205 0 0);
+						--color-sidebar-foreground: oklch(0.985 0 0);
+						--color-sidebar-primary: oklch(0.488 0.243 264.376);
+						--color-sidebar-primary-foreground: oklch(0.985 0 0);
+						--color-sidebar-accent: oklch(0.269 0 0);
+						--color-sidebar-accent-foreground: oklch(0.985 0 0);
+						--color-sidebar-border: oklch(1 0 0 / 10%);
+						--color-sidebar-ring: oklch(0.439 0 0);
 					}
 					[x-cloak] { display: none !important; }
+					[data-cloak] { display: none !important; }
 				</style>
 			} else {
 				<link rel="stylesheet" href="/assets/css/app.compiled.css"/>

@@ -34,7 +34,7 @@ func selectID(p SelectFieldProps) string {
 }
 
 func selectClasses(p SelectFieldProps) string {
-	base := "w-full bg-background border border-input rounded-lg text-foreground outline-none transition-colors focus:border-ring h-10 px-3 text-sm"
+	base := "w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring h-10 px-3 text-sm"
 	var errClass string
 	if p.HasError {
 		errClass = "border-destructive focus:border-destructive"

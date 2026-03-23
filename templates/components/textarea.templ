@@ -37,7 +37,7 @@ func textareaRows(p TextareaProps) string {
 }
 
 func textareaClasses(p TextareaProps) string {
-	base := "w-full bg-background border border-input rounded-lg text-foreground outline-none transition-colors focus:border-ring px-3 py-2 text-sm"
+	base := "w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring px-3 py-2 text-sm"
 	var errClass string
 	if p.HasError {
 		errClass = "border-destructive focus:border-destructive"
