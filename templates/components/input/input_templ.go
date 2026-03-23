@@ -12,7 +12,7 @@ import "github.com/omaklabs/base/templates/components/shared"
 
 // Props configures an Input.
 type Props struct {
-	Type        string // "text" (default), "email", "password", "number", etc.
+	Type        string // "text" (default), "email", "password", "number", "file", "tel", "url", "search", "date", "time"
 	Name        string
 	ID          string // defaults to Name if empty
 	Value       string
@@ -20,7 +20,9 @@ type Props struct {
 	Size        string // "sm", "md" (default), "lg"
 	HasError    bool
 	Disabled    bool
+	Readonly    bool
 	Required    bool
+	FileAccept  string           // accepted file types for file inputs, e.g. "image/*,.pdf"
 	Class       string           // appended to computed classes
 	Attrs       templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
 }
@@ -47,7 +49,7 @@ func inputType(p Props) string {
 }
 
 func classes(p Props) string {
-	base := "w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring"
+	base := "w-full bg-background border border-input rounded-[--radius] text-foreground shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50 disabled:cursor-not-allowed"
 
 	size := p.Size
 	if size == "" {
@@ -65,10 +67,16 @@ func classes(p Props) string {
 
 	var errClass string
 	if p.HasError {
-		errClass = "border-destructive focus:border-destructive"
+		errClass = "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
 	}
 
-	return shared.Cx(base, sizeClass, errClass, p.Class)
+	// File input specific styles
+	var fileClass string
+	if p.Type == "file" {
+		fileClass = "file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground"
+	}
+
+	return shared.Cx(base, sizeClass, errClass, fileClass, p.Class)
 }
 
 // Input renders an <input> field. Zero-arg call gives text input defaults.
@@ -106,7 +114,7 @@ func Input(props ...Props) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(inputType(p))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 70, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 78, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -119,7 +127,7 @@ func Input(props ...Props) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(id(p))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 71, Col: 12}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 79, Col: 12}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -132,7 +140,7 @@ func Input(props ...Props) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 72, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 80, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -145,7 +153,7 @@ func Input(props ...Props) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(p.Value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 73, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 81, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -158,7 +166,7 @@ func Input(props ...Props) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(p.Placeholder)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 74, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 82, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -187,8 +195,39 @@ func Input(props ...Props) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
+		if p.Readonly {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, " readonly")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
 		if p.Required {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, " required")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, " required")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if p.HasError {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " aria-invalid")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if p.FileAccept != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " accept=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(p.FileAccept)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/input/input.templ`, Line: 89, Col: 24}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -197,7 +236,7 @@ func Input(props ...Props) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
