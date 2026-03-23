@@ -38,7 +38,7 @@ import "github.com/omaklabs/base/templates/components/sheet"
 import "github.com/omaklabs/base/templates/components/skeleton"
 import "github.com/omaklabs/base/templates/components/slider"
 import "github.com/omaklabs/base/templates/components/spinner"
-import "github.com/omaklabs/base/templates/components/switchc"
+import switchcomp "github.com/omaklabs/base/templates/components/switchc"
 import "github.com/omaklabs/base/templates/components/table"
 import "github.com/omaklabs/base/templates/components/tabs"
 import "github.com/omaklabs/base/templates/components/tagsinput"
@@ -2509,7 +2509,7 @@ func DesignPage() templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = switchc.Switch(switchc.Props{Name: "demo_notifications", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = switchcomp.Switch(switchcomp.Props{Name: "demo_notifications", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -2517,7 +2517,7 @@ func DesignPage() templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = switchc.Switch(switchc.Props{Name: "demo_darkmode"}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = switchcomp.Switch(switchcomp.Props{Name: "demo_darkmode"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -2525,7 +2525,7 @@ func DesignPage() templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = switchc.Switch(switchc.Props{Name: "demo_disabled", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = switchcomp.Switch(switchcomp.Props{Name: "demo_disabled", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

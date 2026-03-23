@@ -30,7 +30,7 @@ import "github.com/omaklabs/base/templates/components/sheet"
 import "github.com/omaklabs/base/templates/components/skeleton"
 import "github.com/omaklabs/base/templates/components/slider"
 import "github.com/omaklabs/base/templates/components/spinner"
-import "github.com/omaklabs/base/templates/components/switchc"
+import switchcomp "github.com/omaklabs/base/templates/components/switchc"
 import "github.com/omaklabs/base/templates/components/table"
 import "github.com/omaklabs/base/templates/components/tabs"
 import "github.com/omaklabs/base/templates/components/tagsinput"
@@ -408,15 +408,15 @@ templ DesignPage() {
 				@card.Card() {
 					<div class="space-y-4">
 						<div class="flex items-center gap-3">
-							@switchc.Switch(switchc.Props{Name: "demo_notifications", Checked: true})
+							@switchcomp.Switch(switchcomp.Props{Name: "demo_notifications", Checked: true})
 							<span class="text-sm">Notifications (on)</span>
 						</div>
 						<div class="flex items-center gap-3">
-							@switchc.Switch(switchc.Props{Name: "demo_darkmode"})
+							@switchcomp.Switch(switchcomp.Props{Name: "demo_darkmode"})
 							<span class="text-sm">Dark mode (off)</span>
 						</div>
 						<div class="flex items-center gap-3">
-							@switchc.Switch(switchc.Props{Name: "demo_disabled", Disabled: true})
+							@switchcomp.Switch(switchcomp.Props{Name: "demo_disabled", Disabled: true})
 							<span class="text-sm text-muted-foreground">Disabled</span>
 						</div>
 					</div>

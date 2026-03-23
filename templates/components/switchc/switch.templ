@@ -1,75 +1,66 @@
-package switchc
+package switchcomp
+
+import "github.com/omaklabs/base/templates/components/shared"
 
 // Props configures a Switch toggle.
 type Props struct {
+	ID       string
 	Name     string           // form field name
+	Value    string           // value when checked (default: "on")
 	Checked  bool
 	Disabled bool
+	Class    string
 	Attrs    templ.Attributes
 }
 
-var scriptHandle = templ.NewOnceHandle()
-
-// Script loads the Lit component + CSS. Include once in layout.
-templ Script() {
-	@scriptHandle.Once() {
-		<script type="module" src="/components/switch/switch.js"></script>
-		<link rel="stylesheet" href="/components/switch/switch.css"/>
+func defaults(props Props) Props {
+	if props.ID == "" {
+		if props.Name != "" {
+			props.ID = props.Name
+		} else {
+			props.ID = shared.RandomID()
+		}
 	}
+	if props.Value == "" {
+		props.Value = "on"
+	}
+	return props
 }
 
-// Switch renders a toggle switch with a hidden checkbox for form submission.
+// Switch renders a toggle switch. Pure CSS — no JavaScript needed.
+// Uses a hidden checkbox + peer sibling selector for state management.
 templ Switch(props Props) {
-	<omk-switch
-		checked?={ props.Checked }
-		disabled?={ props.Disabled }
-		{ props.Attrs... }
+	{{ p := defaults(props) }}
+	<label
+		for={ p.ID }
+		class={ shared.Cx(
+			"inline-flex cursor-pointer items-center gap-2",
+			condDisabled(p.Disabled),
+			p.Class,
+		) }
 	>
-		<input type="hidden" name={ props.Name } value="false"/>
+		<input type="hidden" name={ p.Name } value="false"/>
 		<input
 			type="checkbox"
-			name={ props.Name }
-			value="true"
-			checked?={ props.Checked }
-			disabled?={ props.Disabled }
-			class="sr-only"
-			data-switch-input
-		/>
-		<button
-			type="button"
+			id={ p.ID }
+			name={ p.Name }
+			value={ p.Value }
+			checked?={ p.Checked }
+			disabled?={ p.Disabled }
 			role="switch"
-			aria-checked={ boolStr(props.Checked) }
-			tabindex="0"
-			data-switch-track
-			class={ switchTrackClasses(props.Checked) }
-		>
-			<span
-				data-switch-thumb
-				class={ switchThumbClasses(props.Checked) }
-			></span>
-		</button>
-	</omk-switch>
+			class="peer hidden"
+			{ p.Attrs... }
+		/>
+		<div
+			class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors bg-input peer-checked:bg-primary peer-focus-visible:outline-none peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 after:pointer-events-none after:block after:h-4 after:w-4 after:rounded-full after:bg-background after:shadow-sm after:ring-0 after:transition-transform after:content-[''] peer-checked:after:translate-x-4"
+			aria-hidden="true"
+		></div>
+	</label>
 }
 
-func boolStr(b bool) string {
-	if b {
-		return "true"
+func condDisabled(disabled bool) string {
+	if disabled {
+		return "cursor-not-allowed opacity-50"
 	}
-	return "false"
-}
-
-func switchTrackClasses(checked bool) string {
-	base := "relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-	if checked {
-		return base + " bg-primary"
-	}
-	return base + " bg-secondary"
-}
-
-func switchThumbClasses(checked bool) string {
-	base := "inline-block h-5 w-5 rounded-full bg-white shadow-sm pointer-events-none"
-	if checked {
-		return base + " translate-x-5"
-	}
-	return base + " translate-x-0"
+	return ""
 }
