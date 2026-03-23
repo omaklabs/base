@@ -859,7 +859,7 @@ func DesignPage() templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = components.PageHeader("Items").Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = components.PageHeader(components.PageHeaderProps{Title: "Items"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -903,7 +903,7 @@ func DesignPage() templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = components.EmptyState("No items yet. Create your first item!").Render(templ.WithChildren(ctx, templ_7745c5c3_Var37), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = components.EmptyState(components.EmptyStateProps{Message: "No items yet. Create your first item!"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var37), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
