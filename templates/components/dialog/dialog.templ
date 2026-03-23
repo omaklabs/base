@@ -9,36 +9,24 @@ type Props struct {
 
 var scriptHandle = templ.NewOnceHandle()
 
-// Script registers the Alpine.js dialog component. Include once in your layout.
+// Script loads the Lit component + CSS. Include once in layout.
 templ Script() {
 	@scriptHandle.Once() {
-		<script>
-			document.addEventListener("alpine:init", () => {
-				Alpine.data("dialog", () => ({
-					open: false,
-					toggle() { this.open = !this.open; },
-					close() { this.open = false; },
-					init() {
-						this.$watch("open", (val) => {
-							document.body.style.overflow = val ? "hidden" : "";
-						});
-					}
-				}));
-			});
-		</script>
+		<script type="module" src="/components/dialog/dialog.js"></script>
+		<link rel="stylesheet" href="/components/dialog/dialog.css"/>
 	}
 }
 
 // Dialog is the root container. Wraps Trigger + Content.
 templ Dialog(props Props) {
-	<div id={ props.ID } x-data="dialog()" class={ props.Class } { props.Attrs... }>
+	<omk-dialog id={ props.ID } class={ props.Class } { props.Attrs... }>
 		{ children... }
-	</div>
+	</omk-dialog>
 }
 
 // Trigger opens the dialog when clicked.
 templ Trigger() {
-	<div @click="toggle()">
+	<div data-trigger>
 		{ children... }
 	</div>
 }
@@ -46,27 +34,15 @@ templ Trigger() {
 // Content is the modal overlay + panel.
 templ Content() {
 	<div
-		x-show="open"
-		x-cloak
-		x-transition:enter="transition ease-out duration-200"
-		x-transition:enter-start="opacity-0"
-		x-transition:enter-end="opacity-100"
-		x-transition:leave="transition ease-in duration-150"
-		x-transition:leave-start="opacity-100"
-		x-transition:leave-end="opacity-0"
-		class="fixed inset-0 z-50 flex items-center justify-center"
-		@keydown.escape.window="close()"
+		data-backdrop
+		class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+		role="dialog"
+		aria-modal="true"
 	>
-		<div class="fixed inset-0 bg-background/80 backdrop-blur-sm" @click="close()"></div>
 		<div
+			data-panel
 			class="relative bg-card border border-border rounded-xl shadow-lg w-full max-w-lg mx-4 p-6"
-			x-transition:enter="transition ease-out duration-200"
-			x-transition:enter-start="opacity-0 scale-95"
-			x-transition:enter-end="opacity-100 scale-100"
-			x-transition:leave="transition ease-in duration-150"
-			x-transition:leave-start="opacity-100 scale-100"
-			x-transition:leave-end="opacity-0 scale-95"
-			@click.stop
+			tabindex="-1"
 		>
 			{ children... }
 		</div>
@@ -96,7 +72,7 @@ templ Footer() {
 
 // Close closes the dialog when its children are clicked.
 templ Close() {
-	<div @click="close()">
+	<div data-close>
 		{ children... }
 	</div>
 }

@@ -1,1 +1,21 @@
-/* Dialog transitions — populated in Phase B */
+/* Dialog: hidden by default, shown via [open] attribute set by Lit */
+omk-dialog [data-backdrop] {
+  display: none;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+omk-dialog[open] [data-backdrop] {
+  display: flex;
+  opacity: 1;
+}
+
+/* Panel: scale + fade in */
+omk-dialog [data-panel] {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+omk-dialog[open] [data-panel] {
+  opacity: 1;
+  transform: scale(1);
+}
