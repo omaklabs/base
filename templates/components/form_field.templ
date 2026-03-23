@@ -71,6 +71,50 @@ func ariaAttrs(hasError bool, errID string) templ.Attributes {
 	return attrs
 }
 
+// TextareaFormFieldProps configures a TextareaFormField (Label + Textarea + ErrorText).
+type TextareaFormFieldProps struct {
+	Label       string
+	Name        string
+	Value       string
+	Rows        int
+	Placeholder string
+	Required    bool
+	ErrMsg      string
+	Attrs       templ.Attributes
+}
+
+func textareaFormFieldDefaults(props []TextareaFormFieldProps) TextareaFormFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return TextareaFormFieldProps{}
+}
+
+// TextareaFormField renders a complete textarea field: Label + Textarea + ErrorText.
+templ TextareaFormField(props ...TextareaFormFieldProps) {
+	{{ p := textareaFormFieldDefaults(props) }}
+	{{ errID := "" }}
+	if p.ErrMsg != "" {
+		{{ errID = p.Name + "-error" }}
+	}
+	<div>
+		@Label(LabelProps{For: p.Name}) {
+			{ p.Label }
+		}
+		@Textarea(TextareaProps{
+			Name:     p.Name,
+			Value:    p.Value,
+			Rows:     p.Rows,
+			HasError: p.ErrMsg != "",
+			Required: p.Required,
+			Attrs:    mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
+		})
+		if p.ErrMsg != "" {
+			<p id={ errID } class="text-sm text-destructive mt-1">{ p.ErrMsg }</p>
+		}
+	</div>
+}
+
 // SelectFormFieldProps configures a SelectFormField (Label + SelectField + ErrorText).
 type SelectFormFieldProps struct {
 	Label    string

@@ -1,0 +1,92 @@
+package components
+
+// RadioOption represents a single radio button in a group.
+type RadioOption struct {
+	Value    string
+	Label    string
+	Disabled bool
+}
+
+// RadioGroupProps configures a RadioGroup.
+type RadioGroupProps struct {
+	Name     string           // form field name (shared by all radios)
+	Options  []RadioOption
+	Value    string           // currently selected value
+	Disabled bool
+	Class    string
+	Attrs    templ.Attributes
+}
+
+func radioGroupDefaults(props []RadioGroupProps) RadioGroupProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return RadioGroupProps{}
+}
+
+// RadioGroup renders a group of radio buttons.
+templ RadioGroup(props ...RadioGroupProps) {
+	{{ p := radioGroupDefaults(props) }}
+	<fieldset class={ cx("space-y-2", p.Class) } { p.Attrs... }>
+		for _, opt := range p.Options {
+			<div class="flex items-center gap-2">
+				<input
+					type="radio"
+					id={ p.Name + "-" + opt.Value }
+					name={ p.Name }
+					value={ opt.Value }
+					checked?={ opt.Value == p.Value }
+					disabled?={ p.Disabled || opt.Disabled }
+					class="h-4 w-4 border border-input text-primary accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+				/>
+				<label
+					for={ p.Name + "-" + opt.Value }
+					class={ cx("text-sm select-none cursor-pointer", disabledLabel(p.Disabled || opt.Disabled)) }
+				>
+					{ opt.Label }
+				</label>
+			</div>
+		}
+	</fieldset>
+}
+
+func disabledLabel(disabled bool) string {
+	if disabled {
+		return "opacity-50 cursor-not-allowed"
+	}
+	return ""
+}
+
+// RadioFormFieldProps configures a RadioFormField (Label + RadioGroup + ErrorText).
+type RadioFormFieldProps struct {
+	Label   string
+	Name    string
+	Options []RadioOption
+	Value   string
+	ErrMsg  string
+	Attrs   templ.Attributes
+}
+
+func radioFormFieldDefaults(props []RadioFormFieldProps) RadioFormFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return RadioFormFieldProps{}
+}
+
+// RadioFormField renders a complete radio group field: Label + RadioGroup + ErrorText.
+templ RadioFormField(props ...RadioFormFieldProps) {
+	{{ p := radioFormFieldDefaults(props) }}
+	<div>
+		<label class="block text-sm text-muted-foreground mb-2">{ p.Label }</label>
+		@RadioGroup(RadioGroupProps{
+			Name:    p.Name,
+			Options: p.Options,
+			Value:   p.Value,
+			Attrs:   p.Attrs,
+		})
+		if p.ErrMsg != "" {
+			<p id={ p.Name + "-error" } class="text-sm text-destructive mt-1.5">{ p.ErrMsg }</p>
+		}
+	</div>
+}

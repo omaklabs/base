@@ -1,0 +1,77 @@
+package alertdialog
+
+import "github.com/omaklabs/base/templates/components"
+
+// Props configures an AlertDialog (pre-built confirmation modal).
+type Props struct {
+	ID           string           // required, unique
+	Title        string           // e.g., "Are you sure?"
+	Description  string           // e.g., "This action cannot be undone."
+	ConfirmText  string           // e.g., "Delete" (default: "Continue")
+	CancelText   string           // e.g., "Cancel" (default: "Cancel")
+	Variant      string           // "default", "destructive"
+	ConfirmAttrs templ.Attributes // hx-delete, hx-post, etc. on the confirm button
+	Attrs        templ.Attributes
+}
+
+func defaults(props Props) Props {
+	if props.ConfirmText == "" {
+		props.ConfirmText = "Continue"
+	}
+	if props.CancelText == "" {
+		props.CancelText = "Cancel"
+	}
+	return props
+}
+
+func confirmVariant(variant string) string {
+	if variant == "destructive" {
+		return "destructive"
+	}
+	return "primary"
+}
+
+// AlertDialog renders a confirmation dialog with trigger (children), title,
+// description, cancel and confirm buttons. Uses the Dialog Lit component internally.
+templ AlertDialog(props Props) {
+	{{ p := defaults(props) }}
+	<omk-dialog id={ p.ID } { p.Attrs... }>
+		<div data-trigger>
+			{ children... }
+		</div>
+		<div
+			data-backdrop
+			class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+			role="alertdialog"
+			aria-modal="true"
+			aria-labelledby={ p.ID + "-title" }
+			aria-describedby={ p.ID + "-desc" }
+		>
+			<div
+				data-panel
+				class="relative bg-card border border-border rounded-[calc(var(--radius)+4px)] shadow-lg w-full max-w-md mx-4 p-6"
+				tabindex="-1"
+			>
+				<div class="mb-2">
+					<h3 id={ p.ID + "-title" } class="text-lg font-semibold">{ p.Title }</h3>
+				</div>
+				<div class="mb-6">
+					<p id={ p.ID + "-desc" } class="text-sm text-muted-foreground">{ p.Description }</p>
+				</div>
+				<div class="flex justify-end gap-2">
+					<div data-close>
+						@components.Button(components.ButtonProps{Variant: "ghost"}) {
+							{ p.CancelText }
+						}
+					</div>
+					@components.Button(components.ButtonProps{
+						Variant: confirmVariant(p.Variant),
+						Attrs:   p.ConfirmAttrs,
+					}) {
+						{ p.ConfirmText }
+					}
+				</div>
+			</div>
+		</div>
+	</omk-dialog>
+}
