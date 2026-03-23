@@ -206,9 +206,9 @@ func fieldFromType(name, typ string) Field {
 	case "ref":
 		f.GoType = "int64"
 		f.IsRef = true
-		f.RefTable = name + "s"
+		f.RefTable = pluralize(name)
 		f.Column = name + "_id"
-		f.SQLType = fmt.Sprintf("INTEGER NOT NULL REFERENCES %ss(id) ON DELETE CASCADE", name)
+		f.SQLType = fmt.Sprintf("INTEGER NOT NULL REFERENCES %s(id) ON DELETE CASCADE", pluralize(name))
 		f.InputType = "select"
 		f.Pascal = snakeToPascalLabel(name)
 	default:
