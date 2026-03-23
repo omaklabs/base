@@ -16,8 +16,8 @@ type Props struct {
 
 // ItemProps configures a dropdown menu item.
 type ItemProps struct {
-	Href    string // if set, renders as <a>
-	Variant string // "default", "destructive"
+	Href    string      // if set, renders as <a>
+	Variant ItemVariant // ItemVariantDefault, ItemVariantDestructive
 	Attrs   templ.Attributes
 }
 
@@ -78,7 +78,7 @@ func alignClass(align string) string {
 	return "left-0"
 }
 
-func itemClasses(variant string) string {
+func itemClasses(variant ItemVariant) string {
 	base := "block w-full text-left px-3 py-2 text-sm transition-colors outline-none"
 	if variant == "destructive" {
 		return base + " text-destructive hover:bg-destructive/10 focus:bg-destructive/10"

@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 // BadgeProps configures a Badge.
 type BadgeProps struct {
-	Variant string           // "default", "success", "destructive", "error", "warning"
+	Variant BadgeVariant     // BadgeVariantDefault, BadgeVariantSuccess, BadgeVariantDestructive, BadgeVariantWarning
 	Class   string           // appended to computed classes
 	Attrs   templ.Attributes // escape hatch: data-*, aria-*, etc.
 }

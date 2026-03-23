@@ -10,9 +10,9 @@ import templruntime "github.com/a-h/templ/runtime"
 
 // ButtonProps configures a Button.
 type ButtonProps struct {
-	Variant   string // "primary" (default), "secondary", "destructive", "ghost", "outline"
-	Size      string // "sm", "md" (default), "lg"
-	Type      string // "button" (default), "submit", "reset"
+	Variant   ButtonVariant // ButtonVariantPrimary (default), ButtonVariantSecondary, ButtonVariantDestructive, ButtonVariantGhost, ButtonVariantOutline
+	Size      ButtonSize    // ButtonSizeSm, ButtonSizeMd (default), ButtonSizeLg
+	Type      string        // "button" (default), "submit", "reset"
 	IconOnly  bool
 	Loading   bool
 	FullWidth bool
@@ -42,7 +42,7 @@ func buttonClasses(p ButtonProps) string {
 		base = cx(base, "opacity-50 pointer-events-none")
 	}
 
-	size := p.Size
+	size := string(p.Size)
 	if size == "" {
 		size = "md"
 	}
@@ -68,7 +68,7 @@ func buttonClasses(p ButtonProps) string {
 		}
 	}
 
-	variant := p.Variant
+	variant := string(p.Variant)
 	if variant == "" {
 		variant = "primary"
 	}

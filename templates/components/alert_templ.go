@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 // AlertProps configures an Alert.
 type AlertProps struct {
-	Variant string // "default", "destructive", "warning", "success"
+	Variant AlertVariant // AlertVariantDefault, AlertVariantDestructive, AlertVariantWarning, AlertVariantSuccess
 	Class   string
 	Attrs   templ.Attributes
 }

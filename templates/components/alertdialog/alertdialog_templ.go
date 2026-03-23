@@ -85,11 +85,11 @@ func defaults(props Props) Props {
 	return props
 }
 
-func confirmVariant(variant string) string {
+func confirmVariant(variant string) components.ButtonVariant {
 	if variant == "destructive" {
-		return "destructive"
+		return components.ButtonVariantDestructive
 	}
-	return "primary"
+	return components.ButtonVariantPrimary
 }
 
 // AlertDialog renders a confirmation dialog with trigger (children), title,

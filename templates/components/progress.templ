@@ -5,7 +5,7 @@ import "fmt"
 // ProgressProps configures a Progress bar.
 type ProgressProps struct {
 	Value   int              // 0-100
-	Variant string           // "default", "success", "destructive"
+	Variant ProgressVariant  // ProgressVariantDefault, ProgressVariantSuccess, ProgressVariantDestructive
 	Class   string
 	Attrs   templ.Attributes
 }
@@ -17,7 +17,7 @@ func progressDefaults(props []ProgressProps) ProgressProps {
 	return ProgressProps{}
 }
 
-func progressFillClass(variant string) string {
+func progressFillClass(variant ProgressVariant) string {
 	switch variant {
 	case "success":
 		return "bg-success"

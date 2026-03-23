@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 // SeparatorProps configures a Separator.
 type SeparatorProps struct {
-	Orientation string // "horizontal" (default), "vertical"
+	Orientation SeparatorOrientation // SeparatorHorizontal (default), SeparatorVertical
 	Class       string
 	Attrs       templ.Attributes
 }

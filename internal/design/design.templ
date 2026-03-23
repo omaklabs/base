@@ -70,25 +70,25 @@ templ DesignPage() {
 							<p class="text-xs text-muted-foreground mb-2 font-medium">Variants</p>
 							<div class="flex flex-wrap gap-2">
 								@components.Button() { Primary }
-								@components.Button(components.ButtonProps{Variant: "secondary"}) { Secondary }
-								@components.Button(components.ButtonProps{Variant: "destructive"}) { Destructive }
-								@components.Button(components.ButtonProps{Variant: "ghost"}) { Ghost }
-								@components.Button(components.ButtonProps{Variant: "outline"}) { Outline }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantSecondary}) { Secondary }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantDestructive}) { Destructive }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantGhost}) { Ghost }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Outline }
 							</div>
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">Sizes</p>
 							<div class="flex flex-wrap gap-2 items-center">
-								@components.Button(components.ButtonProps{Size: "sm"}) { Small }
+								@components.Button(components.ButtonProps{Size: components.ButtonSizeSm}) { Small }
 								@components.Button() { Medium }
-								@components.Button(components.ButtonProps{Size: "lg"}) { Large }
+								@components.Button(components.ButtonProps{Size: components.ButtonSizeLg}) { Large }
 							</div>
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">States</p>
 							<div class="flex flex-wrap gap-2 items-center">
 								@components.Button(components.ButtonProps{Loading: true}) { Loading... }
-								@components.Button(components.ButtonProps{Variant: "secondary", Disabled: true}) { Disabled }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantSecondary, Disabled: true}) { Disabled }
 								@components.Button(components.ButtonProps{FullWidth: true}) { Full Width }
 							</div>
 						</div>
@@ -96,14 +96,14 @@ templ DesignPage() {
 							<p class="text-xs text-muted-foreground mb-2 font-medium">Links as Buttons</p>
 							<div class="flex flex-wrap gap-2">
 								@components.LinkButton("#") { Primary Link }
-								@components.LinkButton("#", components.ButtonProps{Variant: "outline"}) { Outline Link }
+								@components.LinkButton("#", components.ButtonProps{Variant: components.ButtonVariantOutline}) { Outline Link }
 							</div>
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">With HTMX Attrs</p>
 							<div class="flex flex-wrap gap-2">
 								@components.Button(components.ButtonProps{
-									Variant: "destructive",
+									Variant: components.ButtonVariantDestructive,
 									Attrs: templ.Attributes{"hx-delete": "/items/1", "hx-confirm": "Are you sure?"},
 								}) { Delete with HTMX }
 							</div>
@@ -159,9 +159,9 @@ templ DesignPage() {
 				@components.Card() {
 					<div class="flex flex-wrap gap-2">
 						@components.Badge() { Default }
-						@components.Badge(components.BadgeProps{Variant: "success"}) { Success }
-						@components.Badge(components.BadgeProps{Variant: "destructive"}) { Error }
-						@components.Badge(components.BadgeProps{Variant: "warning"}) { Warning }
+						@components.Badge(components.BadgeProps{Variant: components.BadgeVariantSuccess}) { Success }
+						@components.Badge(components.BadgeProps{Variant: components.BadgeVariantDestructive}) { Error }
+						@components.Badge(components.BadgeProps{Variant: components.BadgeVariantWarning}) { Warning }
 					</div>
 				}
 			</section>
@@ -221,9 +221,9 @@ templ DesignPage() {
 							}
 							@dialog.Footer() {
 								@dialog.Close() {
-									@components.Button(components.ButtonProps{Variant: "ghost"}) { Cancel }
+									@components.Button(components.ButtonProps{Variant: components.ButtonVariantGhost}) { Cancel }
 								}
-								@components.Button(components.ButtonProps{Variant: "destructive"}) { Delete }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantDestructive}) { Delete }
 							}
 						}
 					}
@@ -236,13 +236,13 @@ templ DesignPage() {
 				@components.Card() {
 					@dropdown.Dropdown() {
 						@dropdown.Trigger() {
-							@components.Button(components.ButtonProps{Variant: "outline"}) { Open Menu }
+							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Menu }
 						}
 						@dropdown.Content() {
 							@dropdown.Item(dropdown.ItemProps{Href: "#"}) { Profile }
 							@dropdown.Item(dropdown.ItemProps{Href: "#"}) { Settings }
 							@dropdown.Separator()
-							@dropdown.Item(dropdown.ItemProps{Variant: "destructive"}) { Log Out }
+							@dropdown.Item(dropdown.ItemProps{Variant: dropdown.ItemVariantDestructive}) { Log Out }
 						}
 					}
 				}
@@ -280,12 +280,12 @@ templ DesignPage() {
 							Attrs: templ.Attributes{"onclick": toast.Show("default", "This is a default toast", 4000)},
 						}) { Default Toast }
 						@components.Button(components.ButtonProps{
-							Variant: "outline",
+							Variant: components.ButtonVariantOutline,
 							Class: "border-success/20 text-success hover:bg-success/10",
 							Attrs: templ.Attributes{"onclick": toast.Show("success", "Item saved successfully!", 4000)},
 						}) { Success Toast }
 						@components.Button(components.ButtonProps{
-							Variant: "destructive",
+							Variant: components.ButtonVariantDestructive,
 							Attrs: templ.Attributes{"onclick": toast.Show("destructive", "Something went wrong!", 4000)},
 						}) { Error Toast }
 					</div>
@@ -308,7 +308,7 @@ templ DesignPage() {
 							@table.Cell() { Alice Johnson }
 							@table.Cell() { alice@example.com }
 							@table.Cell() {
-								@components.Badge(components.BadgeProps{Variant: "success"}) { Admin }
+								@components.Badge(components.BadgeProps{Variant: components.BadgeVariantSuccess}) { Admin }
 							}
 						}
 						@table.Row() {
@@ -322,7 +322,7 @@ templ DesignPage() {
 							@table.Cell() { Carol White }
 							@table.Cell() { carol@example.com }
 							@table.Cell() {
-								@components.Badge(components.BadgeProps{Variant: "warning"}) { Pending }
+								@components.Badge(components.BadgeProps{Variant: components.BadgeVariantWarning}) { Pending }
 							}
 						}
 					}
@@ -348,16 +348,16 @@ templ DesignPage() {
 				@components.Card() {
 					<div class="flex flex-wrap gap-4">
 						@tooltip.Tooltip(tooltip.Props{Text: "This is a tooltip"}) {
-							@components.Button(components.ButtonProps{Variant: "outline"}) { Hover me (top) }
+							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (top) }
 						}
 						@tooltip.Tooltip(tooltip.Props{Text: "Bottom tooltip", Position: "bottom"}) {
-							@components.Button(components.ButtonProps{Variant: "outline"}) { Hover me (bottom) }
+							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (bottom) }
 						}
 						@tooltip.Tooltip(tooltip.Props{Text: "Left tooltip", Position: "left"}) {
-							@components.Button(components.ButtonProps{Variant: "outline"}) { Hover me (left) }
+							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (left) }
 						}
 						@tooltip.Tooltip(tooltip.Props{Text: "Right tooltip", Position: "right"}) {
-							@components.Button(components.ButtonProps{Variant: "outline"}) { Hover me (right) }
+							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (right) }
 						}
 					</div>
 				}
@@ -402,9 +402,9 @@ templ DesignPage() {
 				<h2 class="text-lg font-semibold mb-4">Alert</h2>
 				<div class="space-y-3">
 					@components.Alert() { This is a default informational alert. }
-					@components.Alert(components.AlertProps{Variant: "success"}) { <strong>Success!</strong> Your changes have been saved. }
-					@components.Alert(components.AlertProps{Variant: "warning"}) { <strong>Warning:</strong> This action cannot be undone. }
-					@components.Alert(components.AlertProps{Variant: "destructive"}) { <strong>Error:</strong> Something went wrong. Please try again. }
+					@components.Alert(components.AlertProps{Variant: components.AlertVariantSuccess}) { <strong>Success!</strong> Your changes have been saved. }
+					@components.Alert(components.AlertProps{Variant: components.AlertVariantWarning}) { <strong>Warning:</strong> This action cannot be undone. }
+					@components.Alert(components.AlertProps{Variant: components.AlertVariantDestructive}) { <strong>Error:</strong> Something went wrong. Please try again. }
 				</div>
 			</section>
 
@@ -441,11 +441,11 @@ templ DesignPage() {
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">75% (success)</p>
-							@components.Progress(components.ProgressProps{Value: 75, Variant: "success"})
+							@components.Progress(components.ProgressProps{Value: 75, Variant: components.ProgressVariantSuccess})
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">100% (destructive)</p>
-							@components.Progress(components.ProgressProps{Value: 100, Variant: "destructive"})
+							@components.Progress(components.ProgressProps{Value: 100, Variant: components.ProgressVariantDestructive})
 						</div>
 					</div>
 				}
@@ -503,9 +503,9 @@ templ DesignPage() {
 					<p class="text-sm">Content below</p>
 					<div class="flex items-center gap-3 h-5 mt-3">
 						<span class="text-sm">Left</span>
-						@components.Separator(components.SeparatorProps{Orientation: "vertical"})
+						@components.Separator(components.SeparatorProps{Orientation: components.SeparatorVertical})
 						<span class="text-sm">Center</span>
-						@components.Separator(components.SeparatorProps{Orientation: "vertical"})
+						@components.Separator(components.SeparatorProps{Orientation: components.SeparatorVertical})
 						<span class="text-sm">Right</span>
 					</div>
 				}
@@ -522,7 +522,7 @@ templ DesignPage() {
 						ConfirmText: "Delete Account",
 						Variant: "destructive",
 					}) {
-						@components.Button(components.ButtonProps{Variant: "destructive"}) { Delete Account }
+						@components.Button(components.ButtonProps{Variant: components.ButtonVariantDestructive}) { Delete Account }
 					}
 				}
 			</section>
@@ -560,7 +560,7 @@ templ DesignPage() {
 				@components.Card() {
 					@popover.Popover() {
 						@popover.Trigger() {
-							@components.Button(components.ButtonProps{Variant: "outline"}) { Open Popover }
+							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Popover }
 						}
 						@popover.Content() {
 							<div class="space-y-2">
@@ -630,7 +630,7 @@ templ DesignPage() {
 					<div class="flex flex-wrap gap-2">
 						@sheet.Sheet(sheet.Props{ID: "demo-sheet-right"}) {
 							@sheet.Trigger() {
-								@components.Button(components.ButtonProps{Variant: "outline"}) { Open Right Sheet }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Right Sheet }
 							}
 							@sheet.Content() {
 								<div class="flex items-center justify-between mb-6">
@@ -646,7 +646,7 @@ templ DesignPage() {
 						}
 						@sheet.Sheet(sheet.Props{ID: "demo-sheet-left", Side: "left"}) {
 							@sheet.Trigger() {
-								@components.Button(components.ButtonProps{Variant: "outline"}) { Open Left Sheet }
+								@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Left Sheet }
 							}
 							@sheet.Content(sheet.Props{Side: "left"}) {
 								<div class="flex items-center justify-between mb-6">
