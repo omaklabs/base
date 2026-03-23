@@ -5,6 +5,7 @@ import (
 	"github.com/omaklabs/base/templates/components/accordion"
 	"github.com/omaklabs/base/templates/components/alertdialog"
 	"github.com/omaklabs/base/templates/components/combobox"
+	"github.com/omaklabs/base/templates/components/copybutton"
 	"github.com/omaklabs/base/templates/components/dialog"
 	"github.com/omaklabs/base/templates/components/dropdown"
 	"github.com/omaklabs/base/templates/components/popover"
@@ -12,6 +13,7 @@ import (
 	"github.com/omaklabs/base/templates/components/sidebar"
 	"github.com/omaklabs/base/templates/components/switchc"
 	"github.com/omaklabs/base/templates/components/tabs"
+	"github.com/omaklabs/base/templates/components/tagsinput"
 	"github.com/omaklabs/base/templates/components/toast"
 	"github.com/omaklabs/base/templates/components/tooltip"
 )
@@ -117,6 +119,7 @@ templ Base(title string) {
 			@accordion.Script()
 			@alertdialog.Script()
 			@combobox.Script()
+			@copybutton.Script()
 			@dialog.Script()
 			@dropdown.Script()
 			@popover.Script()
@@ -124,6 +127,7 @@ templ Base(title string) {
 			@sidebar.Script()
 			@switchc.Script()
 			@tabs.Script()
+			@tagsinput.Script()
 			@toast.Script()
 			@tooltip.Script()
 		</head>

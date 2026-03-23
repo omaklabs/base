@@ -1,0 +1,4 @@
+/* TagsInput: chips row hidden when empty */
+omk-tagsinput [data-tagsinput-chips]:empty {
+  display: none;
+}
