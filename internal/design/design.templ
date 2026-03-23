@@ -1,8 +1,12 @@
 package design
 
 import "github.com/omaklabs/base/templates/components"
+import "github.com/omaklabs/base/templates/components/accordion"
+import "github.com/omaklabs/base/templates/components/alertdialog"
+import "github.com/omaklabs/base/templates/components/combobox"
 import "github.com/omaklabs/base/templates/components/dialog"
 import "github.com/omaklabs/base/templates/components/dropdown"
+import "github.com/omaklabs/base/templates/components/popover"
 import "github.com/omaklabs/base/templates/components/sheet"
 import "github.com/omaklabs/base/templates/components/switchc"
 import "github.com/omaklabs/base/templates/components/tabs"
@@ -458,6 +462,164 @@ templ DesignPage() {
 							{Label: "Current Project"},
 						},
 					})
+				}
+			</section>
+
+			<!-- Checkbox -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Checkbox</h2>
+				@components.Card() {
+					<div class="space-y-3">
+						@components.CheckboxField(components.CheckboxFieldProps{Label: "Accept terms and conditions", Name: "demo_terms"})
+						@components.CheckboxField(components.CheckboxFieldProps{Label: "Published", Name: "demo_published", Checked: true})
+						@components.CheckboxField(components.CheckboxFieldProps{Label: "Disabled option", Name: "demo_disabled", Disabled: true})
+					</div>
+				}
+			</section>
+
+			<!-- RadioGroup -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Radio Group</h2>
+				@components.Card() {
+					@components.RadioFormField(components.RadioFormFieldProps{
+						Label: "Priority",
+						Name: "demo_priority",
+						Value: "medium",
+						Options: []components.RadioOption{
+							{Value: "low", Label: "Low"},
+							{Value: "medium", Label: "Medium"},
+							{Value: "high", Label: "High"},
+						},
+					})
+				}
+			</section>
+
+			<!-- Separator -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Separator</h2>
+				@components.Card() {
+					<p class="text-sm">Content above</p>
+					@components.Separator()
+					<p class="text-sm">Content below</p>
+					<div class="flex items-center gap-3 h-5 mt-3">
+						<span class="text-sm">Left</span>
+						@components.Separator(components.SeparatorProps{Orientation: "vertical"})
+						<span class="text-sm">Center</span>
+						@components.Separator(components.SeparatorProps{Orientation: "vertical"})
+						<span class="text-sm">Right</span>
+					</div>
+				}
+			</section>
+
+			<!-- AlertDialog -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Alert Dialog</h2>
+				@components.Card() {
+					@alertdialog.AlertDialog(alertdialog.Props{
+						ID: "demo-alertdialog",
+						Title: "Are you absolutely sure?",
+						Description: "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+						ConfirmText: "Delete Account",
+						Variant: "destructive",
+					}) {
+						@components.Button(components.ButtonProps{Variant: "destructive"}) { Delete Account }
+					}
+				}
+			</section>
+
+			<!-- Accordion -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Accordion</h2>
+				@components.Card() {
+					@accordion.Accordion() {
+						@accordion.Item(accordion.ItemProps{Value: "item-1"}) {
+							@accordion.Trigger(accordion.ItemProps{Value: "item-1"}) { Is it accessible? }
+							@accordion.Content(accordion.ItemProps{Value: "item-1"}) {
+								Yes. It adheres to the WAI-ARIA design pattern.
+							}
+						}
+						@accordion.Item(accordion.ItemProps{Value: "item-2"}) {
+							@accordion.Trigger(accordion.ItemProps{Value: "item-2"}) { Is it styled? }
+							@accordion.Content(accordion.ItemProps{Value: "item-2"}) {
+								Yes. It comes with default styles that match the shadcn design system.
+							}
+						}
+						@accordion.Item(accordion.ItemProps{Value: "item-3"}) {
+							@accordion.Trigger(accordion.ItemProps{Value: "item-3"}) { Is it animated? }
+							@accordion.Content(accordion.ItemProps{Value: "item-3"}) {
+								Yes. It uses smooth height animations powered by CSS transitions.
+							}
+						}
+					}
+				}
+			</section>
+
+			<!-- Popover -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Popover</h2>
+				@components.Card() {
+					@popover.Popover() {
+						@popover.Trigger() {
+							@components.Button(components.ButtonProps{Variant: "outline"}) { Open Popover }
+						}
+						@popover.Content() {
+							<div class="space-y-2">
+								<h4 class="font-medium text-sm">Dimensions</h4>
+								<p class="text-xs text-muted-foreground">Set the dimensions for the layer.</p>
+							</div>
+						}
+					}
+				}
+			</section>
+
+			<!-- Combobox -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Combobox</h2>
+				@components.Card() {
+					<div class="max-w-sm">
+						@combobox.Combobox(combobox.Props{
+							Name: "demo_framework",
+							Placeholder: "Select framework...",
+							Options: []combobox.Option{
+								{Value: "next", Label: "Next.js"},
+								{Value: "svelte", Label: "SvelteKit"},
+								{Value: "nuxt", Label: "Nuxt"},
+								{Value: "remix", Label: "Remix"},
+								{Value: "astro", Label: "Astro"},
+							},
+						})
+					</div>
+				}
+			</section>
+
+			<!-- Typography -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Typography</h2>
+				@components.Card() {
+					<div class="space-y-4">
+						@components.H1() { H1: The quick brown fox }
+						@components.H2() { H2: Section heading }
+						@components.H3() { H3: Subsection }
+						@components.H4() { H4: Detail heading }
+						@components.P() { This is a paragraph with leading-7. It reads well at standard body text size. }
+						@components.Lead() { This is a lead paragraph, larger and muted. }
+						@components.Muted() { This is muted helper text. }
+						<div>
+							Inline code:
+							@components.InlineCode() { npm install }
+						</div>
+					</div>
+				}
+			</section>
+
+			<!-- Theme Toggle -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Theme Toggle</h2>
+				@components.Card() {
+					<div class="flex items-center gap-3">
+						@components.ThemeToggle()
+						<span class="text-sm text-muted-foreground">Click to toggle light/dark mode</span>
+					</div>
 				}
 			</section>
 

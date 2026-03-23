@@ -557,6 +557,67 @@ import "your-module/templates/components/tooltip"
 
 // Tooltip
 @tooltip.Tooltip(tooltip.Props{Text: "Help text"}) { @components.Button() { Hover me } }
+
+// Checkbox / CheckboxField
+@components.Checkbox(components.CheckboxProps{ID: "terms", Name: "terms"})
+@components.CheckboxField(components.CheckboxFieldProps{Label: "Published", Name: "published", Checked: true})
+
+// RadioGroup / RadioFormField
+@components.RadioGroup(components.RadioGroupProps{Name: "priority", Value: "medium", Options: opts})
+@components.RadioFormField(components.RadioFormFieldProps{Label: "Priority", Name: "priority", Options: opts, Value: val})
+
+// AlertDialog (confirmation modal — replaces hx-confirm)
+@alertdialog.AlertDialog(alertdialog.Props{
+    ID: "delete-1", Title: "Are you sure?", Description: "Cannot be undone.",
+    ConfirmText: "Delete", Variant: "destructive",
+    ConfirmAttrs: templ.Attributes{"hx-delete": "/items/1"},
+}) { @components.Button(components.ButtonProps{Variant: "destructive"}) { Delete } }
+
+// Separator
+@components.Separator()
+@components.Separator(components.SeparatorProps{Orientation: "vertical"})
+
+// Accordion
+@accordion.Accordion() {
+    @accordion.Item(accordion.ItemProps{Value: "q1"}) {
+        @accordion.Trigger(accordion.ItemProps{Value: "q1"}) { Question? }
+        @accordion.Content(accordion.ItemProps{Value: "q1"}) { Answer. }
+    }
+}
+
+// Popover
+@popover.Popover() {
+    @popover.Trigger() { @components.Button(components.ButtonProps{Variant: "outline"}) { Open } }
+    @popover.Content() { <p>Content</p> }
+}
+
+// Combobox (searchable select)
+@combobox.Combobox(combobox.Props{Name: "user", Placeholder: "Select user...", Options: opts})
+
+// Sidebar layout
+@sidebar.Layout() {
+    @sidebar.Sidebar() {
+        @sidebar.Header() { App Name }
+        @sidebar.Content() {
+            @sidebar.Menu() {
+                @sidebar.MenuItem(sidebar.MenuItemProps{Href: "/", Active: true}) { Dashboard }
+            }
+        }
+    }
+    <main>{ children... }</main>
+}
+
+// Typography
+@components.H1() { Page Title }
+@components.H2() { Section }
+@components.P() { Paragraph text }
+@components.Muted() { Helper text }
+
+// ThemeToggle (light/dark mode switch)
+@components.ThemeToggle()
+
+// TextareaFormField
+@components.TextareaFormField(components.TextareaFormFieldProps{Label: "Bio", Name: "bio", Rows: 4})
 ```
 
 ### Design Tokens (shadcn pattern)
@@ -629,16 +690,21 @@ The `<omk-toast-container>` listens for this event automatically.
 
 | Type | Import | Usage |
 |------|--------|-------|
-| Flat | `templates/components` | `@components.Button(...)` |
+| Flat | `templates/components` | `@components.Button(...)`, `@components.Checkbox(...)`, `@components.H1()`, etc. |
+| Accordion | `templates/components/accordion` | `@accordion.Accordion(...)` |
+| AlertDialog | `templates/components/alertdialog` | `@alertdialog.AlertDialog(...)` |
+| Combobox | `templates/components/combobox` | `@combobox.Combobox(...)` |
 | Dialog | `templates/components/dialog` | `@dialog.Dialog(...)` |
 | Dropdown | `templates/components/dropdown` | `@dropdown.Dropdown(...)` |
+| Popover | `templates/components/popover` | `@popover.Popover(...)` |
+| Sheet | `templates/components/sheet` | `@sheet.Sheet(...)` |
+| Sidebar | `templates/components/sidebar` | `@sidebar.Layout(...)`, `@sidebar.Sidebar(...)` |
+| Switch | `templates/components/switchc` | `@switchc.Switch(...)` |
+| Table | `templates/components/table` | `@table.Table(...)` |
 | Tabs | `templates/components/tabs` | `@tabs.Tabs(...)` |
 | Toast | `templates/components/toast` | `@toast.Container()` / `toast.Show(...)` |
-| Table | `templates/components/table` | `@table.Table(...)` |
-| Avatar | `templates/components/avatar` | `@avatar.Avatar(...)` |
 | Tooltip | `templates/components/tooltip` | `@tooltip.Tooltip(...)` |
-| Switch | `templates/components/switchc` | `@switchc.Switch(...)` |
-| Sheet | `templates/components/sheet` | `@sheet.Sheet(...)` |
+| Avatar | `templates/components/avatar` | `@avatar.Avatar(...)` |
 
 ### Rules
 
