@@ -14,6 +14,7 @@ type SkeletonProps struct {
 	Height string // Tailwind height class, e.g., "h-4", "h-10"
 	Round  bool   // rounded-full (circle) vs rounded-md (rectangle)
 	Class  string
+	Attrs  templ.Attributes
 }
 
 func skeletonDefaults(props []SkeletonProps) SkeletonProps {
@@ -73,7 +74,15 @@ func Skeleton(props ...SkeletonProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, p.Attrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -2,10 +2,11 @@ package components
 
 // SkeletonProps configures a Skeleton loading placeholder.
 type SkeletonProps struct {
-	Width  string // Tailwind width class, e.g., "w-full", "w-32"
-	Height string // Tailwind height class, e.g., "h-4", "h-10"
-	Round  bool   // rounded-full (circle) vs rounded-md (rectangle)
+	Width  string           // Tailwind width class, e.g., "w-full", "w-32"
+	Height string           // Tailwind height class, e.g., "h-4", "h-10"
+	Round  bool             // rounded-full (circle) vs rounded-md (rectangle)
 	Class  string
+	Attrs  templ.Attributes
 }
 
 func skeletonDefaults(props []SkeletonProps) SkeletonProps {
@@ -27,5 +28,5 @@ func skeletonClasses(p SkeletonProps) string {
 // Skeleton renders a loading placeholder with a pulse animation.
 templ Skeleton(props ...SkeletonProps) {
 	{{ p := skeletonDefaults(props) }}
-	<div class={ skeletonClasses(p) }></div>
+	<div class={ skeletonClasses(p) } { p.Attrs... }></div>
 }
