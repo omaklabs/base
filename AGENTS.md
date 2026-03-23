@@ -602,12 +602,28 @@ Standard Tailwind colors (`bg-red-500`, `text-blue-300`) still work for one-off 
 5. Use `cx()` helper to build class strings, `{ p.Attrs... }` for escape hatch
 6. Run `templ generate`
 
-**Compound component** (sub-package for namespace isolation):
-1. Create `templates/components/<name>/<name>.templ` with its own `package <name>`
-2. Define `Props` struct (no prefix needed — package provides namespace)
-3. Add `Script()` templ with `templ.NewOnceHandle()` for Alpine.js registration
-4. Add `Script()` call to `templates/layouts/base.templ` `<head>`
-5. Run `templ generate`
+**Interactive compound component** (Lit web component, co-located JS/CSS/templ):
+1. Create `templates/components/<name>/` directory with three files:
+   - `<name>.templ` — Go types + templ API (renders `<omk-<name>>` custom element)
+   - `<name>.js` — Lit class (`import { LitElement } from "/assets/js/lit-all.min.js"`)
+   - `<name>.css` — Transitions/animations for `[open]` or `[data-*]` attributes
+2. Lit component uses light DOM: `createRenderRoot() { return this; }` (Tailwind passes through)
+3. Use `data-*` attributes on child elements for wiring (e.g., `data-trigger`, `data-panel`, `data-close`)
+4. Lit manages state via reactive properties (`static properties = { open: { type: Boolean, reflect: true } }`)
+5. CSS transitions driven by reflected attributes (e.g., `omk-dialog[open] [data-panel] { opacity: 1; }`)
+6. Add `Script()` templ with `NewOnceHandle()` that emits `<script type="module">` + `<link rel="stylesheet">`
+7. Add `Script()` call to `templates/layouts/base.templ`
+8. Run `templ generate`
+
+**Why Lit for interactive components:** Custom elements auto-initialize when HTMX swaps them into the DOM (`connectedCallback`). No `Alpine.initTree()` needed. Proper encapsulation, keyboard navigation, focus trapping, and ARIA roles are baked into the JS class.
+
+### Server-Side Toast Pattern
+
+Instead of rendering toast HTML, set the `HX-Trigger` response header:
+```go
+w.Header().Set("HX-Trigger", `{"toast": {"variant": "success", "message": "Item saved!"}}`)
+```
+The `<omk-toast-container>` listens for this event automatically.
 
 ### Import Paths
 
@@ -617,10 +633,12 @@ Standard Tailwind colors (`bg-red-500`, `text-blue-300`) still work for one-off 
 | Dialog | `templates/components/dialog` | `@dialog.Dialog(...)` |
 | Dropdown | `templates/components/dropdown` | `@dropdown.Dropdown(...)` |
 | Tabs | `templates/components/tabs` | `@tabs.Tabs(...)` |
-| Toast | `templates/components/toast` | `@toast.Toast(...)` / `@toast.Container()` |
+| Toast | `templates/components/toast` | `@toast.Container()` / `toast.Show(...)` |
 | Table | `templates/components/table` | `@table.Table(...)` |
 | Avatar | `templates/components/avatar` | `@avatar.Avatar(...)` |
 | Tooltip | `templates/components/tooltip` | `@tooltip.Tooltip(...)` |
+| Switch | `templates/components/switchc` | `@switchc.Switch(...)` |
+| Sheet | `templates/components/sheet` | `@sheet.Sheet(...)` |
 
 ### Rules
 
@@ -630,6 +648,8 @@ Standard Tailwind colors (`bg-red-500`, `text-blue-300`) still work for one-off 
 - Prefer design tokens over raw Tailwind colors (`bg-primary` not `bg-orange-500`)
 - Never use `@apply` in CSS files
 - Never create CSS component classes (`.btn`, `.card`, etc.)
+- Interactive components use Lit web components (not Alpine inline scripts)
+- Alpine.js stays for simple ad-hoc toggles in user pages (flash auto-dismiss, etc.)
 
 ---
 
