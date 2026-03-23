@@ -36,7 +36,7 @@ templ Popover(props ...Props) {
 
 // Trigger toggles the popover when clicked.
 templ Trigger() {
-	<div data-trigger>
+	<div data-popover-trigger>
 		{ children... }
 	</div>
 }
@@ -48,7 +48,7 @@ templ Content(props ...Props) {
 		{{ p = props[0] }}
 	}
 	<div
-		data-content
+		data-popover-content
 		class={ "absolute z-50 mt-2 w-72 bg-popover text-popover-foreground border border-border rounded-[--radius] shadow-lg p-4 " + alignClass(p.Align) }
 	>
 		{ children... }

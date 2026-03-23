@@ -26,7 +26,7 @@ templ Dialog(props Props) {
 
 // Trigger opens the dialog when clicked.
 templ Trigger() {
-	<div data-trigger>
+	<div data-dialog-trigger>
 		{ children... }
 	</div>
 }
@@ -34,13 +34,13 @@ templ Trigger() {
 // Content is the modal overlay + panel.
 templ Content() {
 	<div
-		data-backdrop
+		data-dialog-backdrop
 		class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
 		role="dialog"
 		aria-modal="true"
 	>
 		<div
-			data-panel
+			data-dialog-panel
 			class="relative bg-card border border-border rounded-[calc(var(--radius)+4px)] shadow-lg w-full max-w-lg mx-4 p-6"
 			tabindex="-1"
 		>
@@ -72,7 +72,7 @@ templ Footer() {
 
 // Close closes the dialog when its children are clicked.
 templ Close() {
-	<div data-close>
+	<div data-dialog-close>
 		{ children... }
 	</div>
 }

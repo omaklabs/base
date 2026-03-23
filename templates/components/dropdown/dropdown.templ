@@ -51,7 +51,7 @@ templ Dropdown(props ...Props) {
 
 // Trigger toggles the dropdown when clicked.
 templ Trigger() {
-	<div data-trigger>
+	<div data-dropdown-trigger>
 		{ children... }
 	</div>
 }
@@ -63,7 +63,7 @@ templ Content(props ...Props) {
 		{{ p = props[0] }}
 	}
 	<div
-		data-content
+		data-dropdown-content
 		role="menu"
 		class={ "absolute z-50 mt-2 min-w-[12rem] bg-popover text-popover-foreground border border-border rounded-[--radius] shadow-lg py-1 " + alignClass(p.Align) }
 	>
@@ -78,11 +78,11 @@ templ Item(props ...ItemProps) {
 		{{ p = props[0] }}
 	}
 	if p.Href != "" {
-		<a href={ templ.SafeURL(p.Href) } class={ itemClasses(p.Variant) } role="menuitem" data-item tabindex="-1" { p.Attrs... }>
+		<a href={ templ.SafeURL(p.Href) } class={ itemClasses(p.Variant) } role="menuitem" data-dropdown-item tabindex="-1" { p.Attrs... }>
 			{ children... }
 		</a>
 	} else {
-		<button type="button" class={ itemClasses(p.Variant) } role="menuitem" data-item tabindex="-1" { p.Attrs... }>
+		<button type="button" class={ itemClasses(p.Variant) } role="menuitem" data-dropdown-item tabindex="-1" { p.Attrs... }>
 			{ children... }
 		</button>
 	}

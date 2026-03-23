@@ -40,7 +40,7 @@ templ Sheet(props Props) {
 
 // Trigger opens the sheet when clicked.
 templ Trigger() {
-	<div data-trigger>
+	<div data-sheet-trigger>
 		{ children... }
 	</div>
 }
@@ -52,13 +52,13 @@ templ Content(props ...Props) {
 		{{ side = props[0].Side }}
 	}
 	<div
-		data-backdrop
+		data-sheet-backdrop
 		class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
 		role="dialog"
 		aria-modal="true"
 	>
 		<div
-			data-panel
+			data-sheet-panel
 			class={ "fixed top-0 h-full w-80 max-w-[85vw] bg-card border-border shadow-lg p-6 overflow-y-auto " + panelPositionClasses(side) }
 			tabindex="-1"
 		>
@@ -69,7 +69,7 @@ templ Content(props ...Props) {
 
 // Close closes the sheet when its children are clicked.
 templ Close() {
-	<div data-close>
+	<div data-sheet-close>
 		{ children... }
 	</div>
 }

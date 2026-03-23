@@ -33,18 +33,18 @@ templ Switch(props Props) {
 			checked?={ props.Checked }
 			disabled?={ props.Disabled }
 			class="sr-only"
-			data-input
+			data-switch-input
 		/>
 		<button
 			type="button"
 			role="switch"
 			aria-checked={ boolStr(props.Checked) }
 			tabindex="0"
-			data-track
+			data-switch-track
 			class={ switchTrackClasses(props.Checked) }
 		>
 			<span
-				data-thumb
+				data-switch-thumb
 				class={ switchThumbClasses(props.Checked) }
 			></span>
 		</button>

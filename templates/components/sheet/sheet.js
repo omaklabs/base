@@ -11,10 +11,10 @@ import { LitElement } from "/assets/js/lit-all.min.js";
  *   data-side — "left" or "right" (default)
  *
  * Data attributes on children:
- *   [data-trigger]  — Element that opens the sheet
- *   [data-backdrop] — Overlay element
- *   [data-panel]    — The sheet panel
- *   [data-close]    — Elements that close the sheet
+ *   [data-sheet-trigger]  — Element that opens the sheet
+ *   [data-sheet-backdrop] — Overlay element
+ *   [data-sheet-panel]    — The sheet panel
+ *   [data-sheet-close]    — Elements that close the sheet
  */
 export class OmkSheet extends LitElement {
   static properties = {
@@ -35,15 +35,15 @@ export class OmkSheet extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.querySelector("[data-trigger]")?.addEventListener("click", () =>
+    this.querySelector("[data-sheet-trigger]")?.addEventListener("click", () =>
       this.show()
     );
 
-    this.querySelector("[data-backdrop]")?.addEventListener("click", (e) => {
+    this.querySelector("[data-sheet-backdrop]")?.addEventListener("click", (e) => {
       if (e.target === e.currentTarget) this.hide();
     });
 
-    this.querySelectorAll("[data-close]").forEach((el) =>
+    this.querySelectorAll("[data-sheet-close]").forEach((el) =>
       el.addEventListener("click", () => this.hide())
     );
   }
@@ -55,7 +55,7 @@ export class OmkSheet extends LitElement {
     document.addEventListener("keydown", this._onKeydown);
 
     requestAnimationFrame(() => {
-      const panel = this.querySelector("[data-panel]");
+      const panel = this.querySelector("[data-sheet-panel]");
       const focusable = panel?.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
@@ -77,7 +77,7 @@ export class OmkSheet extends LitElement {
     }
 
     if (e.key !== "Tab") return;
-    const panel = this.querySelector("[data-panel]");
+    const panel = this.querySelector("[data-sheet-panel]");
     const focusable = [
       ...(panel?.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'

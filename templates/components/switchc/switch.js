@@ -15,9 +15,9 @@ import { LitElement } from "/assets/js/lit-all.min.js";
  *   disabled — Boolean, reflected. Prevents interaction.
  *
  * Data attributes on children:
- *   [data-track]  — The switch track element
- *   [data-thumb]  — The switch thumb element
- *   input[data-input] — Hidden checkbox for form submission
+ *   [data-switch-track]  — The switch track element
+ *   [data-switch-thumb]  — The switch thumb element
+ *   input[data-switch-input] — Hidden checkbox for form submission
  */
 export class OmkSwitch extends LitElement {
   static properties = {
@@ -33,20 +33,22 @@ export class OmkSwitch extends LitElement {
     super();
     this.checked = false;
     this.disabled = false;
+    this._onClick = () => this.toggle();
+    this._onKeydown = (e) => {
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        this.toggle();
+      }
+    };
   }
 
   connectedCallback() {
     super.connectedCallback();
 
-    const track = this.querySelector("[data-track]");
+    const track = this.querySelector("[data-switch-track]");
     if (track) {
-      track.addEventListener("click", () => this.toggle());
-      track.addEventListener("keydown", (e) => {
-        if (e.key === " " || e.key === "Enter") {
-          e.preventDefault();
-          this.toggle();
-        }
-      });
+      track.addEventListener("click", this._onClick);
+      track.addEventListener("keydown", this._onKeydown);
     }
 
     this._updateState();
@@ -64,9 +66,9 @@ export class OmkSwitch extends LitElement {
   }
 
   _updateState() {
-    const track = this.querySelector("[data-track]");
-    const thumb = this.querySelector("[data-thumb]");
-    const input = this.querySelector("[data-input]");
+    const track = this.querySelector("[data-switch-track]");
+    const thumb = this.querySelector("[data-switch-thumb]");
+    const input = this.querySelector("[data-switch-input]");
 
     if (track) {
       track.setAttribute("aria-checked", this.checked ? "true" : "false");
@@ -91,6 +93,15 @@ export class OmkSwitch extends LitElement {
 
     if (input) {
       input.checked = this.checked;
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    const track = this.querySelector("[data-switch-track]");
+    if (track) {
+      track.removeEventListener("click", this._onClick);
+      track.removeEventListener("keydown", this._onKeydown);
     }
   }
 }

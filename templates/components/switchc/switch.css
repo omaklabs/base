@@ -1,5 +1,5 @@
 /* Switch thumb transition */
-omk-switch [data-thumb] {
+omk-switch [data-switch-thumb] {
   transition: transform 150ms ease-in-out;
 }
 

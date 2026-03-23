@@ -1,6 +1,18 @@
 package alertdialog
 
-import "github.com/omaklabs/base/templates/components"
+import (
+	"github.com/omaklabs/base/templates/components"
+	"github.com/omaklabs/base/templates/components/dialog"
+)
+
+var scriptHandle = templ.NewOnceHandle()
+
+// Script loads the Dialog Lit component that AlertDialog depends on.
+templ Script() {
+	@scriptHandle.Once() {
+		@dialog.Script()
+	}
+}
 
 // Props configures an AlertDialog (pre-built confirmation modal).
 type Props struct {
@@ -36,11 +48,11 @@ func confirmVariant(variant string) string {
 templ AlertDialog(props Props) {
 	{{ p := defaults(props) }}
 	<omk-dialog id={ p.ID } { p.Attrs... }>
-		<div data-trigger>
+		<div data-dialog-trigger>
 			{ children... }
 		</div>
 		<div
-			data-backdrop
+			data-dialog-backdrop
 			class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
 			role="alertdialog"
 			aria-modal="true"
@@ -48,7 +60,7 @@ templ AlertDialog(props Props) {
 			aria-describedby={ p.ID + "-desc" }
 		>
 			<div
-				data-panel
+				data-dialog-panel
 				class="relative bg-card border border-border rounded-[calc(var(--radius)+4px)] shadow-lg w-full max-w-md mx-4 p-6"
 				tabindex="-1"
 			>
@@ -59,7 +71,7 @@ templ AlertDialog(props Props) {
 					<p id={ p.ID + "-desc" } class="text-sm text-muted-foreground">{ p.Description }</p>
 				</div>
 				<div class="flex justify-end gap-2">
-					<div data-close>
+					<div data-dialog-close>
 						@components.Button(components.ButtonProps{Variant: "ghost"}) {
 							{ p.CancelText }
 						}

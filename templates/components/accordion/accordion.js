@@ -20,15 +20,21 @@ export class OmkAccordion extends LitElement {
     return this;
   }
 
+  constructor() {
+    super();
+    this._handlers = [];
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._multiple = this.hasAttribute("data-multiple");
 
     this.querySelectorAll("[data-accordion-trigger]").forEach((trigger) => {
-      trigger.addEventListener("click", () =>
-        this._toggle(trigger.dataset.value)
-      );
-      trigger.addEventListener("keydown", (e) => this._handleKeydown(e));
+      const onClick = () => this._toggle(trigger.dataset.value);
+      const onKeydown = (e) => this._handleKeydown(e);
+      trigger.addEventListener("click", onClick);
+      trigger.addEventListener("keydown", onKeydown);
+      this._handlers.push({ el: trigger, click: onClick, keydown: onKeydown });
     });
 
     // Close all content initially
@@ -115,6 +121,15 @@ export class OmkAccordion extends LitElement {
         triggers[triggers.length - 1]?.focus();
         break;
     }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._handlers.forEach(({ el, click, keydown }) => {
+      el.removeEventListener("click", click);
+      el.removeEventListener("keydown", keydown);
+    });
+    this._handlers = [];
   }
 }
 

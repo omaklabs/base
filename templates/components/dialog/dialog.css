@@ -1,21 +1,21 @@
 /* Dialog: hidden by default, shown via [open] attribute set by Lit */
-omk-dialog [data-backdrop] {
+omk-dialog [data-dialog-backdrop] {
   display: none;
   opacity: 0;
   transition: opacity 200ms ease-out;
 }
-omk-dialog[open] [data-backdrop] {
+omk-dialog[open] [data-dialog-backdrop] {
   display: flex;
   opacity: 1;
 }
 
 /* Panel: scale + fade in */
-omk-dialog [data-panel] {
+omk-dialog [data-dialog-panel] {
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 200ms ease-out, transform 200ms ease-out;
 }
-omk-dialog[open] [data-panel] {
+omk-dialog[open] [data-dialog-panel] {
   opacity: 1;
   transform: scale(1);
 }

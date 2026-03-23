@@ -164,7 +164,7 @@ func Trigger() templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div data-trigger>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div data-dialog-trigger>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -202,7 +202,7 @@ func Content() templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div data-backdrop class=\"fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm\" role=\"dialog\" aria-modal=\"true\"><div data-panel class=\"relative bg-card border border-border rounded-[calc(var(--radius)+4px)] shadow-lg w-full max-w-lg mx-4 p-6\" tabindex=\"-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div data-dialog-backdrop class=\"fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm\" role=\"dialog\" aria-modal=\"true\"><div data-dialog-panel class=\"relative bg-card border border-border rounded-[calc(var(--radius)+4px)] shadow-lg w-full max-w-lg mx-4 p-6\" tabindex=\"-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -354,7 +354,7 @@ func Close() templ.Component {
 			templ_7745c5c3_Var12 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div data-close>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div data-dialog-close>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

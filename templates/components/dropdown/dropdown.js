@@ -16,9 +16,9 @@ import { LitElement } from "/assets/js/lit-all.min.js";
  *   open — Boolean, reflected. Controls visibility.
  *
  * Data attributes on children:
- *   [data-trigger]   — Element that toggles the menu
- *   [data-content]   — The menu panel
- *   [data-item]      — Menu items (keyboard-navigable)
+ *   [data-dropdown-trigger]   — Element that toggles the menu
+ *   [data-dropdown-content]   — The menu panel
+ *   [data-dropdown-item]      — Menu items (keyboard-navigable)
  */
 export class OmkDropdown extends LitElement {
   static properties = {
@@ -39,7 +39,7 @@ export class OmkDropdown extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.querySelector("[data-trigger]")?.addEventListener("click", (e) => {
+    this.querySelector("[data-dropdown-trigger]")?.addEventListener("click", (e) => {
       e.stopPropagation();
       this.toggle();
     });
@@ -57,7 +57,7 @@ export class OmkDropdown extends LitElement {
     this.open = true;
 
     // Set ARIA on trigger
-    const trigger = this.querySelector("[data-trigger]");
+    const trigger = this.querySelector("[data-dropdown-trigger]");
     const btn = trigger?.querySelector("button, a, [role='button']") || trigger;
     btn?.setAttribute("aria-expanded", "true");
 
@@ -74,7 +74,7 @@ export class OmkDropdown extends LitElement {
   hide() {
     this.open = false;
 
-    const trigger = this.querySelector("[data-trigger]");
+    const trigger = this.querySelector("[data-dropdown-trigger]");
     const btn = trigger?.querySelector("button, a, [role='button']") || trigger;
     btn?.setAttribute("aria-expanded", "false");
 
@@ -88,7 +88,7 @@ export class OmkDropdown extends LitElement {
   }
 
   _getItems() {
-    return [...this.querySelectorAll("[data-item]")];
+    return [...this.querySelectorAll("[data-dropdown-item]")];
   }
 
   _handleDocClick(e) {

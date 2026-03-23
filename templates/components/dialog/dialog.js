@@ -14,10 +14,10 @@ import { LitElement } from "/assets/js/lit-all.min.js";
  *   open — Boolean, reflected. Controls visibility.
  *
  * Data attributes on children:
- *   [data-trigger]  — Element that opens the dialog on click
- *   [data-backdrop] — Overlay element (click to close)
- *   [data-panel]    — The dialog panel (receives focus)
- *   [data-close]    — Elements that close the dialog on click
+ *   [data-dialog-trigger]  — Element that opens the dialog on click
+ *   [data-dialog-backdrop] — Overlay element (click to close)
+ *   [data-dialog-panel]    — The dialog panel (receives focus)
+ *   [data-dialog-close]    — Elements that close the dialog on click
  */
 export class OmkDialog extends LitElement {
   static properties = {
@@ -39,16 +39,16 @@ export class OmkDialog extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.querySelector("[data-trigger]")?.addEventListener("click", () =>
+    this.querySelector("[data-dialog-trigger]")?.addEventListener("click", () =>
       this.show()
     );
 
-    this.querySelector("[data-backdrop]")?.addEventListener("click", (e) => {
+    this.querySelector("[data-dialog-backdrop]")?.addEventListener("click", (e) => {
       // Only close if clicking the backdrop itself, not its children
       if (e.target === e.currentTarget) this.hide();
     });
 
-    this.querySelectorAll("[data-close]").forEach((el) =>
+    this.querySelectorAll("[data-dialog-close]").forEach((el) =>
       el.addEventListener("click", () => this.hide())
     );
   }
@@ -61,7 +61,7 @@ export class OmkDialog extends LitElement {
 
     // Focus first focusable element inside the panel
     requestAnimationFrame(() => {
-      const panel = this.querySelector("[data-panel]");
+      const panel = this.querySelector("[data-dialog-panel]");
       const focusable = panel?.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
@@ -84,7 +84,7 @@ export class OmkDialog extends LitElement {
 
     // Focus trap: cycle Tab within the panel
     if (e.key !== "Tab") return;
-    const panel = this.querySelector("[data-panel]");
+    const panel = this.querySelector("[data-dialog-panel]");
     const focusable = [
       ...(panel?.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'

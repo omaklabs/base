@@ -2,9 +2,14 @@ package layouts
 
 import (
 	"github.com/omaklabs/base/internal/view"
+	"github.com/omaklabs/base/templates/components/accordion"
+	"github.com/omaklabs/base/templates/components/alertdialog"
+	"github.com/omaklabs/base/templates/components/combobox"
 	"github.com/omaklabs/base/templates/components/dialog"
 	"github.com/omaklabs/base/templates/components/dropdown"
+	"github.com/omaklabs/base/templates/components/popover"
 	"github.com/omaklabs/base/templates/components/sheet"
+	"github.com/omaklabs/base/templates/components/sidebar"
 	"github.com/omaklabs/base/templates/components/switchc"
 	"github.com/omaklabs/base/templates/components/tabs"
 	"github.com/omaklabs/base/templates/components/toast"
@@ -109,13 +114,18 @@ templ Base(title string) {
 			<script defer src="/assets/js/alpine.min.js"></script>
 			<script defer src="/assets/js/app.js"></script>
 			// Component scripts (deduplicated via NewOnceHandle)
+			@accordion.Script()
+			@alertdialog.Script()
+			@combobox.Script()
 			@dialog.Script()
 			@dropdown.Script()
+			@popover.Script()
+			@sheet.Script()
+			@sidebar.Script()
+			@switchc.Script()
 			@tabs.Script()
 			@toast.Script()
 			@tooltip.Script()
-			@switchc.Script()
-			@sheet.Script()
 		</head>
 		<body class="h-full bg-background text-foreground antialiased" hx-boost="true">
 			{ children... }

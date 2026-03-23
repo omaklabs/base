@@ -1,27 +1,27 @@
 /* Sheet: hidden by default */
-omk-sheet [data-backdrop] {
+omk-sheet [data-sheet-backdrop] {
   display: none;
   opacity: 0;
   transition: opacity 200ms ease-out;
 }
-omk-sheet[open] [data-backdrop] {
+omk-sheet[open] [data-sheet-backdrop] {
   display: flex;
   opacity: 1;
 }
 
 /* Panel slide from right (default) */
-omk-sheet [data-panel] {
+omk-sheet [data-sheet-panel] {
   transform: translateX(100%);
   transition: transform 250ms ease-out;
 }
-omk-sheet[open] [data-panel] {
+omk-sheet[open] [data-sheet-panel] {
   transform: translateX(0);
 }
 
 /* Panel slide from left */
-omk-sheet[data-side="left"] [data-panel] {
+omk-sheet[data-side="left"] [data-sheet-panel] {
   transform: translateX(-100%);
 }
-omk-sheet[data-side="left"][open] [data-panel] {
+omk-sheet[data-side="left"][open] [data-sheet-panel] {
   transform: translateX(0);
 }

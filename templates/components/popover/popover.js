@@ -14,8 +14,8 @@ import { LitElement } from "/assets/js/lit-all.min.js";
  *   open — Boolean, reflected. Controls visibility.
  *
  * Data attributes:
- *   [data-trigger] — Element that toggles the popover
- *   [data-content] — The popover panel
+ *   [data-popover-trigger] — Element that toggles the popover
+ *   [data-popover-content] — The popover panel
  */
 export class OmkPopover extends LitElement {
   static properties = {
@@ -35,7 +35,7 @@ export class OmkPopover extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.querySelector("[data-trigger]")?.addEventListener("click", (e) => {
+    this.querySelector("[data-popover-trigger]")?.addEventListener("click", (e) => {
       e.stopPropagation();
       this.toggle();
     });
@@ -52,7 +52,7 @@ export class OmkPopover extends LitElement {
     document.addEventListener("keydown", this._onKeydown);
 
     requestAnimationFrame(() => {
-      const content = this.querySelector("[data-content]");
+      const content = this.querySelector("[data-popover-content]");
       const focusable = content?.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
@@ -76,7 +76,7 @@ export class OmkPopover extends LitElement {
     if (e.key === "Escape") {
       e.preventDefault();
       this.hide();
-      this.querySelector("[data-trigger]")?.querySelector("button")?.focus();
+      this.querySelector("[data-popover-trigger]")?.querySelector("button")?.focus();
     }
   }
 
