@@ -2,12 +2,14 @@ package components
 
 // FormFieldProps configures a FormField (Label + Input + ErrorText).
 type FormFieldProps struct {
-	Label   string           // display label text
-	Name    string           // input name and label for
-	Type    string           // input type (default: "text")
-	Value   string
-	ErrMsg  string           // validation error message
-	Attrs   templ.Attributes // passed through to the Input
+	Label       string           // display label text
+	Name        string           // input name and label for
+	Type        string           // input type (default: "text")
+	Value       string
+	Placeholder string
+	Required    bool
+	ErrMsg      string           // validation error message
+	Attrs       templ.Attributes // passed through to the Input
 }
 
 func formFieldDefaults(props []FormFieldProps) FormFieldProps {
@@ -17,21 +19,95 @@ func formFieldDefaults(props []FormFieldProps) FormFieldProps {
 	return FormFieldProps{}
 }
 
+func mergeAttrs(base templ.Attributes, extra templ.Attributes) templ.Attributes {
+	if len(extra) == 0 {
+		return base
+	}
+	merged := make(templ.Attributes, len(base)+len(extra))
+	for k, v := range base {
+		merged[k] = v
+	}
+	for k, v := range extra {
+		merged[k] = v
+	}
+	return merged
+}
+
 // FormField renders a complete form field: Label + Input + ErrorText.
 // This is the most common way to add a form field — one call instead of three.
 templ FormField(props ...FormFieldProps) {
 	{{ p := formFieldDefaults(props) }}
+	{{ errID := "" }}
+	if p.ErrMsg != "" {
+		{{ errID = p.Name + "-error" }}
+	}
 	<div>
 		@Label(LabelProps{For: p.Name}) {
 			{ p.Label }
 		}
 		@Input(InputProps{
-			Type:     p.Type,
-			Name:     p.Name,
-			Value:    p.Value,
-			HasError: p.ErrMsg != "",
-			Attrs:    p.Attrs,
+			Type:        p.Type,
+			Name:        p.Name,
+			Value:       p.Value,
+			Placeholder: p.Placeholder,
+			Required:    p.Required,
+			HasError:    p.ErrMsg != "",
+			Attrs:       mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
 		})
-		@ErrorText(p.ErrMsg)
+		if p.ErrMsg != "" {
+			<p id={ errID } class="text-sm text-destructive mt-1">{ p.ErrMsg }</p>
+		}
+	</div>
+}
+
+func ariaAttrs(hasError bool, errID string) templ.Attributes {
+	if !hasError {
+		return nil
+	}
+	attrs := templ.Attributes{"aria-invalid": "true"}
+	if errID != "" {
+		attrs["aria-describedby"] = errID
+	}
+	return attrs
+}
+
+// SelectFormFieldProps configures a SelectFormField (Label + SelectField + ErrorText).
+type SelectFormFieldProps struct {
+	Label    string
+	Name     string
+	Options  []SelectOption
+	ErrMsg   string
+	Required bool
+	Attrs    templ.Attributes
+}
+
+func selectFormFieldDefaults(props []SelectFormFieldProps) SelectFormFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return SelectFormFieldProps{}
+}
+
+// SelectFormField renders a complete select field: Label + SelectField + ErrorText.
+templ SelectFormField(props ...SelectFormFieldProps) {
+	{{ p := selectFormFieldDefaults(props) }}
+	{{ errID := "" }}
+	if p.ErrMsg != "" {
+		{{ errID = p.Name + "-error" }}
+	}
+	<div>
+		@Label(LabelProps{For: p.Name}) {
+			{ p.Label }
+		}
+		@SelectField(SelectFieldProps{
+			Name:     p.Name,
+			Options:  p.Options,
+			Required: p.Required,
+			HasError: p.ErrMsg != "",
+			Attrs:    mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
+		})
+		if p.ErrMsg != "" {
+			<p id={ errID } class="text-sm text-destructive mt-1">{ p.ErrMsg }</p>
+		}
 	</div>
 }

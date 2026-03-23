@@ -2,10 +2,8 @@ package components
 
 import "github.com/omaklabs/base/internal/view"
 
-var flashHandle = templ.NewOnceHandle()
-
 func flashClasses(variant string) string {
-	base := "px-4 py-3 rounded-lg text-sm font-medium border"
+	base := "px-4 py-3 rounded-lg text-sm font-medium border flex items-center justify-between gap-2"
 	switch variant {
 	case "error":
 		return cx(base, "bg-destructive/10 border-destructive/20 text-destructive")
@@ -18,17 +16,8 @@ func flashClasses(variant string) string {
 	}
 }
 
-// FlashScript establishes the Script() pattern for flash messages.
-templ FlashScript() {
-	@flashHandle.Once() {
-		<script>
-			// Flash-specific initialization (pattern placeholder for future enhancements)
-		</script>
-	}
-}
-
 // FlashMessage reads a flash from the request context and renders it.
-// Auto-dismisses after 4 seconds using Alpine.js.
+// Auto-dismisses after 4 seconds using Alpine.js. Includes close button.
 templ FlashMessage() {
 	if f := view.GetFlash(ctx); f != nil {
 		<div
@@ -38,7 +27,17 @@ templ FlashMessage() {
 			x-init="setTimeout(() => show = false, 4000)"
 			x-transition
 		>
-			{ f.Message }
+			<span>{ f.Message }</span>
+			<button
+				type="button"
+				class="shrink-0 opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+				@click="show = false"
+				aria-label="Dismiss"
+			>
+				<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
 		</div>
 	}
 }

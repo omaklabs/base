@@ -10,12 +10,14 @@ import templruntime "github.com/a-h/templ/runtime"
 
 // FormFieldProps configures a FormField (Label + Input + ErrorText).
 type FormFieldProps struct {
-	Label  string // display label text
-	Name   string // input name and label for
-	Type   string // input type (default: "text")
-	Value  string
-	ErrMsg string           // validation error message
-	Attrs  templ.Attributes // passed through to the Input
+	Label       string // display label text
+	Name        string // input name and label for
+	Type        string // input type (default: "text")
+	Value       string
+	Placeholder string
+	Required    bool
+	ErrMsg      string           // validation error message
+	Attrs       templ.Attributes // passed through to the Input
 }
 
 func formFieldDefaults(props []FormFieldProps) FormFieldProps {
@@ -23,6 +25,20 @@ func formFieldDefaults(props []FormFieldProps) FormFieldProps {
 		return props[0]
 	}
 	return FormFieldProps{}
+}
+
+func mergeAttrs(base templ.Attributes, extra templ.Attributes) templ.Attributes {
+	if len(extra) == 0 {
+		return base
+	}
+	merged := make(templ.Attributes, len(base)+len(extra))
+	for k, v := range base {
+		merged[k] = v
+	}
+	for k, v := range extra {
+		merged[k] = v
+	}
+	return merged
 }
 
 // FormField renders a complete form field: Label + Input + ErrorText.
@@ -49,6 +65,10 @@ func FormField(props ...FormFieldProps) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		p := formFieldDefaults(props)
+		errID := ""
+		if p.ErrMsg != "" {
+			errID = p.Name + "-error"
+		}
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -68,7 +88,7 @@ func FormField(props ...FormFieldProps) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 26, Col: 12}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 46, Col: 12}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -81,20 +101,186 @@ func FormField(props ...FormFieldProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = Input(InputProps{
-			Type:     p.Type,
-			Name:     p.Name,
-			Value:    p.Value,
-			HasError: p.ErrMsg != "",
-			Attrs:    p.Attrs,
+			Type:        p.Type,
+			Name:        p.Name,
+			Value:       p.Value,
+			Placeholder: p.Placeholder,
+			Required:    p.Required,
+			HasError:    p.ErrMsg != "",
+			Attrs:       mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ErrorText(p.ErrMsg).Render(ctx, templ_7745c5c3_Buffer)
+		if p.ErrMsg != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<p id=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(errID)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 58, Col: 16}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"text-sm text-destructive mt-1\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.ErrMsg)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 58, Col: 67}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div>")
+		return nil
+	})
+}
+
+func ariaAttrs(hasError bool, errID string) templ.Attributes {
+	if !hasError {
+		return nil
+	}
+	attrs := templ.Attributes{"aria-invalid": "true"}
+	if errID != "" {
+		attrs["aria-describedby"] = errID
+	}
+	return attrs
+}
+
+// SelectFormFieldProps configures a SelectFormField (Label + SelectField + ErrorText).
+type SelectFormFieldProps struct {
+	Label    string
+	Name     string
+	Options  []SelectOption
+	ErrMsg   string
+	Required bool
+	Attrs    templ.Attributes
+}
+
+func selectFormFieldDefaults(props []SelectFormFieldProps) SelectFormFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return SelectFormFieldProps{}
+}
+
+// SelectFormField renders a complete select field: Label + SelectField + ErrorText.
+func SelectFormField(props ...SelectFormFieldProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		p := selectFormFieldDefaults(props)
+		errID := ""
+		if p.ErrMsg != "" {
+			errID = p.Name + "-error"
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var7 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
+			var templ_7745c5c3_Var8 string
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(p.Label)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 100, Col: 12}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return nil
+		})
+		templ_7745c5c3_Err = Label(LabelProps{For: p.Name}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = SelectField(SelectFieldProps{
+			Name:     p.Name,
+			Options:  p.Options,
+			Required: p.Required,
+			HasError: p.ErrMsg != "",
+			Attrs:    mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if p.ErrMsg != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<p id=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(errID)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 110, Col: 16}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" class=\"text-sm text-destructive mt-1\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var10 string
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(p.ErrMsg)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 110, Col: 67}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

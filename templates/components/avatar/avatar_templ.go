@@ -8,6 +8,8 @@ package avatar
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "strings"
+
 // Props configures an Avatar.
 type Props struct {
 	Src      string // image URL (optional)
@@ -36,6 +38,17 @@ func sizeClasses(size string) string {
 	}
 }
 
+// cx joins non-empty CSS class strings with a space.
+func cx(classes ...string) string {
+	var out []string
+	for _, c := range classes {
+		if c != "" {
+			out = append(out, c)
+		}
+	}
+	return strings.Join(out, " ")
+}
+
 // Avatar renders a user avatar. Shows image if Src is set, otherwise shows Initials.
 func Avatar(props ...Props) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -60,7 +73,7 @@ func Avatar(props ...Props) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		p := avatarDefaults(props)
 		if p.Src != "" {
-			var templ_7745c5c3_Var2 = []any{"rounded-full object-cover " + sizeClasses(p.Size) + condClass(p.Class)}
+			var templ_7745c5c3_Var2 = []any{cx("rounded-full object-cover", sizeClasses(p.Size), p.Class)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -72,7 +85,7 @@ func Avatar(props ...Props) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.Src)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/avatar/avatar.templ`, Line: 36, Col: 14}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/avatar/avatar.templ`, Line: 49, Col: 14}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -85,7 +98,7 @@ func Avatar(props ...Props) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(p.Alt)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/avatar/avatar.templ`, Line: 37, Col: 14}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/avatar/avatar.templ`, Line: 50, Col: 14}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -117,7 +130,7 @@ func Avatar(props ...Props) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var6 = []any{"inline-flex items-center justify-center rounded-full bg-secondary text-secondary-foreground font-medium select-none " + sizeClasses(p.Size) + condClass(p.Class)}
+			var templ_7745c5c3_Var6 = []any{cx("inline-flex items-center justify-center rounded-full bg-secondary text-secondary-foreground font-medium select-none", sizeClasses(p.Size), p.Class)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -150,7 +163,7 @@ func Avatar(props ...Props) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(p.Initials)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/avatar/avatar.templ`, Line: 46, Col: 15}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/avatar/avatar.templ`, Line: 59, Col: 15}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -163,13 +176,6 @@ func Avatar(props ...Props) templ.Component {
 		}
 		return nil
 	})
-}
-
-func condClass(class string) string {
-	if class != "" {
-		return " " + class
-	}
-	return ""
 }
 
 var _ = templruntime.GeneratedTemplate

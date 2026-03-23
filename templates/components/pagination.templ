@@ -5,7 +5,15 @@ import (
 	"github.com/omaklabs/base/internal/pagination"
 )
 
-templ Pagination(p pagination.Pagination, baseURL string) {
+func paginationTarget(target string) string {
+	if target != "" {
+		return target
+	}
+	return "closest [data-paginated]"
+}
+
+templ Pagination(p pagination.Pagination, baseURL string, target ...string) {
+	{{ htmxTarget := paginationTarget(firstOr(target, "")) }}
 	if p.TotalPages > 1 {
 		<nav class="flex items-center gap-1" aria-label="Pagination">
 			if p.HasPrev {
@@ -13,7 +21,7 @@ templ Pagination(p pagination.Pagination, baseURL string) {
 					class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm"}) }
 					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page-1)) }
 					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page-1) }
-					hx-target="closest [data-paginated]"
+					hx-target={ htmxTarget }
 					hx-swap="outerHTML"
 				>
 					&laquo; Prev
@@ -37,7 +45,7 @@ templ Pagination(p pagination.Pagination, baseURL string) {
 						class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm"}) }
 						href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, pg)) }
 						hx-get={ fmt.Sprintf("%s?page=%d", baseURL, pg) }
-						hx-target="closest [data-paginated]"
+						hx-target={ htmxTarget }
 						hx-swap="outerHTML"
 					>
 						{ fmt.Sprintf("%d", pg) }
@@ -49,7 +57,7 @@ templ Pagination(p pagination.Pagination, baseURL string) {
 					class={ buttonClasses(ButtonProps{Variant: "ghost", Size: "sm"}) }
 					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page+1)) }
 					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page+1) }
-					hx-target="closest [data-paginated]"
+					hx-target={ htmxTarget }
 					hx-swap="outerHTML"
 				>
 					Next &raquo;
