@@ -23,7 +23,7 @@ type ItemProps struct {
 
 var scriptHandle = templ.NewOnceHandle()
 
-// Script registers the Alpine.js dropdown component. Include once in your layout.
+// Script loads the Lit component + CSS. Include once in layout.
 func Script() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -57,7 +57,7 @@ func Script() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n\t\t\tdocument.addEventListener(\"alpine:init\", () => {\n\t\t\t\tAlpine.data(\"dropdown\", () => ({\n\t\t\t\t\topen: false,\n\t\t\t\t\ttoggle() { this.open = !this.open; },\n\t\t\t\t\tclose() { this.open = false; }\n\t\t\t\t}));\n\t\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script type=\"module\" src=\"/components/dropdown/dropdown.js\"></script> <link rel=\"stylesheet\" href=\"/components/dropdown/dropdown.css\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -76,6 +76,14 @@ func alignClass(align string) string {
 		return "right-0"
 	}
 	return "left-0"
+}
+
+func itemClasses(variant string) string {
+	base := "block w-full text-left px-3 py-2 text-sm transition-colors outline-none"
+	if variant == "destructive" {
+		return base + " text-destructive hover:bg-destructive/10 focus:bg-destructive/10"
+	}
+	return base + " text-foreground hover:bg-accent focus:bg-accent"
 }
 
 // Dropdown is the root container. Wraps Trigger + Content.
@@ -104,7 +112,7 @@ func Dropdown(props ...Props) templ.Component {
 		if len(props) > 0 {
 			p = props[0]
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div x-data=\"dropdown()\" class=\"relative inline-block\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<omk-dropdown class=\"relative inline-block\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -120,7 +128,7 @@ func Dropdown(props ...Props) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</omk-dropdown>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -150,7 +158,7 @@ func Trigger() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div @click=\"toggle()\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div data-trigger>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -197,7 +205,7 @@ func Content(props ...Props) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div x-show=\"open\" x-cloak x-transition:enter=\"transition ease-out duration-100\" x-transition:enter-start=\"opacity-0 scale-95\" x-transition:enter-end=\"opacity-100 scale-100\" x-transition:leave=\"transition ease-in duration-75\" x-transition:leave-start=\"opacity-100 scale-100\" x-transition:leave-end=\"opacity-0 scale-95\" @click.outside=\"close()\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div data-content role=\"menu\" class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -224,14 +232,6 @@ func Content(props ...Props) templ.Component {
 		}
 		return nil
 	})
-}
-
-func itemClasses(variant string) string {
-	base := "block w-full text-left px-3 py-2 text-sm transition-colors"
-	if variant == "destructive" {
-		return base + " text-destructive hover:bg-destructive/10"
-	}
-	return base + " text-foreground hover:bg-accent"
 }
 
 // Item renders a dropdown menu item. If Href is set, renders as <a>; otherwise <button>.
@@ -273,7 +273,7 @@ func Item(props ...ItemProps) templ.Component {
 			var templ_7745c5c3_Var10 templ.SafeURL
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(p.Href))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/dropdown/dropdown.templ`, Line: 95, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/dropdown/dropdown.templ`, Line: 81, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -292,7 +292,7 @@ func Item(props ...ItemProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" @click=\"close()\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" role=\"menuitem\" data-item tabindex=\"-1\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -331,7 +331,7 @@ func Item(props ...ItemProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" @click=\"close()\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" role=\"menuitem\" data-item tabindex=\"-1\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -378,7 +378,7 @@ func Separator() templ.Component {
 			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"my-1 border-t border-border\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"my-1 border-t border-border\" role=\"separator\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

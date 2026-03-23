@@ -15,18 +15,11 @@ type ItemProps struct {
 
 var scriptHandle = templ.NewOnceHandle()
 
-// Script registers the Alpine.js dropdown component. Include once in your layout.
+// Script loads the Lit component + CSS. Include once in layout.
 templ Script() {
 	@scriptHandle.Once() {
-		<script>
-			document.addEventListener("alpine:init", () => {
-				Alpine.data("dropdown", () => ({
-					open: false,
-					toggle() { this.open = !this.open; },
-					close() { this.open = false; }
-				}));
-			});
-		</script>
+		<script type="module" src="/components/dropdown/dropdown.js"></script>
+		<link rel="stylesheet" href="/components/dropdown/dropdown.css"/>
 	}
 }
 
@@ -37,20 +30,28 @@ func alignClass(align string) string {
 	return "left-0"
 }
 
+func itemClasses(variant string) string {
+	base := "block w-full text-left px-3 py-2 text-sm transition-colors outline-none"
+	if variant == "destructive" {
+		return base + " text-destructive hover:bg-destructive/10 focus:bg-destructive/10"
+	}
+	return base + " text-foreground hover:bg-accent focus:bg-accent"
+}
+
 // Dropdown is the root container. Wraps Trigger + Content.
 templ Dropdown(props ...Props) {
 	{{ var p Props }}
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
-	<div x-data="dropdown()" class="relative inline-block" { p.Attrs... }>
+	<omk-dropdown class="relative inline-block" { p.Attrs... }>
 		{ children... }
-	</div>
+	</omk-dropdown>
 }
 
 // Trigger toggles the dropdown when clicked.
 templ Trigger() {
-	<div @click="toggle()">
+	<div data-trigger>
 		{ children... }
 	</div>
 }
@@ -62,27 +63,12 @@ templ Content(props ...Props) {
 		{{ p = props[0] }}
 	}
 	<div
-		x-show="open"
-		x-cloak
-		x-transition:enter="transition ease-out duration-100"
-		x-transition:enter-start="opacity-0 scale-95"
-		x-transition:enter-end="opacity-100 scale-100"
-		x-transition:leave="transition ease-in duration-75"
-		x-transition:leave-start="opacity-100 scale-100"
-		x-transition:leave-end="opacity-0 scale-95"
-		@click.outside="close()"
+		data-content
+		role="menu"
 		class={ "absolute z-50 mt-2 min-w-[12rem] bg-card border border-border rounded-lg shadow-lg py-1 " + alignClass(p.Align) }
 	>
 		{ children... }
 	</div>
-}
-
-func itemClasses(variant string) string {
-	base := "block w-full text-left px-3 py-2 text-sm transition-colors"
-	if variant == "destructive" {
-		return base + " text-destructive hover:bg-destructive/10"
-	}
-	return base + " text-foreground hover:bg-accent"
 }
 
 // Item renders a dropdown menu item. If Href is set, renders as <a>; otherwise <button>.
@@ -92,11 +78,11 @@ templ Item(props ...ItemProps) {
 		{{ p = props[0] }}
 	}
 	if p.Href != "" {
-		<a href={ templ.SafeURL(p.Href) } class={ itemClasses(p.Variant) } @click="close()" { p.Attrs... }>
+		<a href={ templ.SafeURL(p.Href) } class={ itemClasses(p.Variant) } role="menuitem" data-item tabindex="-1" { p.Attrs... }>
 			{ children... }
 		</a>
 	} else {
-		<button type="button" class={ itemClasses(p.Variant) } @click="close()" { p.Attrs... }>
+		<button type="button" class={ itemClasses(p.Variant) } role="menuitem" data-item tabindex="-1" { p.Attrs... }>
 			{ children... }
 		</button>
 	}
@@ -104,5 +90,5 @@ templ Item(props ...ItemProps) {
 
 // Separator renders a horizontal divider between items.
 templ Separator() {
-	<div class="my-1 border-t border-border"></div>
+	<div class="my-1 border-t border-border" role="separator"></div>
 }
