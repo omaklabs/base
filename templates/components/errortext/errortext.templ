@@ -1,0 +1,8 @@
+package errortext
+
+// ErrorText renders a validation error message. Renders nothing if message is empty.
+templ ErrorText(message string) {
+	if message != "" {
+		<p class="text-sm text-destructive mt-1">{ message }</p>
+	}
+}

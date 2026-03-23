@@ -1,0 +1,50 @@
+package separator
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Orientation controls separator direction.
+type Orientation string
+
+const (
+	Horizontal Orientation = "horizontal"
+	Vertical   Orientation = "vertical"
+)
+
+// Props configures a Separator.
+type Props struct {
+	Orientation Orientation // Horizontal (default), Vertical
+	Class       string
+	Attrs       templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func classes(p Props) string {
+	if p.Orientation == "vertical" {
+		return shared.Cx("w-px bg-border self-stretch", p.Class)
+	}
+	return shared.Cx("h-px w-full bg-border", p.Class)
+}
+
+func orientation(p Props) string {
+	if p.Orientation == "vertical" {
+		return "vertical"
+	}
+	return "horizontal"
+}
+
+// Separator renders a visual divider. Default is horizontal.
+templ Separator(props ...Props) {
+	{{ p := defaults(props) }}
+	<div
+		role="separator"
+		aria-orientation={ orientation(p) }
+		class={ classes(p) }
+		{ p.Attrs... }
+	></div>
+}

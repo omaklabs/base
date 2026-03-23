@@ -1,7 +1,7 @@
 package alertdialog
 
 import (
-	"github.com/omaklabs/base/templates/components"
+	"github.com/omaklabs/base/templates/components/button"
 	"github.com/omaklabs/base/templates/components/dialog"
 )
 
@@ -36,11 +36,11 @@ func defaults(props Props) Props {
 	return props
 }
 
-func confirmVariant(variant string) components.ButtonVariant {
+func confirmVariant(variant string) button.Variant {
 	if variant == "destructive" {
-		return components.ButtonVariantDestructive
+		return button.VariantDestructive
 	}
-	return components.ButtonVariantPrimary
+	return button.VariantPrimary
 }
 
 // AlertDialog renders a confirmation dialog with trigger (children), title,
@@ -75,11 +75,11 @@ templ AlertDialog(props Props) {
 				</div>
 				<div class="flex justify-end gap-2">
 					<div data-dialog-close>
-						@components.Button(components.ButtonProps{Variant: "ghost"}) {
+						@button.Button(button.Props{Variant: button.VariantGhost}) {
 							{ p.CancelText }
 						}
 					</div>
-					@components.Button(components.ButtonProps{
+					@button.Button(button.Props{
 						Variant: confirmVariant(p.Variant),
 						Attrs:   p.ConfirmAttrs,
 					}) {

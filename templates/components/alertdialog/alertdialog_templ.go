@@ -9,7 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/omaklabs/base/templates/components"
+	"github.com/omaklabs/base/templates/components/button"
 	"github.com/omaklabs/base/templates/components/dialog"
 )
 
@@ -85,11 +85,11 @@ func defaults(props Props) Props {
 	return props
 }
 
-func confirmVariant(variant string) components.ButtonVariant {
+func confirmVariant(variant string) button.Variant {
 	if variant == "destructive" {
-		return components.ButtonVariantDestructive
+		return button.VariantDestructive
 	}
-	return components.ButtonVariantPrimary
+	return button.VariantPrimary
 }
 
 // AlertDialog renders a confirmation dialog with trigger (children), title,
@@ -253,7 +253,7 @@ func AlertDialog(props Props) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Button(components.ButtonProps{Variant: "ghost"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = button.Button(button.Props{Variant: button.VariantGhost}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -284,7 +284,7 @@ func AlertDialog(props Props) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Button(components.ButtonProps{
+		templ_7745c5c3_Err = button.Button(button.Props{
 			Variant: confirmVariant(p.Variant),
 			Attrs:   p.ConfirmAttrs,
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)

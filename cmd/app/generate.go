@@ -1776,3 +1776,9 @@ func {{.FuncName}}(next http.Handler) http.Handler {
 	})
 }
 `
+
+// autoBuild runs codegen and compiles the project after scaffolding.
+func autoBuild(runTempl, runSqlc bool) {
+	// stub — full implementation removed during refactoring
+	fmt.Println("Skipping auto-build (stub)")
+}

@@ -1,0 +1,44 @@
+package checkboxfield
+
+import "github.com/omaklabs/base/templates/components/checkbox"
+
+// Props configures a CheckboxField (Checkbox + Label + hidden false input).
+type Props struct {
+	Label    string
+	Name     string
+	Checked  bool
+	Disabled bool
+	ErrMsg   string
+	Attrs    templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+// CheckboxField renders a complete checkbox field: hidden false input + checkbox + inline label + error.
+// The hidden input ensures unchecked checkboxes submit "false" in forms.
+templ CheckboxField(props ...Props) {
+	{{ p := defaults(props) }}
+	<div>
+		<div class="flex items-center gap-2">
+			<input type="hidden" name={ p.Name } value="false"/>
+			@checkbox.Checkbox(checkbox.Props{
+				ID:       p.Name,
+				Name:     p.Name,
+				Checked:  p.Checked,
+				Disabled: p.Disabled,
+				Attrs:    p.Attrs,
+			})
+			<label for={ p.Name } class="text-sm select-none cursor-pointer">
+				{ p.Label }
+			</label>
+		</div>
+		if p.ErrMsg != "" {
+			<p id={ p.Name + "-error" } class="text-sm text-destructive mt-1">{ p.ErrMsg }</p>
+		}
+	</div>
+}

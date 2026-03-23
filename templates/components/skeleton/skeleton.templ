@@ -1,0 +1,34 @@
+package skeleton
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Props configures a Skeleton loading placeholder.
+type Props struct {
+	Width  string           // Tailwind width class, e.g., "w-full", "w-32"
+	Height string           // Tailwind height class, e.g., "h-4", "h-10"
+	Round  bool             // rounded-full (circle) vs rounded-md (rectangle)
+	Class  string
+	Attrs  templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{Width: "w-full", Height: "h-4"}
+}
+
+func classes(p Props) string {
+	base := "animate-pulse bg-secondary"
+	rounding := "rounded-md"
+	if p.Round {
+		rounding = "rounded-full"
+	}
+	return shared.Cx(base, rounding, p.Width, p.Height, p.Class)
+}
+
+// Skeleton renders a loading placeholder with a pulse animation.
+templ Skeleton(props ...Props) {
+	{{ p := defaults(props) }}
+	<div class={ classes(p) } { p.Attrs... }></div>
+}

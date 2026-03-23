@@ -1,0 +1,34 @@
+package navitem
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Props configures a NavItem.
+type Props struct {
+	Href   string           // link target
+	Active bool             // whether this item is currently active
+	Class  string           // appended to computed classes
+	Attrs  templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func classes(p Props) string {
+	base := "flex items-center gap-2.5 px-2.5 py-1.5 rounded-[calc(var(--radius)-2px)] text-sm transition-colors duration-100"
+	if p.Active {
+		return shared.Cx(base, "bg-accent text-accent-foreground font-medium", p.Class)
+	}
+	return shared.Cx(base, "text-muted-foreground hover:bg-accent hover:text-accent-foreground", p.Class)
+}
+
+// NavItem renders a sidebar/nav link. Active state highlighted.
+templ NavItem(props ...Props) {
+	{{ p := defaults(props) }}
+	<a href={ templ.SafeURL(p.Href) } class={ classes(p) } { p.Attrs... }>
+		{ children... }
+	</a>
+}

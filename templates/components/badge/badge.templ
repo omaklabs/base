@@ -1,0 +1,48 @@
+package badge
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Variant controls badge color scheme.
+type Variant string
+
+const (
+	VariantDefault     Variant = "default"
+	VariantSuccess     Variant = "success"
+	VariantDestructive Variant = "destructive"
+	VariantWarning     Variant = "warning"
+)
+
+// Props configures a Badge.
+type Props struct {
+	Variant Variant          // VariantDefault, VariantSuccess, VariantDestructive, VariantWarning
+	Class   string           // appended to computed classes
+	Attrs   templ.Attributes // escape hatch: data-*, aria-*, etc.
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+// Badge renders a small status label. Zero-arg call gives default variant.
+// Variant styling driven by data-variant attribute + Tailwind data selectors.
+templ Badge(props ...Props) {
+	{{ p := defaults(props) }}
+	<span
+		data-variant={ string(p.Variant) }
+		class={ shared.Cx(
+			"inline-flex px-2 py-0.5 rounded-[calc(var(--radius)-2px)] text-xs font-medium",
+			"bg-secondary text-secondary-foreground",
+			"data-[variant=success]:bg-success/10 data-[variant=success]:text-success",
+			"data-[variant=destructive]:bg-destructive/10 data-[variant=destructive]:text-destructive",
+			"data-[variant=error]:bg-destructive/10 data-[variant=error]:text-destructive",
+			"data-[variant=warning]:bg-warning/10 data-[variant=warning]:text-warning",
+			p.Class,
+		) }
+		{ p.Attrs... }
+	>
+		{ children... }
+	</span>
+}

@@ -1,0 +1,164 @@
+package formfield
+
+import (
+	"github.com/omaklabs/base/templates/components/input"
+	"github.com/omaklabs/base/templates/components/label"
+	"github.com/omaklabs/base/templates/components/selectfield"
+	"github.com/omaklabs/base/templates/components/textarea"
+)
+
+// Props configures a FormField (Label + Input + ErrorText).
+type Props struct {
+	Label       string           // display label text
+	Name        string           // input name and label for
+	Type        string           // input type (default: "text")
+	Value       string
+	Placeholder string
+	Required    bool
+	ErrMsg      string           // validation error message
+	Attrs       templ.Attributes // passed through to the Input
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func mergeAttrs(base templ.Attributes, extra templ.Attributes) templ.Attributes {
+	if len(extra) == 0 {
+		return base
+	}
+	merged := make(templ.Attributes, len(base)+len(extra))
+	for k, v := range base {
+		merged[k] = v
+	}
+	for k, v := range extra {
+		merged[k] = v
+	}
+	return merged
+}
+
+func ariaAttrs(hasError bool, errID string) templ.Attributes {
+	if !hasError {
+		return nil
+	}
+	attrs := templ.Attributes{"aria-invalid": "true"}
+	if errID != "" {
+		attrs["aria-describedby"] = errID
+	}
+	return attrs
+}
+
+// FormField renders a complete form field: Label + Input + ErrorText.
+// This is the most common way to add a form field — one call instead of three.
+templ FormField(props ...Props) {
+	{{ p := defaults(props) }}
+	{{ errID := "" }}
+	if p.ErrMsg != "" {
+		{{ errID = p.Name + "-error" }}
+	}
+	<div>
+		@label.Label(label.Props{For: p.Name}) {
+			{ p.Label }
+		}
+		@input.Input(input.Props{
+			Type:        p.Type,
+			Name:        p.Name,
+			Value:       p.Value,
+			Placeholder: p.Placeholder,
+			Required:    p.Required,
+			HasError:    p.ErrMsg != "",
+			Attrs:       mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
+		})
+		if p.ErrMsg != "" {
+			<p id={ errID } class="text-sm text-destructive mt-1">{ p.ErrMsg }</p>
+		}
+	</div>
+}
+
+// TextareaProps configures a TextareaFormField (Label + Textarea + ErrorText).
+type TextareaProps struct {
+	Label       string
+	Name        string
+	Value       string
+	Rows        int
+	Placeholder string
+	Required    bool
+	ErrMsg      string
+	Attrs       templ.Attributes
+}
+
+func textareaDefaults(props []TextareaProps) TextareaProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return TextareaProps{}
+}
+
+// TextareaFormField renders a complete textarea field: Label + Textarea + ErrorText.
+templ TextareaFormField(props ...TextareaProps) {
+	{{ p := textareaDefaults(props) }}
+	{{ errID := "" }}
+	if p.ErrMsg != "" {
+		{{ errID = p.Name + "-error" }}
+	}
+	<div>
+		@label.Label(label.Props{For: p.Name}) {
+			{ p.Label }
+		}
+		@textarea.Textarea(textarea.Props{
+			Name:     p.Name,
+			Value:    p.Value,
+			Rows:     p.Rows,
+			HasError: p.ErrMsg != "",
+			Required: p.Required,
+			Attrs:    mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
+		})
+		if p.ErrMsg != "" {
+			<p id={ errID } class="text-sm text-destructive mt-1">{ p.ErrMsg }</p>
+		}
+	</div>
+}
+
+// SelectProps configures a SelectFormField (Label + SelectField + ErrorText).
+type SelectProps struct {
+	Label    string
+	Name     string
+	Options  []selectfield.Option
+	ErrMsg   string
+	Required bool
+	Attrs    templ.Attributes
+}
+
+func selectDefaults(props []SelectProps) SelectProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return SelectProps{}
+}
+
+// SelectFormField renders a complete select field: Label + SelectField + ErrorText.
+templ SelectFormField(props ...SelectProps) {
+	{{ p := selectDefaults(props) }}
+	{{ errID := "" }}
+	if p.ErrMsg != "" {
+		{{ errID = p.Name + "-error" }}
+	}
+	<div>
+		@label.Label(label.Props{For: p.Name}) {
+			{ p.Label }
+		}
+		@selectfield.SelectField(selectfield.Props{
+			Name:     p.Name,
+			Options:  p.Options,
+			Required: p.Required,
+			HasError: p.ErrMsg != "",
+			Attrs:    mergeAttrs(ariaAttrs(p.ErrMsg != "", errID), p.Attrs),
+		})
+		if p.ErrMsg != "" {
+			<p id={ errID } class="text-sm text-destructive mt-1">{ p.ErrMsg }</p>
+		}
+	</div>
+}

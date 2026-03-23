@@ -1,0 +1,75 @@
+package pagination
+
+import (
+	"fmt"
+
+	pgn "github.com/omaklabs/base/internal/pagination"
+	"github.com/omaklabs/base/templates/components/button"
+	"github.com/omaklabs/base/templates/components/shared"
+)
+
+func target(t string) string {
+	if t != "" {
+		return t
+	}
+	return "closest [data-paginated]"
+}
+
+templ Pagination(p pgn.Pagination, baseURL string, htmxTarget ...string) {
+	{{ tgt := target(shared.FirstOr(htmxTarget, "")) }}
+	if p.TotalPages > 1 {
+		<nav class="flex items-center gap-1" aria-label="Pagination">
+			if p.HasPrev {
+				<a
+					class={ button.Classes(button.Props{Variant: "ghost", Size: "sm"}) }
+					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page-1)) }
+					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page-1) }
+					hx-target={ tgt }
+					hx-swap="outerHTML"
+				>
+					&laquo; Prev
+				</a>
+			} else {
+				<span class={ button.Classes(button.Props{Variant: "ghost", Size: "sm", Disabled: true}) } aria-disabled="true">
+					&laquo; Prev
+				</span>
+			}
+			for _, pg := range p.Pages() {
+				if pg == -1 {
+					<span class={ button.Classes(button.Props{Variant: "ghost", Size: "sm"}) } aria-hidden="true">
+						&hellip;
+					</span>
+				} else if pg == p.Page {
+					<span class={ button.Classes(button.Props{Variant: "primary", Size: "sm"}) } aria-current="page">
+						{ fmt.Sprintf("%d", pg) }
+					</span>
+				} else {
+					<a
+						class={ button.Classes(button.Props{Variant: "ghost", Size: "sm"}) }
+						href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, pg)) }
+						hx-get={ fmt.Sprintf("%s?page=%d", baseURL, pg) }
+						hx-target={ tgt }
+						hx-swap="outerHTML"
+					>
+						{ fmt.Sprintf("%d", pg) }
+					</a>
+				}
+			}
+			if p.HasNext {
+				<a
+					class={ button.Classes(button.Props{Variant: "ghost", Size: "sm"}) }
+					href={ templ.SafeURL(fmt.Sprintf("%s?page=%d", baseURL, p.Page+1)) }
+					hx-get={ fmt.Sprintf("%s?page=%d", baseURL, p.Page+1) }
+					hx-target={ tgt }
+					hx-swap="outerHTML"
+				>
+					Next &raquo;
+				</a>
+			} else {
+				<span class={ button.Classes(button.Props{Variant: "ghost", Size: "sm", Disabled: true}) } aria-disabled="true">
+					Next &raquo;
+				</span>
+			}
+		</nav>
+	}
+}

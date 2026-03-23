@@ -1,0 +1,74 @@
+package progress
+
+import (
+	"fmt"
+
+	"github.com/omaklabs/base/templates/components/shared"
+)
+
+// Variant controls progress bar color.
+type Variant string
+
+const (
+	VariantDefault     Variant = "default"
+	VariantSuccess     Variant = "success"
+	VariantDestructive Variant = "destructive"
+)
+
+// Props configures a Progress bar.
+type Props struct {
+	Value   int              // 0-100
+	Variant Variant          // VariantDefault, VariantSuccess, VariantDestructive
+	Class   string
+	Attrs   templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func fillClass(variant Variant) string {
+	switch variant {
+	case "success":
+		return "bg-success"
+	case "destructive":
+		return "bg-destructive"
+	default:
+		return "bg-primary"
+	}
+}
+
+func width(value int) string {
+	if value < 0 {
+		value = 0
+	}
+	if value > 100 {
+		value = 100
+	}
+	return fmt.Sprintf("width: %d%%", value)
+}
+
+func valueStr(value int) string {
+	return fmt.Sprintf("%d", value)
+}
+
+// Progress renders a progress bar.
+templ Progress(props ...Props) {
+	{{ p := defaults(props) }}
+	<div
+		class={ shared.Cx("w-full bg-secondary rounded-full h-2 overflow-hidden", p.Class) }
+		role="progressbar"
+		aria-valuenow={ valueStr(p.Value) }
+		aria-valuemin="0"
+		aria-valuemax="100"
+		{ p.Attrs... }
+	>
+		<div
+			class={ shared.Cx("h-full rounded-full transition-all duration-300", fillClass(p.Variant)) }
+			style={ width(p.Value) }
+		></div>
+	</div>
+}

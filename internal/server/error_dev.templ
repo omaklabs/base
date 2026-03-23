@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/omaklabs/base/templates/components"
+	"github.com/omaklabs/base/templates/components/card"
 	"github.com/omaklabs/base/templates/layouts"
 )
 
@@ -10,13 +10,13 @@ templ ErrorDev(method, path, requestID, errMsg, stackTrace string) {
 		<div class="min-h-screen px-4 py-8 max-w-4xl mx-auto">
 			<h1 class="text-3xl font-bold text-destructive mb-6">Internal Server Error</h1>
 			<div class="mb-4" style="border-left: 4px solid #dc2626;">
-				@components.Card() {
+				@card.Card() {
 					<h2 class="text-lg font-semibold mb-2">Error</h2>
 					<p class="text-destructive font-mono text-sm">{ errMsg }</p>
 				}
 			</div>
 			<div class="mb-4">
-				@components.Card() {
+				@card.Card() {
 					<h2 class="text-lg font-semibold mb-2">Request Details</h2>
 					<ul class="space-y-1 text-sm text-muted-foreground">
 						<li><span class="font-medium text-foreground">Method:</span> { method }</li>
@@ -27,7 +27,7 @@ templ ErrorDev(method, path, requestID, errMsg, stackTrace string) {
 					</ul>
 				}
 			</div>
-			@components.Card() {
+			@card.Card() {
 				<h2 class="text-lg font-semibold mb-2">Stack Trace</h2>
 				<pre class="overflow-x-auto text-xs leading-relaxed bg-gray-900 text-gray-100 p-4 rounded"><code>{ stackTrace }</code></pre>
 			}

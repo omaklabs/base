@@ -1,0 +1,152 @@
+package button
+
+import (
+	"github.com/omaklabs/base/templates/components/shared"
+	"github.com/omaklabs/base/templates/components/spinner"
+)
+
+// Variant controls the visual style of a Button.
+type Variant string
+
+const (
+	VariantPrimary     Variant = "primary"
+	VariantSecondary   Variant = "secondary"
+	VariantDestructive Variant = "destructive"
+	VariantGhost       Variant = "ghost"
+	VariantOutline     Variant = "outline"
+)
+
+// Size controls the dimensions of a Button.
+type Size string
+
+const (
+	SizeSm Size = "sm"
+	SizeMd Size = "md"
+	SizeLg Size = "lg"
+)
+
+// Props configures a Button.
+type Props struct {
+	Variant   Variant          // VariantPrimary (default), VariantSecondary, VariantDestructive, VariantGhost, VariantOutline
+	Size      Size             // SizeSm, SizeMd (default), SizeLg
+	Type      string           // "button" (default), "submit", "reset"
+	IconOnly  bool
+	Loading   bool
+	FullWidth bool
+	Disabled  bool
+	Class     string           // appended to computed classes
+	Attrs     templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+// Type returns the button type attribute, defaulting to "button".
+func btnType(p Props) string {
+	if p.Type != "" {
+		return p.Type
+	}
+	return "button"
+}
+
+// Classes computes the CSS class string for a button. Exported so other
+// packages (e.g. pagination) can reuse button styling on non-button elements.
+func Classes(p Props) string {
+	base := "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--radius] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer select-none"
+
+	if p.Disabled {
+		base = shared.Cx(base, "opacity-50 pointer-events-none")
+	}
+
+	size := string(p.Size)
+	if size == "" {
+		size = "md"
+	}
+	var sizeClass string
+	switch size {
+	case "sm":
+		if p.IconOnly {
+			sizeClass = "h-9 w-9 p-0"
+		} else {
+			sizeClass = "h-9 px-3 text-sm"
+		}
+	case "lg":
+		if p.IconOnly {
+			sizeClass = "h-11 w-11 p-0"
+		} else {
+			sizeClass = "h-11 px-6 text-base"
+		}
+	default:
+		if p.IconOnly {
+			sizeClass = "h-10 w-10 p-0"
+		} else {
+			sizeClass = "h-10 px-4 text-sm"
+		}
+	}
+
+	variant := string(p.Variant)
+	if variant == "" {
+		variant = "primary"
+	}
+	var variantClass string
+	switch variant {
+	case "secondary":
+		variantClass = "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+	case "destructive":
+		variantClass = "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+	case "ghost":
+		variantClass = "hover:bg-accent hover:text-accent-foreground"
+	case "outline":
+		variantClass = "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+	default:
+		variantClass = "bg-primary text-primary-foreground hover:bg-primary/90"
+	}
+
+	var mods string
+	if p.Loading {
+		mods = shared.Cx(mods, "cursor-wait opacity-70")
+	}
+	if p.FullWidth {
+		mods = shared.Cx(mods, "w-full")
+	}
+
+	return shared.Cx(base, sizeClass, variantClass, mods, p.Class)
+}
+
+// Button renders a <button>. Zero-arg call gives primary/md defaults.
+templ Button(props ...Props) {
+	{{ p := defaults(props) }}
+	<button
+		type={ btnType(p) }
+		class={ Classes(p) }
+		disabled?={ p.Disabled || p.Loading }
+		aria-busy?={ p.Loading }
+		{ p.Attrs... }
+	>
+		if p.Loading {
+			@spinner.Spinner(spinner.Props{Size: "sm"})
+		}
+		{ children... }
+	</button>
+}
+
+// LinkButton renders an <a> styled as a button.
+templ LinkButton(href string, props ...Props) {
+	{{ p := defaults(props) }}
+	<a href={ templ.SafeURL(href) } class={ Classes(p) } { p.Attrs... }>
+		{ children... }
+	</a>
+}
+
+// SubmitButton renders a submit <button>. Convenience for forms.
+templ SubmitButton(props ...Props) {
+	{{ p := defaults(props) }}
+	{{ p.Type = "submit" }}
+	@Button(p) {
+		{ children... }
+	}
+}

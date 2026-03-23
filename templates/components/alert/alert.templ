@@ -1,0 +1,49 @@
+package alert
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Variant controls alert color scheme.
+type Variant string
+
+const (
+	VariantDefault     Variant = "default"
+	VariantDestructive Variant = "destructive"
+	VariantWarning     Variant = "warning"
+	VariantSuccess     Variant = "success"
+)
+
+// Props configures an Alert.
+type Props struct {
+	Variant Variant          // VariantDefault, VariantDestructive, VariantWarning, VariantSuccess
+	Class   string
+	Attrs   templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+// Alert renders a persistent info/warning/error block.
+// Unlike Flash (auto-dismiss) and Toast (ephemeral), Alert stays visible.
+// Variant styling driven by data-variant attribute + Tailwind data selectors.
+templ Alert(props ...Props) {
+	{{ p := defaults(props) }}
+	<div
+		data-variant={ string(p.Variant) }
+		class={ shared.Cx(
+			"px-4 py-3 rounded-[--radius] text-sm border",
+			"bg-primary/10 border-primary/20 text-primary",
+			"data-[variant=destructive]:bg-destructive/10 data-[variant=destructive]:border-destructive/20 data-[variant=destructive]:text-destructive",
+			"data-[variant=warning]:bg-warning/10 data-[variant=warning]:border-warning/20 data-[variant=warning]:text-warning",
+			"data-[variant=success]:bg-success/10 data-[variant=success]:border-success/20 data-[variant=success]:text-success",
+			p.Class,
+		) }
+		role="alert"
+		{ p.Attrs... }
+	>
+		{ children... }
+	</div>
+}

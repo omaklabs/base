@@ -1,0 +1,63 @@
+package slider
+
+import (
+	"fmt"
+
+	"github.com/omaklabs/base/templates/components/shared"
+)
+
+// Props configures a Slider (range input).
+type Props struct {
+	ID    string
+	Name  string
+	Value int
+	Min   int
+	Max   int
+	Step  int
+	Class string
+	Attrs templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{Max: 100, Step: 1}
+}
+
+func maxStr(p Props) string {
+	if p.Max == 0 {
+		return "100"
+	}
+	return fmt.Sprintf("%d", p.Max)
+}
+
+func stepStr(p Props) string {
+	if p.Step == 0 {
+		return "1"
+	}
+	return fmt.Sprintf("%d", p.Step)
+}
+
+func id(p Props) string {
+	if p.ID != "" {
+		return p.ID
+	}
+	return p.Name
+}
+
+// Slider renders a styled range input.
+templ Slider(props ...Props) {
+	{{ p := defaults(props) }}
+	<input
+		type="range"
+		id={ id(p) }
+		name={ p.Name }
+		value={ fmt.Sprintf("%d", p.Value) }
+		min={ fmt.Sprintf("%d", p.Min) }
+		max={ maxStr(p) }
+		step={ stepStr(p) }
+		class={ shared.Cx("w-full h-2 bg-secondary rounded-full appearance-none cursor-pointer accent-primary", "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:cursor-pointer", "[&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-sm [&::-moz-range-thumb]:cursor-pointer", p.Class) }
+		{ p.Attrs... }
+	/>
+}

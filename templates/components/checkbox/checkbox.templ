@@ -1,0 +1,50 @@
+package checkbox
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Props configures a Checkbox.
+type Props struct {
+	ID       string
+	Name     string
+	Value    string           // default "true"
+	Checked  bool
+	Disabled bool
+	Class    string
+	Attrs    templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func value(p Props) string {
+	if p.Value != "" {
+		return p.Value
+	}
+	return "true"
+}
+
+func id(p Props) string {
+	if p.ID != "" {
+		return p.ID
+	}
+	return p.Name
+}
+
+// Checkbox renders a styled <input type="checkbox">.
+templ Checkbox(props ...Props) {
+	{{ p := defaults(props) }}
+	<input
+		type="checkbox"
+		id={ id(p) }
+		name={ p.Name }
+		value={ value(p) }
+		checked?={ p.Checked }
+		disabled?={ p.Disabled }
+		class={ shared.Cx("h-4 w-4 shrink-0 rounded-[calc(var(--radius)-2px)] border border-input bg-background text-primary accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer", p.Class) }
+		{ p.Attrs... }
+	/>
+}

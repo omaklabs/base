@@ -1,0 +1,94 @@
+package radiogroup
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Option represents a single radio button in a group.
+type Option struct {
+	Value    string
+	Label    string
+	Disabled bool
+}
+
+// GroupProps configures a Group (radio group).
+type GroupProps struct {
+	Name     string           // form field name (shared by all radios)
+	Options  []Option
+	Value    string           // currently selected value
+	Disabled bool
+	Class    string
+	Attrs    templ.Attributes
+}
+
+func groupDefaults(props []GroupProps) GroupProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return GroupProps{}
+}
+
+// Group renders a group of radio buttons.
+templ Group(props ...GroupProps) {
+	{{ p := groupDefaults(props) }}
+	<fieldset class={ shared.Cx("space-y-2", p.Class) } { p.Attrs... }>
+		for _, opt := range p.Options {
+			<div class="flex items-center gap-2">
+				<input
+					type="radio"
+					id={ p.Name + "-" + opt.Value }
+					name={ p.Name }
+					value={ opt.Value }
+					checked?={ opt.Value == p.Value }
+					disabled?={ p.Disabled || opt.Disabled }
+					class="h-4 w-4 border border-input text-primary accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+				/>
+				<label
+					for={ p.Name + "-" + opt.Value }
+					class={ shared.Cx("text-sm select-none cursor-pointer", disabledLabel(p.Disabled || opt.Disabled)) }
+				>
+					{ opt.Label }
+				</label>
+			</div>
+		}
+	</fieldset>
+}
+
+func disabledLabel(disabled bool) string {
+	if disabled {
+		return "opacity-50 cursor-not-allowed"
+	}
+	return ""
+}
+
+// FormFieldProps configures a FormField (Label + Group + ErrorText).
+type FormFieldProps struct {
+	Label   string
+	Name    string
+	Options []Option
+	Value   string
+	ErrMsg  string
+	Attrs   templ.Attributes
+}
+
+func formFieldDefaults(props []FormFieldProps) FormFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return FormFieldProps{}
+}
+
+// FormField renders a complete radio group field: Label + Group + ErrorText.
+templ FormField(props ...FormFieldProps) {
+	{{ p := formFieldDefaults(props) }}
+	<div>
+		<label class="block text-sm text-muted-foreground mb-2">{ p.Label }</label>
+		@Group(GroupProps{
+			Name:    p.Name,
+			Options: p.Options,
+			Value:   p.Value,
+			Attrs:   p.Attrs,
+		})
+		if p.ErrMsg != "" {
+			<p id={ p.Name + "-error" } class="text-sm text-destructive mt-1.5">{ p.ErrMsg }</p>
+		}
+	</div>
+}

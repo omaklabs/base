@@ -1,0 +1,29 @@
+package label
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Props configures a Label.
+type Props struct {
+	For   string           // the id of the associated input
+	Class string           // appended to computed classes
+	Attrs templ.Attributes // escape hatch: data-*, aria-*, etc.
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func classes(p Props) string {
+	return shared.Cx("block text-sm text-muted-foreground mb-1.5", p.Class)
+}
+
+// Label renders a form field label. Zero-arg call gives unstyled label.
+templ Label(props ...Props) {
+	{{ p := defaults(props) }}
+	<label class={ classes(p) } for={ p.For } { p.Attrs... }>
+		{ children... }
+	</label>
+}

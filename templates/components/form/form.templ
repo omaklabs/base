@@ -1,0 +1,94 @@
+package form
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// ItemProps configures a form item container.
+type ItemProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+func itemDefaults(props []ItemProps) ItemProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return ItemProps{}
+}
+
+// FormItem wraps a form field with consistent vertical spacing.
+templ FormItem(props ...ItemProps) {
+	{{ p := itemDefaults(props) }}
+	<div class={ shared.Cx("space-y-2", p.Class) } { p.Attrs... }>
+		{ children... }
+	</div>
+}
+
+// FormItemFlex wraps a form field with horizontal flex layout (for inline fields like checkboxes).
+templ FormItemFlex(props ...ItemProps) {
+	{{ p := itemDefaults(props) }}
+	<div class={ shared.Cx("flex items-center space-x-2", p.Class) } { p.Attrs... }>
+		{ children... }
+	</div>
+}
+
+// DescriptionProps configures a form field description.
+type DescriptionProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+func descDefaults(props []DescriptionProps) DescriptionProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return DescriptionProps{}
+}
+
+// FormDescription renders help/hint text below a form field.
+templ FormDescription(props ...DescriptionProps) {
+	{{ p := descDefaults(props) }}
+	<p class={ shared.Cx("text-sm text-muted-foreground", p.Class) } { p.Attrs... }>
+		{ children... }
+	</p>
+}
+
+// MessageVariant controls form message color.
+type MessageVariant string
+
+const (
+	MessageError MessageVariant = "error"
+	MessageInfo  MessageVariant = "info"
+)
+
+// MessageProps configures a form validation/info message.
+type MessageProps struct {
+	Variant MessageVariant
+	Class   string
+	Attrs   templ.Attributes
+}
+
+func msgDefaults(props []MessageProps) MessageProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return MessageProps{}
+}
+
+func messageClasses(variant MessageVariant) string {
+	switch variant {
+	case MessageError:
+		return "text-destructive"
+	case MessageInfo:
+		return "text-primary"
+	default:
+		return "text-muted-foreground"
+	}
+}
+
+// FormMessage renders a validation error or info message.
+templ FormMessage(props ...MessageProps) {
+	{{ p := msgDefaults(props) }}
+	<p class={ shared.Cx("text-sm font-medium", messageClasses(p.Variant), p.Class) } { p.Attrs... }>
+		{ children... }
+	</p>
+}

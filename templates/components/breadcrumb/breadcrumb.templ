@@ -1,0 +1,43 @@
+package breadcrumb
+
+// Item represents a single breadcrumb segment.
+type Item struct {
+	Label string
+	Href  string // empty = current page (no link)
+}
+
+// Props configures a Breadcrumb.
+type Props struct {
+	Items []Item
+	Attrs templ.Attributes
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+// Breadcrumb renders a navigation breadcrumb trail.
+templ Breadcrumb(props ...Props) {
+	{{ p := defaults(props) }}
+	<nav aria-label="Breadcrumb" { p.Attrs... }>
+		<ol class="flex items-center gap-1.5 text-sm text-muted-foreground">
+			for i, item := range p.Items {
+				if i > 0 {
+					<li class="select-none">/</li>
+				}
+				<li>
+					if item.Href != "" {
+						<a href={ templ.SafeURL(item.Href) } class="hover:text-foreground transition-colors">
+							{ item.Label }
+						</a>
+					} else {
+						<span class="text-foreground font-medium">{ item.Label }</span>
+					}
+				</li>
+			}
+		</ol>
+	</nav>
+}

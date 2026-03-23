@@ -1,0 +1,80 @@
+package input
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Props configures an Input.
+type Props struct {
+	Type        string           // "text" (default), "email", "password", "number", etc.
+	Name        string
+	ID          string           // defaults to Name if empty
+	Value       string
+	Placeholder string
+	Size        string           // "sm", "md" (default), "lg"
+	HasError    bool
+	Disabled    bool
+	Required    bool
+	Class       string           // appended to computed classes
+	Attrs       templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func id(p Props) string {
+	if p.ID != "" {
+		return p.ID
+	}
+	return p.Name
+}
+
+func inputType(p Props) string {
+	if p.Type != "" {
+		return p.Type
+	}
+	return "text"
+}
+
+func classes(p Props) string {
+	base := "w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring"
+
+	size := p.Size
+	if size == "" {
+		size = "md"
+	}
+	var sizeClass string
+	switch size {
+	case "sm":
+		sizeClass = "h-9 px-3 text-sm"
+	case "lg":
+		sizeClass = "h-11 px-4 text-base"
+	default:
+		sizeClass = "h-10 px-3 text-sm"
+	}
+
+	var errClass string
+	if p.HasError {
+		errClass = "border-destructive focus:border-destructive"
+	}
+
+	return shared.Cx(base, sizeClass, errClass, p.Class)
+}
+
+// Input renders an <input> field. Zero-arg call gives text input defaults.
+templ Input(props ...Props) {
+	{{ p := defaults(props) }}
+	<input
+		type={ inputType(p) }
+		id={ id(p) }
+		name={ p.Name }
+		value={ p.Value }
+		placeholder={ p.Placeholder }
+		class={ classes(p) }
+		disabled?={ p.Disabled }
+		required?={ p.Required }
+		{ p.Attrs... }
+	/>
+}

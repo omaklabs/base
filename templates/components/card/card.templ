@@ -1,0 +1,37 @@
+package card
+
+import "github.com/omaklabs/base/templates/components/shared"
+
+// Props configures a Card.
+type Props struct {
+	Padding string           // "default" (p-6), "sm" (p-4), "none"
+	Class   string           // appended to computed classes
+	Attrs   templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func defaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func classes(p Props) string {
+	base := "bg-card text-card-foreground border border-border rounded-[calc(var(--radius)+4px)]"
+	switch p.Padding {
+	case "none":
+		return shared.Cx(base, p.Class)
+	case "sm":
+		return shared.Cx(base, "p-4", p.Class)
+	default:
+		return shared.Cx(base, "p-6", p.Class)
+	}
+}
+
+// Card renders a content container. Zero-arg call gives default padding (p-6).
+templ Card(props ...Props) {
+	{{ p := defaults(props) }}
+	<div class={ classes(p) } { p.Attrs... }>
+		{ children... }
+	</div>
+}

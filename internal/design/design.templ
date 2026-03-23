@@ -1,21 +1,44 @@
 package design
 
-import "github.com/omaklabs/base/templates/components"
 import "github.com/omaklabs/base/templates/components/accordion"
+import "github.com/omaklabs/base/templates/components/alert"
 import "github.com/omaklabs/base/templates/components/alertdialog"
+import "github.com/omaklabs/base/templates/components/avatar"
+import "github.com/omaklabs/base/templates/components/badge"
+import "github.com/omaklabs/base/templates/components/breadcrumb"
+import "github.com/omaklabs/base/templates/components/button"
+import "github.com/omaklabs/base/templates/components/card"
+import "github.com/omaklabs/base/templates/components/checkbox"
+import "github.com/omaklabs/base/templates/components/checkboxfield"
 import "github.com/omaklabs/base/templates/components/combobox"
 import "github.com/omaklabs/base/templates/components/copybutton"
 import "github.com/omaklabs/base/templates/components/dialog"
 import "github.com/omaklabs/base/templates/components/dropdown"
+import "github.com/omaklabs/base/templates/components/emptystate"
+import "github.com/omaklabs/base/templates/components/form"
+import "github.com/omaklabs/base/templates/components/formfield"
+import "github.com/omaklabs/base/templates/components/input"
+import "github.com/omaklabs/base/templates/components/label"
+import "github.com/omaklabs/base/templates/components/navitem"
+import "github.com/omaklabs/base/templates/components/pageheader"
 import "github.com/omaklabs/base/templates/components/popover"
+import "github.com/omaklabs/base/templates/components/progress"
+import "github.com/omaklabs/base/templates/components/radiogroup"
+import "github.com/omaklabs/base/templates/components/selectfield"
+import "github.com/omaklabs/base/templates/components/separator"
 import "github.com/omaklabs/base/templates/components/sheet"
+import "github.com/omaklabs/base/templates/components/skeleton"
+import "github.com/omaklabs/base/templates/components/slider"
+import "github.com/omaklabs/base/templates/components/spinner"
 import "github.com/omaklabs/base/templates/components/switchc"
+import "github.com/omaklabs/base/templates/components/table"
 import "github.com/omaklabs/base/templates/components/tabs"
 import "github.com/omaklabs/base/templates/components/tagsinput"
+import "github.com/omaklabs/base/templates/components/textarea"
+import "github.com/omaklabs/base/templates/components/themetoggle"
 import "github.com/omaklabs/base/templates/components/toast"
-import "github.com/omaklabs/base/templates/components/table"
-import "github.com/omaklabs/base/templates/components/avatar"
 import "github.com/omaklabs/base/templates/components/tooltip"
+import "github.com/omaklabs/base/templates/components/typography"
 import "github.com/omaklabs/base/templates/layouts"
 
 templ DesignPage() {
@@ -37,7 +60,7 @@ templ DesignPage() {
 			<!-- Typography -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Typography</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-3">
 						<div class="flex items-baseline justify-between">
 							<span class="text-2xl font-bold">Page Title</span>
@@ -66,46 +89,46 @@ templ DesignPage() {
 			<!-- Buttons -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Buttons</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-4">
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">Variants</p>
 							<div class="flex flex-wrap gap-2">
-								@components.Button() { Primary }
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantSecondary}) { Secondary }
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantDestructive}) { Destructive }
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantGhost}) { Ghost }
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Outline }
+								@button.Button() { Primary }
+								@button.Button(button.Props{Variant: button.VariantSecondary}) { Secondary }
+								@button.Button(button.Props{Variant: button.VariantDestructive}) { Destructive }
+								@button.Button(button.Props{Variant: button.VariantGhost}) { Ghost }
+								@button.Button(button.Props{Variant: button.VariantOutline}) { Outline }
 							</div>
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">Sizes</p>
 							<div class="flex flex-wrap gap-2 items-center">
-								@components.Button(components.ButtonProps{Size: components.ButtonSizeSm}) { Small }
-								@components.Button() { Medium }
-								@components.Button(components.ButtonProps{Size: components.ButtonSizeLg}) { Large }
+								@button.Button(button.Props{Size: button.SizeSm}) { Small }
+								@button.Button() { Medium }
+								@button.Button(button.Props{Size: button.SizeLg}) { Large }
 							</div>
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">States</p>
 							<div class="flex flex-wrap gap-2 items-center">
-								@components.Button(components.ButtonProps{Loading: true}) { Loading... }
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantSecondary, Disabled: true}) { Disabled }
-								@components.Button(components.ButtonProps{FullWidth: true}) { Full Width }
+								@button.Button(button.Props{Loading: true}) { Loading... }
+								@button.Button(button.Props{Variant: button.VariantSecondary, Disabled: true}) { Disabled }
+								@button.Button(button.Props{FullWidth: true}) { Full Width }
 							</div>
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">Links as Buttons</p>
 							<div class="flex flex-wrap gap-2">
-								@components.LinkButton("#") { Primary Link }
-								@components.LinkButton("#", components.ButtonProps{Variant: components.ButtonVariantOutline}) { Outline Link }
+								@button.LinkButton("#") { Primary Link }
+								@button.LinkButton("#", button.Props{Variant: button.VariantOutline}) { Outline Link }
 							</div>
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2 font-medium">With HTMX Attrs</p>
 							<div class="flex flex-wrap gap-2">
-								@components.Button(components.ButtonProps{
-									Variant: components.ButtonVariantDestructive,
+								@button.Button(button.Props{
+									Variant: button.VariantDestructive,
 									Attrs: templ.Attributes{"hx-delete": "/items/1", "hx-confirm": "Are you sure?"},
 								}) { Delete with HTMX }
 							</div>
@@ -117,19 +140,19 @@ templ DesignPage() {
 			<!-- Form Elements -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Form Elements</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-4">
-						@components.FormField(components.FormFieldProps{Label: "Text Input", Name: "demo_text", Type: "text"})
-						@components.FormField(components.FormFieldProps{Label: "Email (with error)", Name: "demo_email", Type: "email", Value: "invalid", ErrMsg: "Please enter a valid email"})
+						@formfield.FormField(formfield.Props{Label: "Text Input", Name: "demo_text", Type: "text"})
+						@formfield.FormField(formfield.Props{Label: "Email (with error)", Name: "demo_email", Type: "email", Value: "invalid", ErrMsg: "Please enter a valid email"})
 						<div>
-							@components.Label(components.LabelProps{For: "demo_textarea"}) { Textarea }
-							@components.Textarea(components.TextareaProps{Name: "demo_textarea", Rows: 3})
+							@label.Label(label.Props{For: "demo_textarea"}) { Textarea }
+							@textarea.Textarea(textarea.Props{Name: "demo_textarea", Rows: 3})
 						</div>
 						<div>
-							@components.Label(components.LabelProps{For: "demo_select"}) { Select }
-							@components.SelectField(components.SelectFieldProps{
+							@label.Label(label.Props{For: "demo_select"}) { Select }
+							@selectfield.SelectField(selectfield.Props{
 								Name: "demo_select",
-								Options: []components.SelectOption{
+								Options: []selectfield.Option{
 									{Value: "1", Label: "Option 1"},
 									{Value: "2", Label: "Option 2", Selected: true},
 									{Value: "3", Label: "Option 3"},
@@ -144,11 +167,11 @@ templ DesignPage() {
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Cards</h2>
 				<div class="space-y-3">
-					@components.Card() {
+					@card.Card() {
 						<p class="font-semibold">Default Card</p>
 						<p class="text-sm text-muted-foreground mt-1">Default padding (p-6)</p>
 					}
-					@components.Card(components.CardProps{Padding: "sm"}) {
+					@card.Card(card.Props{Padding: "sm"}) {
 						<p class="font-semibold">Small Padding Card</p>
 						<p class="text-sm text-muted-foreground mt-1">Small padding (p-4)</p>
 					}
@@ -158,12 +181,12 @@ templ DesignPage() {
 			<!-- Badges -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Badges</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex flex-wrap gap-2">
-						@components.Badge() { Default }
-						@components.Badge(components.BadgeProps{Variant: components.BadgeVariantSuccess}) { Success }
-						@components.Badge(components.BadgeProps{Variant: components.BadgeVariantDestructive}) { Error }
-						@components.Badge(components.BadgeProps{Variant: components.BadgeVariantWarning}) { Warning }
+						@badge.Badge() { Default }
+						@badge.Badge(badge.Props{Variant: badge.VariantSuccess}) { Success }
+						@badge.Badge(badge.Props{Variant: badge.VariantDestructive}) { Error }
+						@badge.Badge(badge.Props{Variant: badge.VariantWarning}) { Warning }
 					</div>
 				}
 			</section>
@@ -171,15 +194,15 @@ templ DesignPage() {
 			<!-- Navigation -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Navigation</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-1 w-56">
-						@components.NavItem(components.NavItemProps{Href: "#", Active: true}) {
+						@navitem.NavItem(navitem.Props{Href: "#", Active: true}) {
 							Dashboard (active)
 						}
-						@components.NavItem(components.NavItemProps{Href: "#"}) {
+						@navitem.NavItem(navitem.Props{Href: "#"}) {
 							Users
 						}
-						@components.NavItem(components.NavItemProps{Href: "#"}) {
+						@navitem.NavItem(navitem.Props{Href: "#"}) {
 							Settings
 						}
 					</div>
@@ -189,9 +212,9 @@ templ DesignPage() {
 			<!-- Page Header -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Page Header</h2>
-				@components.Card() {
-					@components.PageHeader(components.PageHeaderProps{Title: "Items"}) {
-						@components.LinkButton("#") { New Item }
+				@card.Card() {
+					@pageheader.PageHeader(pageheader.Props{Title: "Items"}) {
+						@button.LinkButton("#") { New Item }
 					}
 				}
 			</section>
@@ -199,8 +222,8 @@ templ DesignPage() {
 			<!-- Empty State -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Empty State</h2>
-				@components.Card() {
-					@components.EmptyState(components.EmptyStateProps{Message: "No items yet. Create your first item!"}) {
+				@card.Card() {
+					@emptystate.EmptyState(emptystate.Props{Message: "No items yet. Create your first item!"}) {
 						<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
 					}
 				}
@@ -209,10 +232,10 @@ templ DesignPage() {
 			<!-- Dialog -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Dialog</h2>
-				@components.Card() {
+				@card.Card() {
 					@dialog.Dialog(dialog.Props{ID: "demo-dialog"}) {
 						@dialog.Trigger() {
-							@components.Button() { Open Dialog }
+							@button.Button() { Open Dialog }
 						}
 						@dialog.Content() {
 							@dialog.Header() {
@@ -223,9 +246,9 @@ templ DesignPage() {
 							}
 							@dialog.Footer() {
 								@dialog.Close() {
-									@components.Button(components.ButtonProps{Variant: components.ButtonVariantGhost}) { Cancel }
+									@button.Button(button.Props{Variant: button.VariantGhost}) { Cancel }
 								}
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantDestructive}) { Delete }
+								@button.Button(button.Props{Variant: button.VariantDestructive}) { Delete }
 							}
 						}
 					}
@@ -235,10 +258,10 @@ templ DesignPage() {
 			<!-- Dropdown -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Dropdown</h2>
-				@components.Card() {
+				@card.Card() {
 					@dropdown.Dropdown() {
 						@dropdown.Trigger() {
-							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Menu }
+							@button.Button(button.Props{Variant: button.VariantOutline}) { Open Menu }
 						}
 						@dropdown.Content() {
 							@dropdown.Item(dropdown.ItemProps{Href: "#"}) { Profile }
@@ -253,7 +276,7 @@ templ DesignPage() {
 			<!-- Tabs -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Tabs</h2>
-				@components.Card() {
+				@card.Card() {
 					@tabs.Tabs(tabs.Props{Default: "overview"}) {
 						@tabs.List() {
 							@tabs.Trigger(tabs.TriggerProps{Value: "overview"}) { Overview }
@@ -276,18 +299,18 @@ templ DesignPage() {
 			<!-- Toast -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Toast</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex flex-wrap gap-2">
-						@components.Button(components.ButtonProps{
+						@button.Button(button.Props{
 							Attrs: templ.Attributes{"onclick": toast.Show("default", "This is a default toast", 4000)},
 						}) { Default Toast }
-						@components.Button(components.ButtonProps{
-							Variant: components.ButtonVariantOutline,
+						@button.Button(button.Props{
+							Variant: button.VariantOutline,
 							Class: "border-success/20 text-success hover:bg-success/10",
 							Attrs: templ.Attributes{"onclick": toast.Show("success", "Item saved successfully!", 4000)},
 						}) { Success Toast }
-						@components.Button(components.ButtonProps{
-							Variant: components.ButtonVariantDestructive,
+						@button.Button(button.Props{
+							Variant: button.VariantDestructive,
 							Attrs: templ.Attributes{"onclick": toast.Show("destructive", "Something went wrong!", 4000)},
 						}) { Error Toast }
 					</div>
@@ -310,21 +333,21 @@ templ DesignPage() {
 							@table.Cell() { Alice Johnson }
 							@table.Cell() { alice@example.com }
 							@table.Cell() {
-								@components.Badge(components.BadgeProps{Variant: components.BadgeVariantSuccess}) { Admin }
+								@badge.Badge(badge.Props{Variant: badge.VariantSuccess}) { Admin }
 							}
 						}
 						@table.Row() {
 							@table.Cell() { Bob Smith }
 							@table.Cell() { bob@example.com }
 							@table.Cell() {
-								@components.Badge() { Member }
+								@badge.Badge() { Member }
 							}
 						}
 						@table.Row() {
 							@table.Cell() { Carol White }
 							@table.Cell() { carol@example.com }
 							@table.Cell() {
-								@components.Badge(components.BadgeProps{Variant: components.BadgeVariantWarning}) { Pending }
+								@badge.Badge(badge.Props{Variant: badge.VariantWarning}) { Pending }
 							}
 						}
 					}
@@ -334,7 +357,7 @@ templ DesignPage() {
 			<!-- Avatar -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Avatar</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex flex-wrap gap-4 items-center">
 						@avatar.Avatar(avatar.Props{Initials: "AJ", Size: "sm"})
 						@avatar.Avatar(avatar.Props{Initials: "BS"})
@@ -347,19 +370,19 @@ templ DesignPage() {
 			<!-- Tooltip -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Tooltip</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex flex-wrap gap-4">
 						@tooltip.Tooltip(tooltip.Props{Text: "This is a tooltip"}) {
-							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (top) }
+							@button.Button(button.Props{Variant: button.VariantOutline}) { Hover me (top) }
 						}
 						@tooltip.Tooltip(tooltip.Props{Text: "Bottom tooltip", Position: "bottom"}) {
-							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (bottom) }
+							@button.Button(button.Props{Variant: button.VariantOutline}) { Hover me (bottom) }
 						}
 						@tooltip.Tooltip(tooltip.Props{Text: "Left tooltip", Position: "left"}) {
-							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (left) }
+							@button.Button(button.Props{Variant: button.VariantOutline}) { Hover me (left) }
 						}
 						@tooltip.Tooltip(tooltip.Props{Text: "Right tooltip", Position: "right"}) {
-							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Hover me (right) }
+							@button.Button(button.Props{Variant: button.VariantOutline}) { Hover me (right) }
 						}
 					</div>
 				}
@@ -368,12 +391,12 @@ templ DesignPage() {
 			<!-- Spinner -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Spinner</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex flex-wrap gap-4 items-center">
-						@components.Spinner(components.SpinnerProps{Size: "sm"})
-						@components.Spinner()
-						@components.Spinner(components.SpinnerProps{Size: "lg"})
-						@components.Button(components.ButtonProps{Loading: true}) { Saving... }
+						@spinner.Spinner(spinner.Props{Size: "sm"})
+						@spinner.Spinner()
+						@spinner.Spinner(spinner.Props{Size: "lg"})
+						@button.Button(button.Props{Loading: true}) { Saving... }
 					</div>
 				}
 			</section>
@@ -381,7 +404,7 @@ templ DesignPage() {
 			<!-- Switch -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Switch</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-4">
 						<div class="flex items-center gap-3">
 							@switchc.Switch(switchc.Props{Name: "demo_notifications", Checked: true})
@@ -403,27 +426,27 @@ templ DesignPage() {
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Alert</h2>
 				<div class="space-y-3">
-					@components.Alert() { This is a default informational alert. }
-					@components.Alert(components.AlertProps{Variant: components.AlertVariantSuccess}) { <strong>Success!</strong> Your changes have been saved. }
-					@components.Alert(components.AlertProps{Variant: components.AlertVariantWarning}) { <strong>Warning:</strong> This action cannot be undone. }
-					@components.Alert(components.AlertProps{Variant: components.AlertVariantDestructive}) { <strong>Error:</strong> Something went wrong. Please try again. }
+					@alert.Alert() { This is a default informational alert. }
+					@alert.Alert(alert.Props{Variant: alert.VariantSuccess}) { <strong>Success!</strong> Your changes have been saved. }
+					@alert.Alert(alert.Props{Variant: alert.VariantWarning}) { <strong>Warning:</strong> This action cannot be undone. }
+					@alert.Alert(alert.Props{Variant: alert.VariantDestructive}) { <strong>Error:</strong> Something went wrong. Please try again. }
 				</div>
 			</section>
 
 			<!-- Skeleton -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Skeleton</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-3">
 						<div class="flex items-center gap-3">
-							@components.Skeleton(components.SkeletonProps{Width: "w-10", Height: "h-10", Round: true})
+							@skeleton.Skeleton(skeleton.Props{Width: "w-10", Height: "h-10", Round: true})
 							<div class="space-y-2 flex-1">
-								@components.Skeleton(components.SkeletonProps{Width: "w-1/3", Height: "h-4"})
-								@components.Skeleton(components.SkeletonProps{Width: "w-2/3", Height: "h-3"})
+								@skeleton.Skeleton(skeleton.Props{Width: "w-1/3", Height: "h-4"})
+								@skeleton.Skeleton(skeleton.Props{Width: "w-2/3", Height: "h-3"})
 							</div>
 						</div>
-						@components.Skeleton(components.SkeletonProps{Width: "w-full", Height: "h-4"})
-						@components.Skeleton(components.SkeletonProps{Width: "w-3/4", Height: "h-4"})
+						@skeleton.Skeleton(skeleton.Props{Width: "w-full", Height: "h-4"})
+						@skeleton.Skeleton(skeleton.Props{Width: "w-3/4", Height: "h-4"})
 					</div>
 				}
 			</section>
@@ -431,23 +454,23 @@ templ DesignPage() {
 			<!-- Progress -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Progress</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-4">
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">0%</p>
-							@components.Progress(components.ProgressProps{Value: 0})
+							@progress.Progress(progress.Props{Value: 0})
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">50% (default)</p>
-							@components.Progress(components.ProgressProps{Value: 50})
+							@progress.Progress(progress.Props{Value: 50})
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">75% (success)</p>
-							@components.Progress(components.ProgressProps{Value: 75, Variant: components.ProgressVariantSuccess})
+							@progress.Progress(progress.Props{Value: 75, Variant: progress.VariantSuccess})
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">100% (destructive)</p>
-							@components.Progress(components.ProgressProps{Value: 100, Variant: components.ProgressVariantDestructive})
+							@progress.Progress(progress.Props{Value: 100, Variant: progress.VariantDestructive})
 						</div>
 					</div>
 				}
@@ -456,9 +479,9 @@ templ DesignPage() {
 			<!-- Breadcrumb -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Breadcrumb</h2>
-				@components.Card() {
-					@components.Breadcrumb(components.BreadcrumbProps{
-						Items: []components.BreadcrumbItem{
+				@card.Card() {
+					@breadcrumb.Breadcrumb(breadcrumb.Props{
+						Items: []breadcrumb.Item{
 							{Label: "Home", Href: "#"},
 							{Label: "Projects", Href: "#"},
 							{Label: "Current Project"},
@@ -470,11 +493,11 @@ templ DesignPage() {
 			<!-- Checkbox -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Checkbox</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-3">
-						@components.CheckboxField(components.CheckboxFieldProps{Label: "Accept terms and conditions", Name: "demo_terms"})
-						@components.CheckboxField(components.CheckboxFieldProps{Label: "Published", Name: "demo_published", Checked: true})
-						@components.CheckboxField(components.CheckboxFieldProps{Label: "Disabled option", Name: "demo_disabled", Disabled: true})
+						@checkboxfield.CheckboxField(checkboxfield.Props{Label: "Accept terms and conditions", Name: "demo_terms"})
+						@checkboxfield.CheckboxField(checkboxfield.Props{Label: "Published", Name: "demo_published", Checked: true})
+						@checkboxfield.CheckboxField(checkboxfield.Props{Label: "Disabled option", Name: "demo_disabled", Disabled: true})
 					</div>
 				}
 			</section>
@@ -482,12 +505,12 @@ templ DesignPage() {
 			<!-- RadioGroup -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Radio Group</h2>
-				@components.Card() {
-					@components.RadioFormField(components.RadioFormFieldProps{
+				@card.Card() {
+					@radiogroup.FormField(radiogroup.FormFieldProps{
 						Label: "Priority",
 						Name: "demo_priority",
 						Value: "medium",
-						Options: []components.RadioOption{
+						Options: []radiogroup.Option{
 							{Value: "low", Label: "Low"},
 							{Value: "medium", Label: "Medium"},
 							{Value: "high", Label: "High"},
@@ -499,15 +522,15 @@ templ DesignPage() {
 			<!-- Separator -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Separator</h2>
-				@components.Card() {
+				@card.Card() {
 					<p class="text-sm">Content above</p>
-					@components.Separator()
+					@separator.Separator()
 					<p class="text-sm">Content below</p>
 					<div class="flex items-center gap-3 h-5 mt-3">
 						<span class="text-sm">Left</span>
-						@components.Separator(components.SeparatorProps{Orientation: components.SeparatorVertical})
+						@separator.Separator(separator.Props{Orientation: separator.Vertical})
 						<span class="text-sm">Center</span>
-						@components.Separator(components.SeparatorProps{Orientation: components.SeparatorVertical})
+						@separator.Separator(separator.Props{Orientation: separator.Vertical})
 						<span class="text-sm">Right</span>
 					</div>
 				}
@@ -516,7 +539,7 @@ templ DesignPage() {
 			<!-- AlertDialog -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Alert Dialog</h2>
-				@components.Card() {
+				@card.Card() {
 					@alertdialog.AlertDialog(alertdialog.Props{
 						ID: "demo-alertdialog",
 						Title: "Are you absolutely sure?",
@@ -524,7 +547,7 @@ templ DesignPage() {
 						ConfirmText: "Delete Account",
 						Variant: "destructive",
 					}) {
-						@components.Button(components.ButtonProps{Variant: components.ButtonVariantDestructive}) { Delete Account }
+						@button.Button(button.Props{Variant: button.VariantDestructive}) { Delete Account }
 					}
 				}
 			</section>
@@ -532,7 +555,7 @@ templ DesignPage() {
 			<!-- Accordion -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Accordion</h2>
-				@components.Card() {
+				@card.Card() {
 					@accordion.Accordion() {
 						@accordion.Item(accordion.ItemProps{Value: "item-1"}) {
 							@accordion.Trigger(accordion.ItemProps{Value: "item-1"}) { Is it accessible? }
@@ -559,10 +582,10 @@ templ DesignPage() {
 			<!-- Popover -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Popover</h2>
-				@components.Card() {
+				@card.Card() {
 					@popover.Popover() {
 						@popover.Trigger() {
-							@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Popover }
+							@button.Button(button.Props{Variant: button.VariantOutline}) { Open Popover }
 						}
 						@popover.Content() {
 							<div class="space-y-2">
@@ -577,7 +600,7 @@ templ DesignPage() {
 			<!-- Combobox -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Combobox</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="max-w-sm">
 						@combobox.Combobox(combobox.Props{
 							Name: "demo_framework",
@@ -597,18 +620,18 @@ templ DesignPage() {
 			<!-- Typography -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Typography</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-4">
-						@components.H1() { H1: The quick brown fox }
-						@components.H2() { H2: Section heading }
-						@components.H3() { H3: Subsection }
-						@components.H4() { H4: Detail heading }
-						@components.P() { This is a paragraph with leading-7. It reads well at standard body text size. }
-						@components.Lead() { This is a lead paragraph, larger and muted. }
-						@components.Muted() { This is muted helper text. }
+						@typography.H1() { H1: The quick brown fox }
+						@typography.H2() { H2: Section heading }
+						@typography.H3() { H3: Subsection }
+						@typography.H4() { H4: Detail heading }
+						@typography.P() { This is a paragraph with leading-7. It reads well at standard body text size. }
+						@typography.Lead() { This is a lead paragraph, larger and muted. }
+						@typography.Muted() { This is muted helper text. }
 						<div>
 							Inline code:
-							@components.InlineCode() { npm install }
+							@typography.InlineCode() { npm install }
 						</div>
 					</div>
 				}
@@ -617,9 +640,9 @@ templ DesignPage() {
 			<!-- Theme Toggle -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Theme Toggle</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex items-center gap-3">
-						@components.ThemeToggle()
+						@themetoggle.ThemeToggle()
 						<span class="text-sm text-muted-foreground">Click to toggle light/dark mode</span>
 					</div>
 				}
@@ -628,7 +651,7 @@ templ DesignPage() {
 			<!-- CopyButton -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Copy Button</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex items-center gap-2">
 						<code id="demo-api-key" class="relative rounded-[calc(var(--radius)-2px)] bg-muted px-3 py-1.5 font-mono text-sm">sk-abc123def456ghi789</code>
 						@copybutton.CopyButton(copybutton.Props{TargetID: "demo-api-key"})
@@ -639,7 +662,7 @@ templ DesignPage() {
 			<!-- TagsInput -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Tags Input</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="max-w-sm">
 						@tagsinput.TagsInput(tagsinput.Props{
 							Name:        "demo_tags",
@@ -653,15 +676,15 @@ templ DesignPage() {
 			<!-- Slider -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Slider</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-4 max-w-sm">
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">Default (0-100)</p>
-							@components.Slider(components.SliderProps{Name: "demo_slider", Value: 50})
+							@slider.Slider(slider.Props{Name: "demo_slider", Value: 50})
 						</div>
 						<div>
 							<p class="text-xs text-muted-foreground mb-2">With steps (0-200, step 25)</p>
-							@components.Slider(components.SliderProps{Name: "demo_slider2", Value: 100, Max: 200, Step: 25})
+							@slider.Slider(slider.Props{Name: "demo_slider2", Value: 100, Max: 200, Step: 25})
 						</div>
 					</div>
 				}
@@ -670,17 +693,17 @@ templ DesignPage() {
 			<!-- Form Sub-Components -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Form Item / Description / Message</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="space-y-6 max-w-sm">
-						@components.FormItem() {
-							@components.Label(components.LabelProps{For: "demo_rich_email"}) { Email }
-							@components.Input(components.InputProps{Name: "demo_rich_email", Type: "email", Placeholder: "m@example.com", HasError: true})
-							@components.FormDescription() { We'll never share your email with anyone. }
-							@components.FormMessage(components.FormMessageProps{Variant: components.FormMessageError}) { Please enter a valid email address. }
+						@form.FormItem() {
+							@label.Label(label.Props{For: "demo_rich_email"}) { Email }
+							@input.Input(input.Props{Name: "demo_rich_email", Type: "email", Placeholder: "m@example.com", HasError: true})
+							@form.FormDescription() { We'll never share your email with anyone. }
+							@form.FormMessage(form.MessageProps{Variant: form.MessageError}) { Please enter a valid email address. }
 						}
-						@components.FormItemFlex() {
-							@components.Checkbox(components.CheckboxProps{ID: "demo_agree", Name: "agree"})
-							@components.Label(components.LabelProps{For: "demo_agree"}) { I agree to the terms }
+						@form.FormItemFlex() {
+							@checkbox.Checkbox(checkbox.Props{ID: "demo_agree", Name: "agree"})
+							@label.Label(label.Props{For: "demo_agree"}) { I agree to the terms }
 						}
 					</div>
 				}
@@ -689,11 +712,11 @@ templ DesignPage() {
 			<!-- Sheet -->
 			<section>
 				<h2 class="text-lg font-semibold mb-4">Sheet / Drawer</h2>
-				@components.Card() {
+				@card.Card() {
 					<div class="flex flex-wrap gap-2">
 						@sheet.Sheet(sheet.Props{ID: "demo-sheet-right"}) {
 							@sheet.Trigger() {
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Right Sheet }
+								@button.Button(button.Props{Variant: button.VariantOutline}) { Open Right Sheet }
 							}
 							@sheet.Content() {
 								<div class="flex items-center justify-between mb-6">
@@ -709,7 +732,7 @@ templ DesignPage() {
 						}
 						@sheet.Sheet(sheet.Props{ID: "demo-sheet-left", Side: "left"}) {
 							@sheet.Trigger() {
-								@components.Button(components.ButtonProps{Variant: components.ButtonVariantOutline}) { Open Left Sheet }
+								@button.Button(button.Props{Variant: button.VariantOutline}) { Open Left Sheet }
 							}
 							@sheet.Content(sheet.Props{Side: "left"}) {
 								<div class="flex items-center justify-between mb-6">
