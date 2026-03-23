@@ -1,0 +1,5 @@
+/* Tooltip container: relative positioning for absolute tooltip child */
+omk-tooltip {
+  position: relative;
+  display: inline-block;
+}

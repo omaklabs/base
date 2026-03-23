@@ -9,57 +9,17 @@ type Props struct {
 
 var scriptHandle = templ.NewOnceHandle()
 
-// Script registers the Alpine.js tooltip component. Include once in your layout.
+// Script loads the Lit component + CSS. Include once in layout.
 templ Script() {
 	@scriptHandle.Once() {
-		<script>
-			document.addEventListener("alpine:init", () => {
-				Alpine.data("tooltip", () => ({
-					show: false
-				}));
-			});
-		</script>
+		<script type="module" src="/components/tooltip/tooltip.js"></script>
+		<link rel="stylesheet" href="/components/tooltip/tooltip.css"/>
 	}
 }
 
-func positionClasses(pos string) string {
-	switch pos {
-	case "bottom":
-		return "top-full left-1/2 -translate-x-1/2 mt-2"
-	case "left":
-		return "right-full top-1/2 -translate-y-1/2 mr-2"
-	case "right":
-		return "left-full top-1/2 -translate-y-1/2 ml-2"
-	default: // top
-		return "bottom-full left-1/2 -translate-x-1/2 mb-2"
-	}
-}
-
-// Tooltip wraps children with a tooltip that shows on hover.
+// Tooltip wraps children with a tooltip that shows on hover/focus.
 templ Tooltip(props Props) {
-	<div
-		class="relative inline-block"
-		x-data="tooltip()"
-		@mouseenter="show = true"
-		@mouseleave="show = false"
-		@focus="show = true"
-		@blur="show = false"
-		{ props.Attrs... }
-	>
+	<omk-tooltip data-text={ props.Text } data-position={ props.Position } { props.Attrs... }>
 		{ children... }
-		<div
-			x-show="show"
-			x-cloak
-			x-transition:enter="transition ease-out duration-100"
-			x-transition:enter-start="opacity-0"
-			x-transition:enter-end="opacity-100"
-			x-transition:leave="transition ease-in duration-75"
-			x-transition:leave-start="opacity-100"
-			x-transition:leave-end="opacity-0"
-			class={ "absolute z-50 px-2 py-1 text-xs rounded-md bg-foreground text-background whitespace-nowrap pointer-events-none " + positionClasses(props.Position) }
-			role="tooltip"
-		>
-			{ props.Text }
-		</div>
-	</div>
+	</omk-tooltip>
 }
