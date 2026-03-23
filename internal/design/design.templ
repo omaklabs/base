@@ -4,12 +4,14 @@ import "github.com/omaklabs/base/templates/components"
 import "github.com/omaklabs/base/templates/components/accordion"
 import "github.com/omaklabs/base/templates/components/alertdialog"
 import "github.com/omaklabs/base/templates/components/combobox"
+import "github.com/omaklabs/base/templates/components/copybutton"
 import "github.com/omaklabs/base/templates/components/dialog"
 import "github.com/omaklabs/base/templates/components/dropdown"
 import "github.com/omaklabs/base/templates/components/popover"
 import "github.com/omaklabs/base/templates/components/sheet"
 import "github.com/omaklabs/base/templates/components/switchc"
 import "github.com/omaklabs/base/templates/components/tabs"
+import "github.com/omaklabs/base/templates/components/tagsinput"
 import "github.com/omaklabs/base/templates/components/toast"
 import "github.com/omaklabs/base/templates/components/table"
 import "github.com/omaklabs/base/templates/components/avatar"
@@ -619,6 +621,67 @@ templ DesignPage() {
 					<div class="flex items-center gap-3">
 						@components.ThemeToggle()
 						<span class="text-sm text-muted-foreground">Click to toggle light/dark mode</span>
+					</div>
+				}
+			</section>
+
+			<!-- CopyButton -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Copy Button</h2>
+				@components.Card() {
+					<div class="flex items-center gap-2">
+						<code id="demo-api-key" class="relative rounded-[calc(var(--radius)-2px)] bg-muted px-3 py-1.5 font-mono text-sm">sk-abc123def456ghi789</code>
+						@copybutton.CopyButton(copybutton.Props{TargetID: "demo-api-key"})
+					</div>
+				}
+			</section>
+
+			<!-- TagsInput -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Tags Input</h2>
+				@components.Card() {
+					<div class="max-w-sm">
+						@tagsinput.TagsInput(tagsinput.Props{
+							Name:        "demo_tags",
+							Value:       []string{"go", "htmx", "templ"},
+							Placeholder: "Add tag...",
+						})
+					</div>
+				}
+			</section>
+
+			<!-- Slider -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Slider</h2>
+				@components.Card() {
+					<div class="space-y-4 max-w-sm">
+						<div>
+							<p class="text-xs text-muted-foreground mb-2">Default (0-100)</p>
+							@components.Slider(components.SliderProps{Name: "demo_slider", Value: 50})
+						</div>
+						<div>
+							<p class="text-xs text-muted-foreground mb-2">With steps (0-200, step 25)</p>
+							@components.Slider(components.SliderProps{Name: "demo_slider2", Value: 100, Max: 200, Step: 25})
+						</div>
+					</div>
+				}
+			</section>
+
+			<!-- Form Sub-Components -->
+			<section>
+				<h2 class="text-lg font-semibold mb-4">Form Item / Description / Message</h2>
+				@components.Card() {
+					<div class="space-y-6 max-w-sm">
+						@components.FormItem() {
+							@components.Label(components.LabelProps{For: "demo_rich_email"}) { Email }
+							@components.Input(components.InputProps{Name: "demo_rich_email", Type: "email", Placeholder: "m@example.com", HasError: true})
+							@components.FormDescription() { We'll never share your email with anyone. }
+							@components.FormMessage(components.FormMessageProps{Variant: components.FormMessageError}) { Please enter a valid email address. }
+						}
+						@components.FormItemFlex() {
+							@components.Checkbox(components.CheckboxProps{ID: "demo_agree", Name: "agree"})
+							@components.Label(components.LabelProps{For: "demo_agree"}) { I agree to the terms }
+						}
 					</div>
 				}
 			</section>
