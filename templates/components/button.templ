@@ -95,10 +95,13 @@ templ Button(props ...ButtonProps) {
 	<button
 		type={ buttonType(p) }
 		class={ buttonClasses(p) }
-		disabled?={ p.Disabled }
+		disabled?={ p.Disabled || p.Loading }
 		aria-busy?={ p.Loading }
 		{ p.Attrs... }
 	>
+		if p.Loading {
+			@Spinner(SpinnerProps{Size: "sm"})
+		}
 		{ children... }
 	</button>
 }

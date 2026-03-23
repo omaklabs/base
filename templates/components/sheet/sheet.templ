@@ -1,0 +1,75 @@
+package sheet
+
+// Props configures a Sheet / Drawer.
+type Props struct {
+	ID    string           // required, unique
+	Side  string           // "left", "right" (default)
+	Attrs templ.Attributes
+}
+
+var scriptHandle = templ.NewOnceHandle()
+
+// Script loads the Lit component + CSS. Include once in layout.
+templ Script() {
+	@scriptHandle.Once() {
+		<script type="module" src="/components/sheet/sheet.js"></script>
+		<link rel="stylesheet" href="/components/sheet/sheet.css"/>
+	}
+}
+
+func sheetSide(side string) string {
+	if side == "left" {
+		return "left"
+	}
+	return "right"
+}
+
+func panelPositionClasses(side string) string {
+	if side == "left" {
+		return "left-0"
+	}
+	return "right-0"
+}
+
+// Sheet is the root container. Wraps Trigger + Content.
+templ Sheet(props Props) {
+	<omk-sheet id={ props.ID } data-side={ sheetSide(props.Side) } { props.Attrs... }>
+		{ children... }
+	</omk-sheet>
+}
+
+// Trigger opens the sheet when clicked.
+templ Trigger() {
+	<div data-trigger>
+		{ children... }
+	</div>
+}
+
+// Content is the sheet overlay + side panel.
+templ Content(props ...Props) {
+	{{ side := "right" }}
+	if len(props) > 0 && props[0].Side != "" {
+		{{ side = props[0].Side }}
+	}
+	<div
+		data-backdrop
+		class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
+		role="dialog"
+		aria-modal="true"
+	>
+		<div
+			data-panel
+			class={ "fixed top-0 h-full w-80 max-w-[85vw] bg-card border-border shadow-lg p-6 overflow-y-auto " + panelPositionClasses(side) }
+			tabindex="-1"
+		>
+			{ children... }
+		</div>
+	</div>
+}
+
+// Close closes the sheet when its children are clicked.
+templ Close() {
+	<div data-close>
+		{ children... }
+	</div>
+}

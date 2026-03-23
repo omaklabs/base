@@ -1,0 +1,27 @@
+/* Sheet: hidden by default */
+omk-sheet [data-backdrop] {
+  display: none;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+omk-sheet[open] [data-backdrop] {
+  display: flex;
+  opacity: 1;
+}
+
+/* Panel slide from right (default) */
+omk-sheet [data-panel] {
+  transform: translateX(100%);
+  transition: transform 250ms ease-out;
+}
+omk-sheet[open] [data-panel] {
+  transform: translateX(0);
+}
+
+/* Panel slide from left */
+omk-sheet[data-side="left"] [data-panel] {
+  transform: translateX(-100%);
+}
+omk-sheet[data-side="left"][open] [data-panel] {
+  transform: translateX(0);
+}

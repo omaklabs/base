@@ -1,0 +1,75 @@
+package switchc
+
+// Props configures a Switch toggle.
+type Props struct {
+	Name     string           // form field name
+	Checked  bool
+	Disabled bool
+	Attrs    templ.Attributes
+}
+
+var scriptHandle = templ.NewOnceHandle()
+
+// Script loads the Lit component + CSS. Include once in layout.
+templ Script() {
+	@scriptHandle.Once() {
+		<script type="module" src="/components/switch/switch.js"></script>
+		<link rel="stylesheet" href="/components/switch/switch.css"/>
+	}
+}
+
+// Switch renders a toggle switch with a hidden checkbox for form submission.
+templ Switch(props Props) {
+	<omk-switch
+		checked?={ props.Checked }
+		disabled?={ props.Disabled }
+		{ props.Attrs... }
+	>
+		<input type="hidden" name={ props.Name } value="false"/>
+		<input
+			type="checkbox"
+			name={ props.Name }
+			value="true"
+			checked?={ props.Checked }
+			disabled?={ props.Disabled }
+			class="sr-only"
+			data-input
+		/>
+		<button
+			type="button"
+			role="switch"
+			aria-checked={ boolStr(props.Checked) }
+			tabindex="0"
+			data-track
+			class={ switchTrackClasses(props.Checked) }
+		>
+			<span
+				data-thumb
+				class={ switchThumbClasses(props.Checked) }
+			></span>
+		</button>
+	</omk-switch>
+}
+
+func boolStr(b bool) string {
+	if b {
+		return "true"
+	}
+	return "false"
+}
+
+func switchTrackClasses(checked bool) string {
+	base := "relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+	if checked {
+		return base + " bg-primary"
+	}
+	return base + " bg-secondary"
+}
+
+func switchThumbClasses(checked bool) string {
+	base := "inline-block h-5 w-5 rounded-full bg-white shadow-sm pointer-events-none"
+	if checked {
+		return base + " translate-x-5"
+	}
+	return base + " translate-x-0"
+}

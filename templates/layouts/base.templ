@@ -4,6 +4,8 @@ import (
 	"github.com/omaklabs/base/internal/view"
 	"github.com/omaklabs/base/templates/components/dialog"
 	"github.com/omaklabs/base/templates/components/dropdown"
+	"github.com/omaklabs/base/templates/components/sheet"
+	"github.com/omaklabs/base/templates/components/switchc"
 	"github.com/omaklabs/base/templates/components/tabs"
 	"github.com/omaklabs/base/templates/components/toast"
 	"github.com/omaklabs/base/templates/components/tooltip"
@@ -57,6 +59,8 @@ templ Base(title string) {
 			@tabs.Script()
 			@toast.Script()
 			@tooltip.Script()
+			@switchc.Script()
+			@sheet.Script()
 		</head>
 		<body class="h-full bg-background text-foreground antialiased" hx-boost="true">
 			{ children... }
