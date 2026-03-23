@@ -34,7 +34,7 @@ func selectID(p SelectFieldProps) string {
 }
 
 func selectClasses(p SelectFieldProps) string {
-	base := "w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring h-10 px-3 text-sm"
+	base := "w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring h-10 pl-3 pr-8 text-sm appearance-none cursor-pointer"
 	var errClass string
 	if p.HasError {
 		errClass = "border-destructive focus:border-destructive"
@@ -42,19 +42,25 @@ func selectClasses(p SelectFieldProps) string {
 	return cx(base, errClass, p.Class)
 }
 
-// SelectField renders a <select> dropdown. Zero-arg call gives sensible defaults.
+// SelectField renders a <select> dropdown with a custom chevron icon.
+// Uses appearance-none + SVG chevron for consistent cross-browser styling.
 templ SelectField(props ...SelectFieldProps) {
 	{{ p := selectFieldDefaults(props) }}
-	<select
-		id={ selectID(p) }
-		name={ p.Name }
-		class={ selectClasses(p) }
-		disabled?={ p.Disabled }
-		required?={ p.Required }
-		{ p.Attrs... }
-	>
-		for _, opt := range p.Options {
-			<option value={ opt.Value } selected?={ opt.Selected }>{ opt.Label }</option>
-		}
-	</select>
+	<div class="relative">
+		<select
+			id={ selectID(p) }
+			name={ p.Name }
+			class={ selectClasses(p) }
+			disabled?={ p.Disabled }
+			required?={ p.Required }
+			{ p.Attrs... }
+		>
+			for _, opt := range p.Options {
+				<option value={ opt.Value } selected?={ opt.Selected }>{ opt.Label }</option>
+			}
+		</select>
+		<svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+		</svg>
+	</div>
 }
