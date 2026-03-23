@@ -298,6 +298,51 @@ Follow every step in order. Do not skip any.
 
 ---
 
+## 5b. How to Add a Simple Page (No Database)
+
+For pages like landing, about, features, contact — no migration/queries needed.
+
+1. **Create templ template** in the existing `internal/server/` package:
+   ```
+   internal/server/landing.templ
+   ```
+   Use `package server` and import layouts: `@layouts.Base("Page Title") { ... }`
+
+2. **Create handler** in `internal/server/handler.go` (or a new file like `landing_handler.go`):
+   ```go
+   func HandleLanding() http.HandlerFunc {
+       return func(w http.ResponseWriter, r *http.Request) {
+           Landing().Render(r.Context(), w)
+       }
+   }
+   ```
+
+3. **Register route** in `cmd/app/app.go` or the appropriate router mount:
+   ```go
+   r.Get("/landing", server.HandleLanding())
+   ```
+
+4. **For forms** (e.g., contact page that saves to DB): use `go run ./cmd/app generate domain` instead — it creates everything including queries and migration.
+
+**Common templ patterns:**
+```
+templ Landing() {
+    @layouts.Base("Landing") {
+        <div class="max-w-4xl mx-auto p-8">
+            <h1 class="text-4xl font-bold">Welcome</h1>
+        </div>
+    }
+}
+```
+
+**Things that break the build:**
+- Wrong package name in .templ file (must match the directory)
+- Importing a package that doesn't exist in go.mod
+- Missing closing braces in templ syntax (templ uses `{ }` not `{{ }}`)
+- Using `html/template` syntax instead of templ syntax
+
+---
+
 ## 6. How to Remove a Domain
 
 1. **Remove from modules** -- Delete the line from `cmd/app/app.go`.
