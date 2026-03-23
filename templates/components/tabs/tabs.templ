@@ -20,30 +20,24 @@ type ContentProps struct {
 
 var scriptHandle = templ.NewOnceHandle()
 
-// Script registers the Alpine.js tabs component. Include once in your layout.
+// Script loads the Lit component + CSS. Include once in layout.
 templ Script() {
 	@scriptHandle.Once() {
-		<script>
-			document.addEventListener("alpine:init", () => {
-				Alpine.data("tabs", (defaultTab) => ({
-					active: defaultTab || "",
-					select(value) { this.active = value; }
-				}));
-			});
-		</script>
+		<script type="module" src="/components/tabs/tabs.js"></script>
+		<link rel="stylesheet" href="/components/tabs/tabs.css"/>
 	}
 }
 
 // Tabs is the root container. Set Default to the initially active tab value.
 templ Tabs(props Props) {
-	<div x-data={ "tabs('" + props.Default + "')" } { props.Attrs... }>
+	<omk-tabs data-default={ props.Default } { props.Attrs... }>
 		{ children... }
-	</div>
+	</omk-tabs>
 }
 
 // List renders the tab button strip.
 templ List() {
-	<div class="flex border-b border-border" role="tablist">
+	<div class="flex border-b border-border" role="tablist" data-tab-list>
 		{ children... }
 	</div>
 }
@@ -53,9 +47,10 @@ templ Trigger(props TriggerProps) {
 	<button
 		type="button"
 		role="tab"
-		class="px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px cursor-pointer"
-		:class={ "active === '" + props.Value + "' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'" }
-		@click={ "select('" + props.Value + "')" }
+		class="px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px cursor-pointer border-transparent text-muted-foreground hover:text-foreground"
+		data-tab-trigger
+		data-value={ props.Value }
+		tabindex="-1"
 		{ props.Attrs... }
 	>
 		{ children... }
@@ -65,8 +60,10 @@ templ Trigger(props TriggerProps) {
 // Content renders a tab content panel, shown when its Value matches the active tab.
 templ Content(props ContentProps) {
 	<div
-		x-show={ "active === '" + props.Value + "'" }
 		role="tabpanel"
+		data-tab-content
+		data-value={ props.Value }
+		hidden
 		{ props.Attrs... }
 	>
 		{ children... }

@@ -1,0 +1,7 @@
+/* Tab content panels: hidden by default, shown when not [hidden] */
+omk-tabs [data-tab-content] {
+  display: none;
+}
+omk-tabs [data-tab-content]:not([hidden]) {
+  display: block;
+}
