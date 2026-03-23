@@ -8,22 +8,38 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func badgeClasses(variant string) string {
-	base := "inline-flex px-2 py-0.5 rounded-md text-xs font-medium"
-	switch variant {
-	case "success":
-		return cx(base, "bg-success/10 text-success")
-	case "destructive", "error":
-		return cx(base, "bg-destructive/10 text-destructive")
-	case "warning":
-		return cx(base, "bg-warning/10 text-warning")
-	default:
-		return cx(base, "bg-secondary text-secondary-foreground")
-	}
+// BadgeProps configures a Badge.
+type BadgeProps struct {
+	Variant string           // "default", "success", "destructive", "error", "warning"
+	Class   string           // appended to computed classes
+	Attrs   templ.Attributes // escape hatch: data-*, aria-*, etc.
 }
 
-// Badge renders a small status label. Variants: "default", "success", "destructive", "warning".
-func Badge(variant string) templ.Component {
+func badgeDefaults(props []BadgeProps) BadgeProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return BadgeProps{}
+}
+
+func badgeClasses(p BadgeProps) string {
+	base := "inline-flex px-2 py-0.5 rounded-md text-xs font-medium"
+	var variantClass string
+	switch p.Variant {
+	case "success":
+		variantClass = "bg-success/10 text-success"
+	case "destructive", "error":
+		variantClass = "bg-destructive/10 text-destructive"
+	case "warning":
+		variantClass = "bg-warning/10 text-warning"
+	default:
+		variantClass = "bg-secondary text-secondary-foreground"
+	}
+	return cx(base, variantClass, p.Class)
+}
+
+// Badge renders a small status label. Zero-arg call gives default variant.
+func Badge(props ...BadgeProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -44,7 +60,8 @@ func Badge(variant string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{badgeClasses(variant)}
+		p := badgeDefaults(props)
+		var templ_7745c5c3_Var2 = []any{badgeClasses(p)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -62,7 +79,15 @@ func Badge(variant string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, p.Attrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -70,7 +95,7 @@ func Badge(variant string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,8 +1,27 @@
 package components
 
-// Label renders a form field label.
-templ Label(forID string) {
-	<label class="block text-sm text-muted-foreground mb-1.5" for={ forID }>
+// LabelProps configures a Label.
+type LabelProps struct {
+	For   string           // the id of the associated input
+	Class string           // appended to computed classes
+	Attrs templ.Attributes // escape hatch: data-*, aria-*, etc.
+}
+
+func labelDefaults(props []LabelProps) LabelProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return LabelProps{}
+}
+
+func labelClasses(p LabelProps) string {
+	return cx("block text-sm text-muted-foreground mb-1.5", p.Class)
+}
+
+// Label renders a form field label. Zero-arg call gives unstyled label.
+templ Label(props ...LabelProps) {
+	{{ p := labelDefaults(props) }}
+	<label class={ labelClasses(p) } for={ p.For } { p.Attrs... }>
 		{ children... }
 	</label>
 }

@@ -1,0 +1,74 @@
+package tabs
+
+// Props configures a Tabs container.
+type Props struct {
+	Default string           // value of the initially active tab
+	Attrs   templ.Attributes
+}
+
+// TriggerProps configures a tab trigger button.
+type TriggerProps struct {
+	Value string             // matches Content.Value
+	Attrs templ.Attributes
+}
+
+// ContentProps configures a tab content panel.
+type ContentProps struct {
+	Value string
+	Attrs templ.Attributes
+}
+
+var scriptHandle = templ.NewOnceHandle()
+
+// Script registers the Alpine.js tabs component. Include once in your layout.
+templ Script() {
+	@scriptHandle.Once() {
+		<script>
+			document.addEventListener("alpine:init", () => {
+				Alpine.data("tabs", (defaultTab) => ({
+					active: defaultTab || "",
+					select(value) { this.active = value; }
+				}));
+			});
+		</script>
+	}
+}
+
+// Tabs is the root container. Set Default to the initially active tab value.
+templ Tabs(props Props) {
+	<div x-data={ "tabs('" + props.Default + "')" } { props.Attrs... }>
+		{ children... }
+	</div>
+}
+
+// List renders the tab button strip.
+templ List() {
+	<div class="flex border-b border-border" role="tablist">
+		{ children... }
+	</div>
+}
+
+// Trigger renders a single tab button.
+templ Trigger(props TriggerProps) {
+	<button
+		type="button"
+		role="tab"
+		class="px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px cursor-pointer"
+		:class={ "active === '" + props.Value + "' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'" }
+		@click={ "select('" + props.Value + "')" }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</button>
+}
+
+// Content renders a tab content panel, shown when its Value matches the active tab.
+templ Content(props ContentProps) {
+	<div
+		x-show={ "active === '" + props.Value + "'" }
+		role="tabpanel"
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}

@@ -1,6 +1,13 @@
 package layouts
 
-import "github.com/omaklabs/base/internal/view"
+import (
+	"github.com/omaklabs/base/internal/view"
+	"github.com/omaklabs/base/templates/components/dialog"
+	"github.com/omaklabs/base/templates/components/dropdown"
+	"github.com/omaklabs/base/templates/components/tabs"
+	"github.com/omaklabs/base/templates/components/toast"
+	"github.com/omaklabs/base/templates/components/tooltip"
+)
 
 templ Base(title string) {
 	<!DOCTYPE html>
@@ -44,9 +51,16 @@ templ Base(title string) {
 			<script src="/assets/js/htmx.min.js"></script>
 			<script defer src="/assets/js/alpine.min.js"></script>
 			<script defer src="/assets/js/app.js"></script>
+			// Component scripts (deduplicated via NewOnceHandle)
+			@dialog.Script()
+			@dropdown.Script()
+			@tabs.Script()
+			@toast.Script()
+			@tooltip.Script()
 		</head>
 		<body class="h-full bg-background text-foreground antialiased" hx-boost="true">
 			{ children... }
+			@toast.Container()
 		</body>
 	</html>
 }

@@ -29,3 +29,11 @@ document.addEventListener("htmx:configRequest", function (e) {
     e.detail.headers["X-CSRF-Token"] = input.value;
   }
 });
+
+// Reinitialize Alpine.js components after HTMX content swaps.
+// This ensures dynamically loaded content with x-data works correctly.
+document.addEventListener("htmx:afterSettle", function (e) {
+  if (typeof Alpine !== "undefined") {
+    Alpine.initTree(e.detail.target);
+  }
+});

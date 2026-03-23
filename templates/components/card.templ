@@ -1,20 +1,35 @@
 package components
 
-func cardClasses(padding string) string {
+// CardProps configures a Card.
+type CardProps struct {
+	Padding string           // "default" (p-6), "sm" (p-4), "none"
+	Class   string           // appended to computed classes
+	Attrs   templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func cardDefaults(props []CardProps) CardProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return CardProps{}
+}
+
+func cardClasses(p CardProps) string {
 	base := "bg-card text-card-foreground border border-border rounded-xl"
-	switch padding {
+	switch p.Padding {
 	case "none":
-		return cx(base)
+		return cx(base, p.Class)
 	case "sm":
-		return cx(base, "p-4")
+		return cx(base, "p-4", p.Class)
 	default:
-		return cx(base, "p-6")
+		return cx(base, "p-6", p.Class)
 	}
 }
 
-// Card renders a content container. Optional padding: "sm", "none" (default has p-6).
-templ Card(padding ...string) {
-	<div class={ cardClasses(firstOr(padding, "default")) }>
+// Card renders a content container. Zero-arg call gives default padding (p-6).
+templ Card(props ...CardProps) {
+	{{ p := cardDefaults(props) }}
+	<div class={ cardClasses(p) } { p.Attrs... }>
 		{ children... }
 	</div>
 }

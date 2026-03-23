@@ -1,18 +1,37 @@
 package components
 
+// FormFieldProps configures a FormField (Label + Input + ErrorText).
+type FormFieldProps struct {
+	Label   string           // display label text
+	Name    string           // input name and label for
+	Type    string           // input type (default: "text")
+	Value   string
+	ErrMsg  string           // validation error message
+	Attrs   templ.Attributes // passed through to the Input
+}
+
+func formFieldDefaults(props []FormFieldProps) FormFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return FormFieldProps{}
+}
+
 // FormField renders a complete form field: Label + Input + ErrorText.
 // This is the most common way to add a form field — one call instead of three.
-templ FormField(label string, name string, inputType string, value string, errMsg string) {
+templ FormField(props ...FormFieldProps) {
+	{{ p := formFieldDefaults(props) }}
 	<div>
-		@Label(name) {
-			{ label }
+		@Label(LabelProps{For: p.Name}) {
+			{ p.Label }
 		}
-		@InputWith(InputProps{
-			Type:     inputType,
-			Name:     name,
-			Value:    value,
-			HasError: errMsg != "",
+		@Input(InputProps{
+			Type:     p.Type,
+			Name:     p.Name,
+			Value:    p.Value,
+			HasError: p.ErrMsg != "",
+			Attrs:    p.Attrs,
 		})
-		@ErrorText(errMsg)
+		@ErrorText(p.ErrMsg)
 	</div>
 }

@@ -1,17 +1,25 @@
 package components
 
-// InputProps configures an Input with full control.
+// InputProps configures an Input.
 type InputProps struct {
-	Type        string // "text", "email", "password", "number", etc.
+	Type        string           // "text" (default), "email", "password", "number", etc.
 	Name        string
-	ID          string // defaults to Name if empty
+	ID          string           // defaults to Name if empty
 	Value       string
 	Placeholder string
-	Size        string // "sm", "md", "lg"
+	Size        string           // "sm", "md" (default), "lg"
 	HasError    bool
 	Disabled    bool
 	Required    bool
-	Class       string
+	Class       string           // appended to computed classes
+	Attrs       templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func inputDefaults(props []InputProps) InputProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return InputProps{}
 }
 
 func inputID(p InputProps) string {
@@ -21,10 +29,20 @@ func inputID(p InputProps) string {
 	return p.Name
 }
 
+func inputType(p InputProps) string {
+	if p.Type != "" {
+		return p.Type
+	}
+	return "text"
+}
+
 func inputClasses(p InputProps) string {
 	base := "w-full bg-background border border-input rounded-lg text-foreground outline-none transition-colors focus:border-ring"
 
-	size := firstOr([]string{p.Size}, "md")
+	size := p.Size
+	if size == "" {
+		size = "md"
+	}
 	var sizeClass string
 	switch size {
 	case "sm":
@@ -43,21 +61,18 @@ func inputClasses(p InputProps) string {
 	return cx(base, sizeClass, errClass, p.Class)
 }
 
-// Input renders an <input> field. Simple API: type + placeholder.
-templ Input(inputType string, placeholder string) {
-	@InputWith(InputProps{Type: inputType, Placeholder: placeholder})
-}
-
-// InputWith renders an <input> with full props control.
-templ InputWith(props InputProps) {
+// Input renders an <input> field. Zero-arg call gives text input defaults.
+templ Input(props ...InputProps) {
+	{{ p := inputDefaults(props) }}
 	<input
-		type={ firstOr([]string{props.Type}, "text") }
-		id={ inputID(props) }
-		name={ props.Name }
-		value={ props.Value }
-		placeholder={ props.Placeholder }
-		class={ inputClasses(props) }
-		disabled?={ props.Disabled }
-		required?={ props.Required }
+		type={ inputType(p) }
+		id={ inputID(p) }
+		name={ p.Name }
+		value={ p.Value }
+		placeholder={ p.Placeholder }
+		class={ inputClasses(p) }
+		disabled?={ p.Disabled }
+		required?={ p.Required }
+		{ p.Attrs... }
 	/>
 }

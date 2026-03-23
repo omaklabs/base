@@ -46,3 +46,4 @@
 }
 
 [x-cloak] { display: none !important; }
+[data-cloak] { display: none !important; }

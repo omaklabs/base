@@ -1,22 +1,39 @@
 package components
 
-func badgeClasses(variant string) string {
-	base := "inline-flex px-2 py-0.5 rounded-md text-xs font-medium"
-	switch variant {
-	case "success":
-		return cx(base, "bg-success/10 text-success")
-	case "destructive", "error":
-		return cx(base, "bg-destructive/10 text-destructive")
-	case "warning":
-		return cx(base, "bg-warning/10 text-warning")
-	default:
-		return cx(base, "bg-secondary text-secondary-foreground")
-	}
+// BadgeProps configures a Badge.
+type BadgeProps struct {
+	Variant string           // "default", "success", "destructive", "error", "warning"
+	Class   string           // appended to computed classes
+	Attrs   templ.Attributes // escape hatch: data-*, aria-*, etc.
 }
 
-// Badge renders a small status label. Variants: "default", "success", "destructive", "warning".
-templ Badge(variant string) {
-	<span class={ badgeClasses(variant) }>
+func badgeDefaults(props []BadgeProps) BadgeProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return BadgeProps{}
+}
+
+func badgeClasses(p BadgeProps) string {
+	base := "inline-flex px-2 py-0.5 rounded-md text-xs font-medium"
+	var variantClass string
+	switch p.Variant {
+	case "success":
+		variantClass = "bg-success/10 text-success"
+	case "destructive", "error":
+		variantClass = "bg-destructive/10 text-destructive"
+	case "warning":
+		variantClass = "bg-warning/10 text-warning"
+	default:
+		variantClass = "bg-secondary text-secondary-foreground"
+	}
+	return cx(base, variantClass, p.Class)
+}
+
+// Badge renders a small status label. Zero-arg call gives default variant.
+templ Badge(props ...BadgeProps) {
+	{{ p := badgeDefaults(props) }}
+	<span class={ badgeClasses(p) } { p.Attrs... }>
 		{ children... }
 	</span>
 }

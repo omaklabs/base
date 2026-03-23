@@ -2,6 +2,8 @@ package components
 
 import "github.com/omaklabs/base/internal/view"
 
+var flashHandle = templ.NewOnceHandle()
+
 func flashClasses(variant string) string {
 	base := "px-4 py-3 rounded-lg text-sm font-medium border"
 	switch variant {
@@ -13,6 +15,15 @@ func flashClasses(variant string) string {
 		return cx(base, "bg-primary/10 border-primary/20 text-primary")
 	default: // success
 		return cx(base, "bg-success/10 border-success/20 text-success")
+	}
+}
+
+// FlashScript establishes the Script() pattern for flash messages.
+templ FlashScript() {
+	@flashHandle.Once() {
+		<script>
+			// Flash-specific initialization (pattern placeholder for future enhancements)
+		</script>
 	}
 }
 

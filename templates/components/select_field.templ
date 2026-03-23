@@ -7,7 +7,7 @@ type SelectOption struct {
 	Selected bool
 }
 
-// SelectFieldProps configures a SelectField with full control.
+// SelectFieldProps configures a SelectField.
 type SelectFieldProps struct {
 	Name     string
 	ID       string
@@ -15,7 +15,15 @@ type SelectFieldProps struct {
 	HasError bool
 	Disabled bool
 	Required bool
-	Class    string
+	Class    string           // appended to computed classes
+	Attrs    templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func selectFieldDefaults(props []SelectFieldProps) SelectFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return SelectFieldProps{}
 }
 
 func selectID(p SelectFieldProps) string {
@@ -34,21 +42,18 @@ func selectClasses(p SelectFieldProps) string {
 	return cx(base, errClass, p.Class)
 }
 
-// SelectField renders a <select> dropdown. Simple API: name + options.
-templ SelectField(name string, options []SelectOption) {
-	@SelectFieldWith(SelectFieldProps{Name: name, Options: options})
-}
-
-// SelectFieldWith renders a <select> with full props control.
-templ SelectFieldWith(props SelectFieldProps) {
+// SelectField renders a <select> dropdown. Zero-arg call gives sensible defaults.
+templ SelectField(props ...SelectFieldProps) {
+	{{ p := selectFieldDefaults(props) }}
 	<select
-		id={ selectID(props) }
-		name={ props.Name }
-		class={ selectClasses(props) }
-		disabled?={ props.Disabled }
-		required?={ props.Required }
+		id={ selectID(p) }
+		name={ p.Name }
+		class={ selectClasses(p) }
+		disabled?={ p.Disabled }
+		required?={ p.Required }
+		{ p.Attrs... }
 	>
-		for _, opt := range props.Options {
+		for _, opt := range p.Options {
 			<option value={ opt.Value } selected?={ opt.Selected }>{ opt.Label }</option>
 		}
 	</select>

@@ -10,6 +10,7 @@ import (
 
 	"github.com/omaklabs/base/assets"
 	"github.com/omaklabs/base/internal/api"
+	components "github.com/omaklabs/base/templates/components"
 	"github.com/omaklabs/base/internal/auth"
 	"github.com/omaklabs/base/internal/config"
 	"github.com/omaklabs/base/internal/db"
@@ -133,6 +134,15 @@ func buildRouter(cfg config.Config, dbConn *sql.DB, dbPath string, deps *server.
 	} else {
 		router.Handle("/assets/*", http.StripPrefix("/assets/",
 			http.FileServer(http.FS(assets.Files))))
+	}
+
+	// Component JS/CSS: co-located with templ files, served via embed.FS.
+	if cfg.IsDev() {
+		router.Handle("/components/*", http.StripPrefix("/components/",
+			http.FileServer(http.Dir("templates/components"))))
+	} else {
+		router.Handle("/components/*", http.StripPrefix("/components/",
+			http.FileServer(http.FS(components.Assets))))
 	}
 
 	return router

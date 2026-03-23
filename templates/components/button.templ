@@ -1,15 +1,23 @@
 package components
 
-// ButtonProps configures a Button with full control.
+// ButtonProps configures a Button.
 type ButtonProps struct {
-	Variant   string // "primary", "secondary", "destructive", "ghost", "outline"
-	Size      string // "sm", "md", "lg"
-	Type      string // "button", "submit", "reset" (default: "button")
+	Variant   string           // "primary" (default), "secondary", "destructive", "ghost", "outline"
+	Size      string           // "sm", "md" (default), "lg"
+	Type      string           // "button" (default), "submit", "reset"
 	IconOnly  bool
 	Loading   bool
 	FullWidth bool
 	Disabled  bool
-	Class     string // additional Tailwind classes
+	Class     string           // appended to computed classes
+	Attrs     templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func buttonDefaults(props []ButtonProps) ButtonProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return ButtonProps{}
 }
 
 func buttonType(p ButtonProps) string {
@@ -26,7 +34,10 @@ func buttonClasses(p ButtonProps) string {
 		base = cx(base, "opacity-50 pointer-events-none")
 	}
 
-	size := firstOr([]string{p.Size}, "md")
+	size := p.Size
+	if size == "" {
+		size = "md"
+	}
 	var sizeClass string
 	switch size {
 	case "sm":
@@ -49,18 +60,22 @@ func buttonClasses(p ButtonProps) string {
 		}
 	}
 
-	var variant string
-	switch firstOr([]string{p.Variant}, "primary") {
+	variant := p.Variant
+	if variant == "" {
+		variant = "primary"
+	}
+	var variantClass string
+	switch variant {
 	case "secondary":
-		variant = "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+		variantClass = "bg-secondary text-secondary-foreground hover:bg-secondary/80"
 	case "destructive":
-		variant = "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+		variantClass = "bg-destructive text-destructive-foreground hover:bg-destructive/90"
 	case "ghost":
-		variant = "hover:bg-accent hover:text-accent-foreground"
+		variantClass = "hover:bg-accent hover:text-accent-foreground"
 	case "outline":
-		variant = "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+		variantClass = "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
 	default:
-		variant = "bg-primary text-primary-foreground hover:bg-primary/90"
+		variantClass = "bg-primary text-primary-foreground hover:bg-primary/90"
 	}
 
 	var mods string
@@ -71,34 +86,36 @@ func buttonClasses(p ButtonProps) string {
 		mods = cx(mods, "w-full")
 	}
 
-	return cx(base, sizeClass, variant, mods, p.Class)
+	return cx(base, sizeClass, variantClass, mods, p.Class)
 }
 
-// Button renders a <button>. Simple API: variant + optional size.
-templ Button(variant string, size ...string) {
-	@ButtonWith(ButtonProps{Variant: variant, Size: firstOr(size, "md")})
-}
-
-// ButtonWith renders a <button> with full props control.
-templ ButtonWith(props ButtonProps) {
+// Button renders a <button>. Zero-arg call gives primary/md defaults.
+templ Button(props ...ButtonProps) {
+	{{ p := buttonDefaults(props) }}
 	<button
-		type={ buttonType(props) }
-		class={ buttonClasses(props) }
-		disabled?={ props.Disabled }
-		aria-busy?={ props.Loading }
+		type={ buttonType(p) }
+		class={ buttonClasses(p) }
+		disabled?={ p.Disabled }
+		aria-busy?={ p.Loading }
+		{ p.Attrs... }
 	>
 		{ children... }
 	</button>
 }
 
 // LinkButton renders an <a> styled as a button.
-templ LinkButton(variant string, href string, size ...string) {
-	<a href={ templ.SafeURL(href) } class={ buttonClasses(ButtonProps{Variant: variant, Size: firstOr(size, "md")}) }>
+templ LinkButton(href string, props ...ButtonProps) {
+	{{ p := buttonDefaults(props) }}
+	<a href={ templ.SafeURL(href) } class={ buttonClasses(p) } { p.Attrs... }>
 		{ children... }
 	</a>
 }
 
 // SubmitButton renders a submit <button>. Convenience for forms.
-templ SubmitButton(variant string, size ...string) {
-	@ButtonWith(ButtonProps{Variant: variant, Size: firstOr(size, "md"), Type: "submit"})
+templ SubmitButton(props ...ButtonProps) {
+	{{ p := buttonDefaults(props) }}
+	{{ p.Type = "submit" }}
+	@Button(p) {
+		{ children... }
+	}
 }

@@ -8,9 +8,26 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+// FormFieldProps configures a FormField (Label + Input + ErrorText).
+type FormFieldProps struct {
+	Label  string // display label text
+	Name   string // input name and label for
+	Type   string // input type (default: "text")
+	Value  string
+	ErrMsg string           // validation error message
+	Attrs  templ.Attributes // passed through to the Input
+}
+
+func formFieldDefaults(props []FormFieldProps) FormFieldProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return FormFieldProps{}
+}
+
 // FormField renders a complete form field: Label + Input + ErrorText.
 // This is the most common way to add a form field — one call instead of three.
-func FormField(label string, name string, inputType string, value string, errMsg string) templ.Component {
+func FormField(props ...FormFieldProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,6 +48,7 @@ func FormField(label string, name string, inputType string, value string, errMsg
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		p := formFieldDefaults(props)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -48,9 +66,9 @@ func FormField(label string, name string, inputType string, value string, errMsg
 			}
 			ctx = templ.InitializeContext(ctx)
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(label)
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 8, Col: 10}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/form_field.templ`, Line: 26, Col: 12}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -58,20 +76,21 @@ func FormField(label string, name string, inputType string, value string, errMsg
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Label(name).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Label(LabelProps{For: p.Name}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = InputWith(InputProps{
-			Type:     inputType,
-			Name:     name,
-			Value:    value,
-			HasError: errMsg != "",
+		templ_7745c5c3_Err = Input(InputProps{
+			Type:     p.Type,
+			Name:     p.Name,
+			Value:    p.Value,
+			HasError: p.ErrMsg != "",
+			Attrs:    p.Attrs,
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ErrorText(errMsg).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ErrorText(p.ErrMsg).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

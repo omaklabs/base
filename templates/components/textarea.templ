@@ -2,16 +2,24 @@ package components
 
 import "strconv"
 
-// TextareaProps configures a Textarea with full control.
+// TextareaProps configures a Textarea.
 type TextareaProps struct {
 	Name     string
 	ID       string
 	Value    string
-	Rows     int // default 4
+	Rows     int              // default 4
 	HasError bool
 	Disabled bool
 	Required bool
-	Class    string
+	Class    string           // appended to computed classes
+	Attrs    templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func textareaDefaults(props []TextareaProps) TextareaProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return TextareaProps{}
 }
 
 func textareaID(p TextareaProps) string {
@@ -37,19 +45,16 @@ func textareaClasses(p TextareaProps) string {
 	return cx(base, errClass, p.Class)
 }
 
-// Textarea renders a <textarea>. Simple API: name.
-templ Textarea(name string) {
-	@TextareaWith(TextareaProps{Name: name})
-}
-
-// TextareaWith renders a <textarea> with full props control.
-templ TextareaWith(props TextareaProps) {
+// Textarea renders a <textarea>. Zero-arg call gives sensible defaults.
+templ Textarea(props ...TextareaProps) {
+	{{ p := textareaDefaults(props) }}
 	<textarea
-		id={ textareaID(props) }
-		name={ props.Name }
-		rows={ textareaRows(props) }
-		class={ textareaClasses(props) }
-		disabled?={ props.Disabled }
-		required?={ props.Required }
-	>{ props.Value }</textarea>
+		id={ textareaID(p) }
+		name={ p.Name }
+		rows={ textareaRows(p) }
+		class={ textareaClasses(p) }
+		disabled?={ p.Disabled }
+		required?={ p.Required }
+		{ p.Attrs... }
+	>{ p.Value }</textarea>
 }

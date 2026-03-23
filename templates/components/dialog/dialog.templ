@@ -1,0 +1,102 @@
+package dialog
+
+// Props configures a Dialog container.
+type Props struct {
+	ID    string           // required, unique
+	Class string
+	Attrs templ.Attributes
+}
+
+var scriptHandle = templ.NewOnceHandle()
+
+// Script registers the Alpine.js dialog component. Include once in your layout.
+templ Script() {
+	@scriptHandle.Once() {
+		<script>
+			document.addEventListener("alpine:init", () => {
+				Alpine.data("dialog", () => ({
+					open: false,
+					toggle() { this.open = !this.open; },
+					close() { this.open = false; },
+					init() {
+						this.$watch("open", (val) => {
+							document.body.style.overflow = val ? "hidden" : "";
+						});
+					}
+				}));
+			});
+		</script>
+	}
+}
+
+// Dialog is the root container. Wraps Trigger + Content.
+templ Dialog(props Props) {
+	<div id={ props.ID } x-data="dialog()" class={ props.Class } { props.Attrs... }>
+		{ children... }
+	</div>
+}
+
+// Trigger opens the dialog when clicked.
+templ Trigger() {
+	<div @click="toggle()">
+		{ children... }
+	</div>
+}
+
+// Content is the modal overlay + panel.
+templ Content() {
+	<div
+		x-show="open"
+		x-cloak
+		x-transition:enter="transition ease-out duration-200"
+		x-transition:enter-start="opacity-0"
+		x-transition:enter-end="opacity-100"
+		x-transition:leave="transition ease-in duration-150"
+		x-transition:leave-start="opacity-100"
+		x-transition:leave-end="opacity-0"
+		class="fixed inset-0 z-50 flex items-center justify-center"
+		@keydown.escape.window="close()"
+	>
+		<div class="fixed inset-0 bg-background/80 backdrop-blur-sm" @click="close()"></div>
+		<div
+			class="relative bg-card border border-border rounded-xl shadow-lg w-full max-w-lg mx-4 p-6"
+			x-transition:enter="transition ease-out duration-200"
+			x-transition:enter-start="opacity-0 scale-95"
+			x-transition:enter-end="opacity-100 scale-100"
+			x-transition:leave="transition ease-in duration-150"
+			x-transition:leave-start="opacity-100 scale-100"
+			x-transition:leave-end="opacity-0 scale-95"
+			@click.stop
+		>
+			{ children... }
+		</div>
+	</div>
+}
+
+// Header renders the dialog title area.
+templ Header() {
+	<div class="mb-4">
+		{ children... }
+	</div>
+}
+
+// Body renders the dialog content area.
+templ Body() {
+	<div class="mb-6">
+		{ children... }
+	</div>
+}
+
+// Footer renders the dialog action buttons area.
+templ Footer() {
+	<div class="flex justify-end gap-2">
+		{ children... }
+	</div>
+}
+
+// Close closes the dialog when its children are clicked.
+templ Close() {
+	<div @click="close()">
+		{ children... }
+	</div>
+}

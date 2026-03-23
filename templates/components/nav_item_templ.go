@@ -8,16 +8,31 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func navItemClasses(active bool) string {
-	base := "flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors duration-100"
-	if active {
-		return cx(base, "bg-accent text-accent-foreground font-medium")
+// NavItemProps configures a NavItem.
+type NavItemProps struct {
+	Href   string           // link target
+	Active bool             // whether this item is currently active
+	Class  string           // appended to computed classes
+	Attrs  templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func navItemDefaults(props []NavItemProps) NavItemProps {
+	if len(props) > 0 {
+		return props[0]
 	}
-	return cx(base, "text-muted-foreground hover:bg-accent hover:text-accent-foreground")
+	return NavItemProps{}
+}
+
+func navItemClasses(p NavItemProps) string {
+	base := "flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors duration-100"
+	if p.Active {
+		return cx(base, "bg-accent text-accent-foreground font-medium", p.Class)
+	}
+	return cx(base, "text-muted-foreground hover:bg-accent hover:text-accent-foreground", p.Class)
 }
 
 // NavItem renders a sidebar/nav link. Active state highlighted.
-func NavItem(href string, active bool) templ.Component {
+func NavItem(props ...NavItemProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -38,7 +53,8 @@ func NavItem(href string, active bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{navItemClasses(active)}
+		p := navItemDefaults(props)
+		var templ_7745c5c3_Var2 = []any{navItemClasses(p)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -48,9 +64,9 @@ func NavItem(href string, active bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 templ.SafeURL
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(href))
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(p.Href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/nav_item.templ`, Line: 13, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/nav_item.templ`, Line: 29, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -69,7 +85,15 @@ func NavItem(href string, active bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, p.Attrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -77,7 +101,7 @@ func NavItem(href string, active bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</a>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

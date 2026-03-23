@@ -8,20 +8,34 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func cardClasses(padding string) string {
+// CardProps configures a Card.
+type CardProps struct {
+	Padding string           // "default" (p-6), "sm" (p-4), "none"
+	Class   string           // appended to computed classes
+	Attrs   templ.Attributes // escape hatch: hx-get, data-*, aria-*, etc.
+}
+
+func cardDefaults(props []CardProps) CardProps {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return CardProps{}
+}
+
+func cardClasses(p CardProps) string {
 	base := "bg-card text-card-foreground border border-border rounded-xl"
-	switch padding {
+	switch p.Padding {
 	case "none":
-		return cx(base)
+		return cx(base, p.Class)
 	case "sm":
-		return cx(base, "p-4")
+		return cx(base, "p-4", p.Class)
 	default:
-		return cx(base, "p-6")
+		return cx(base, "p-6", p.Class)
 	}
 }
 
-// Card renders a content container. Optional padding: "sm", "none" (default has p-6).
-func Card(padding ...string) templ.Component {
+// Card renders a content container. Zero-arg call gives default padding (p-6).
+func Card(props ...CardProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -42,7 +56,8 @@ func Card(padding ...string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{cardClasses(firstOr(padding, "default"))}
+		p := cardDefaults(props)
+		var templ_7745c5c3_Var2 = []any{cardClasses(p)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -60,7 +75,15 @@ func Card(padding ...string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, p.Attrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -68,7 +91,7 @@ func Card(padding ...string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

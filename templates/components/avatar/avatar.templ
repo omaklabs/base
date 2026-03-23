@@ -1,0 +1,56 @@
+package avatar
+
+// Props configures an Avatar.
+type Props struct {
+	Src      string           // image URL (optional)
+	Alt      string
+	Initials string           // fallback when no Src
+	Size     string           // "sm" (32px), "md" (40px, default), "lg" (48px)
+	Class    string
+	Attrs    templ.Attributes
+}
+
+func avatarDefaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func sizeClasses(size string) string {
+	switch size {
+	case "sm":
+		return "w-8 h-8 text-xs"
+	case "lg":
+		return "w-12 h-12 text-base"
+	default:
+		return "w-10 h-10 text-sm"
+	}
+}
+
+// Avatar renders a user avatar. Shows image if Src is set, otherwise shows Initials.
+templ Avatar(props ...Props) {
+	{{ p := avatarDefaults(props) }}
+	if p.Src != "" {
+		<img
+			src={ p.Src }
+			alt={ p.Alt }
+			class={ "rounded-full object-cover " + sizeClasses(p.Size) + condClass(p.Class) }
+			{ p.Attrs... }
+		/>
+	} else {
+		<div
+			class={ "inline-flex items-center justify-center rounded-full bg-secondary text-secondary-foreground font-medium select-none " + sizeClasses(p.Size) + condClass(p.Class) }
+			{ p.Attrs... }
+		>
+			{ p.Initials }
+		</div>
+	}
+}
+
+func condClass(class string) string {
+	if class != "" {
+		return " " + class
+	}
+	return ""
+}
