@@ -359,10 +359,10 @@ func generateDomain(name string, fields []Field) {
 	d := domainData{
 		Package:    name,
 		Pascal:     toPascal(name),
-		PascalPlur: toPascal(name) + "s",
+		PascalPlur: toPascal(pluralize(name)),
 		Lower:      name,
-		LowerPlur:  name + "s",
-		Table:      name + "s",
+		LowerPlur:  pluralize(name),
+		Table:      pluralize(name),
 		ModulePath: getModulePath(),
 		Timestamp:  time.Now().Format("20060102150405"),
 		Fields:     fields,
@@ -416,9 +416,9 @@ func generateDomain(name string, fields []Field) {
 		fmt.Printf("  updated  cmd/app/app.go\n")
 	}
 
+	// Auto-build: run codegen and compile so the domain works immediately
 	fmt.Println()
-	fmt.Println("Next steps:")
-	fmt.Println("  sqlc generate && templ generate && go build ./...")
+	autoBuild(true, true)
 }
 
 func generateAPI(name string, fields []Field) {
@@ -432,10 +432,10 @@ func generateAPI(name string, fields []Field) {
 	d := domainData{
 		Package:    name,
 		Pascal:     toPascal(name),
-		PascalPlur: toPascal(name) + "s",
+		PascalPlur: toPascal(pluralize(name)),
 		Lower:      name,
-		LowerPlur:  name + "s",
-		Table:      name + "s",
+		LowerPlur:  pluralize(name),
+		Table:      pluralize(name),
 		ModulePath: getModulePath(),
 		Timestamp:  time.Now().Format("20060102150405"),
 		Fields:     fields,
@@ -487,8 +487,7 @@ func generateAPI(name string, fields []Field) {
 	}
 
 	fmt.Println()
-	fmt.Println("Next steps:")
-	fmt.Println("  sqlc generate && go build ./...")
+	autoBuild(true, false) // sqlc + build, no templ (API has no templates)
 }
 
 func generatePage(domain, page string) {
@@ -765,6 +764,29 @@ func toPascal(s string) string {
 	runes := []rune(s)
 	runes[0] = unicode.ToUpper(runes[0])
 	return string(runes)
+}
+
+// pluralize returns the English plural of a singular noun.
+// Handles common suffixes: s/ss/sh/ch/x/z → +es, consonant+y → +ies.
+func pluralize(s string) string {
+	if s == "" {
+		return ""
+	}
+	if strings.HasSuffix(s, "ss") || strings.HasSuffix(s, "sh") ||
+		strings.HasSuffix(s, "ch") || strings.HasSuffix(s, "x") ||
+		strings.HasSuffix(s, "z") {
+		return s + "es"
+	}
+	if strings.HasSuffix(s, "s") {
+		return s + "es"
+	}
+	if strings.HasSuffix(s, "y") && len(s) > 1 {
+		prev := s[len(s)-2]
+		if prev != 'a' && prev != 'e' && prev != 'i' && prev != 'o' && prev != 'u' {
+			return s[:len(s)-1] + "ies"
+		}
+	}
+	return s + "s"
 }
 
 // --- Domain Templates ---
