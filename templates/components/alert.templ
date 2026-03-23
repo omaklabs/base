@@ -14,27 +14,24 @@ func alertDefaults(props []AlertProps) AlertProps {
 	return AlertProps{}
 }
 
-func alertClasses(p AlertProps) string {
-	base := "px-4 py-3 rounded-[--radius] text-sm border"
-	var variant string
-	switch p.Variant {
-	case "destructive":
-		variant = "bg-destructive/10 border-destructive/20 text-destructive"
-	case "warning":
-		variant = "bg-warning/10 border-warning/20 text-warning"
-	case "success":
-		variant = "bg-success/10 border-success/20 text-success"
-	default:
-		variant = "bg-primary/10 border-primary/20 text-primary"
-	}
-	return cx(base, variant, p.Class)
-}
-
 // Alert renders a persistent info/warning/error block.
 // Unlike Flash (auto-dismiss) and Toast (ephemeral), Alert stays visible.
+// Variant styling driven by data-variant attribute + Tailwind data selectors.
 templ Alert(props ...AlertProps) {
 	{{ p := alertDefaults(props) }}
-	<div class={ alertClasses(p) } role="alert" { p.Attrs... }>
+	<div
+		data-variant={ string(p.Variant) }
+		class={ cx(
+			"px-4 py-3 rounded-[--radius] text-sm border",
+			"bg-primary/10 border-primary/20 text-primary",
+			"data-[variant=destructive]:bg-destructive/10 data-[variant=destructive]:border-destructive/20 data-[variant=destructive]:text-destructive",
+			"data-[variant=warning]:bg-warning/10 data-[variant=warning]:border-warning/20 data-[variant=warning]:text-warning",
+			"data-[variant=success]:bg-success/10 data-[variant=success]:border-success/20 data-[variant=success]:text-success",
+			p.Class,
+		) }
+		role="alert"
+		{ p.Attrs... }
+	>
 		{ children... }
 	</div>
 }

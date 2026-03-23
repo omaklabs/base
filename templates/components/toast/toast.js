@@ -72,25 +72,16 @@ export class OmkToastContainer extends LitElement {
     this.add(data.variant, data.message, data.duration);
   }
 
-  _variantClasses(variant) {
-    switch (variant) {
-      case "success":
-        return "bg-success/10 border-success/20 text-success";
-      case "destructive":
-        return "bg-destructive/10 border-destructive/20 text-destructive";
-      case "warning":
-        return "bg-warning/10 border-warning/20 text-warning";
-      default:
-        return "bg-card border-border text-foreground";
-    }
-  }
-
   render() {
     return html`${this._items.map(
       (t) => html`
         <div
+          data-variant=${t.variant}
           class="px-4 py-3 rounded-lg text-sm font-medium border shadow-lg cursor-pointer
-            ${this._variantClasses(t.variant)}
+            bg-card border-border text-foreground
+            data-[variant=success]:bg-success/10 data-[variant=success]:border-success/20 data-[variant=success]:text-success
+            data-[variant=destructive]:bg-destructive/10 data-[variant=destructive]:border-destructive/20 data-[variant=destructive]:text-destructive
+            data-[variant=warning]:bg-warning/10 data-[variant=warning]:border-warning/20 data-[variant=warning]:text-warning
             ${t.show ? "omk-toast-enter" : "omk-toast-leave"}"
           @click=${() => this.dismiss(t.id)}
         >

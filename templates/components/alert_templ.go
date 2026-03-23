@@ -22,24 +22,9 @@ func alertDefaults(props []AlertProps) AlertProps {
 	return AlertProps{}
 }
 
-func alertClasses(p AlertProps) string {
-	base := "px-4 py-3 rounded-[--radius] text-sm border"
-	var variant string
-	switch p.Variant {
-	case "destructive":
-		variant = "bg-destructive/10 border-destructive/20 text-destructive"
-	case "warning":
-		variant = "bg-warning/10 border-warning/20 text-warning"
-	case "success":
-		variant = "bg-success/10 border-success/20 text-success"
-	default:
-		variant = "bg-primary/10 border-primary/20 text-primary"
-	}
-	return cx(base, variant, p.Class)
-}
-
 // Alert renders a persistent info/warning/error block.
 // Unlike Flash (auto-dismiss) and Toast (ephemeral), Alert stays visible.
+// Variant styling driven by data-variant attribute + Tailwind data selectors.
 func Alert(props ...AlertProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -62,25 +47,45 @@ func Alert(props ...AlertProps) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		p := alertDefaults(props)
-		var templ_7745c5c3_Var2 = []any{alertClasses(p)}
+		var templ_7745c5c3_Var2 = []any{cx(
+			"px-4 py-3 rounded-[--radius] text-sm border",
+			"bg-primary/10 border-primary/20 text-primary",
+			"data-[variant=destructive]:bg-destructive/10 data-[variant=destructive]:border-destructive/20 data-[variant=destructive]:text-destructive",
+			"data-[variant=warning]:bg-warning/10 data-[variant=warning]:border-warning/20 data-[variant=warning]:text-warning",
+			"data-[variant=success]:bg-success/10 data-[variant=success]:border-success/20 data-[variant=success]:text-success",
+			p.Class,
+		)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div data-variant=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var2).String())
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(string(p.Variant))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/alert.templ`, Line: 1, Col: 0}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/alert.templ`, Line: 23, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" role=\"alert\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var2).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/alert.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" role=\"alert\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -88,7 +93,7 @@ func Alert(props ...AlertProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -96,7 +101,7 @@ func Alert(props ...AlertProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
