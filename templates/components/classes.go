@@ -1,6 +1,10 @@
 package components
 
-import "strings"
+import (
+	"crypto/rand"
+	"fmt"
+	"strings"
+)
 
 // cx joins non-empty CSS class strings with a space.
 // Usage: cx("base classes", variant, modifier, props.Class)
@@ -21,6 +25,14 @@ func firstOr(s []string, fallback string) string {
 		return s[0]
 	}
 	return fallback
+}
+
+// RandomID generates a short random ID for accessibility linking.
+// Used by dialog, alertdialog, sheet when no explicit ID is provided.
+func RandomID() string {
+	b := make([]byte, 4)
+	rand.Read(b)
+	return fmt.Sprintf("c-%x", b)
 }
 
 // ── Button ──

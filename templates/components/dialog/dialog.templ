@@ -18,7 +18,11 @@ templ Script() {
 }
 
 // Dialog is the root container. Wraps Trigger + Content.
+// ID is auto-generated if not provided.
 templ Dialog(props Props) {
+	if props.ID == "" {
+		{{ props.ID = randomID() }}
+	}
 	<omk-dialog id={ props.ID } class={ props.Class } { props.Attrs... }>
 		{ children... }
 	</omk-dialog>

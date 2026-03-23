@@ -32,7 +32,11 @@ func panelPositionClasses(side string) string {
 }
 
 // Sheet is the root container. Wraps Trigger + Content.
+// ID is auto-generated if not provided.
 templ Sheet(props Props) {
+	if props.ID == "" {
+		{{ props.ID = randomID() }}
+	}
 	<omk-sheet id={ props.ID } data-side={ sheetSide(props.Side) } { props.Attrs... }>
 		{ children... }
 	</omk-sheet>

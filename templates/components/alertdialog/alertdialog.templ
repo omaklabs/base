@@ -47,6 +47,9 @@ func confirmVariant(variant string) components.ButtonVariant {
 // description, cancel and confirm buttons. Uses the Dialog Lit component internally.
 templ AlertDialog(props Props) {
 	{{ p := defaults(props) }}
+	if p.ID == "" {
+		{{ p.ID = randomID() }}
+	}
 	<omk-dialog id={ p.ID } { p.Attrs... }>
 		<div data-dialog-trigger>
 			{ children... }
