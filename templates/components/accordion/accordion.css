@@ -1,13 +1,4 @@
-/* Accordion content: smooth height transition */
-omk-accordion [data-accordion-content] {
-  transition: max-height 200ms ease-out;
-  overflow: hidden;
-}
-
-/* Trigger chevron rotation */
-omk-accordion [data-accordion-trigger] svg[data-chevron] {
-  transition: transform 200ms ease-out;
-}
-omk-accordion [data-accordion-trigger][aria-expanded="true"] svg[data-chevron] {
+/* Chevron rotation when details is open */
+details[open] > summary svg {
   transform: rotate(180deg);
 }
