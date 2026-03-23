@@ -1,0 +1,56 @@
+package popover
+
+// Props configures a Popover.
+type Props struct {
+	Align string           // "left" (default), "right"
+	Attrs templ.Attributes
+}
+
+var scriptHandle = templ.NewOnceHandle()
+
+// Script loads the Lit component + CSS. Include once in layout.
+templ Script() {
+	@scriptHandle.Once() {
+		<script type="module" src="/components/popover/popover.js"></script>
+		<link rel="stylesheet" href="/components/popover/popover.css"/>
+	}
+}
+
+func alignClass(align string) string {
+	if align == "right" {
+		return "right-0"
+	}
+	return "left-0"
+}
+
+// Popover is the root container. Wraps Trigger + Content.
+templ Popover(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<omk-popover class="relative inline-block" { p.Attrs... }>
+		{ children... }
+	</omk-popover>
+}
+
+// Trigger toggles the popover when clicked.
+templ Trigger() {
+	<div data-trigger>
+		{ children... }
+	</div>
+}
+
+// Content is the popover panel.
+templ Content(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		data-content
+		class={ "absolute z-50 mt-2 w-72 bg-popover text-popover-foreground border border-border rounded-[--radius] shadow-lg p-4 " + alignClass(p.Align) }
+	>
+		{ children... }
+	</div>
+}

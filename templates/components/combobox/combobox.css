@@ -1,0 +1,12 @@
+/* Combobox: list hidden by default, shown via [open] */
+omk-combobox [data-combobox-list] {
+  display: none;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 100ms ease-out, transform 100ms ease-out;
+}
+omk-combobox[open] [data-combobox-list] {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+}

@@ -1,0 +1,91 @@
+package combobox
+
+// Option represents a single selectable option.
+type Option struct {
+	Value string
+	Label string
+}
+
+// Props configures a Combobox (searchable select).
+type Props struct {
+	Name        string           // form field name
+	Placeholder string           // input placeholder (default: "Search...")
+	Options     []Option
+	Value       string           // pre-selected value
+	Class       string
+	Attrs       templ.Attributes
+}
+
+var scriptHandle = templ.NewOnceHandle()
+
+// Script loads the Lit component + CSS. Include once in layout.
+templ Script() {
+	@scriptHandle.Once() {
+		<script type="module" src="/components/combobox/combobox.js"></script>
+		<link rel="stylesheet" href="/components/combobox/combobox.css"/>
+	}
+}
+
+func comboboxDefaults(props []Props) Props {
+	if len(props) > 0 {
+		return props[0]
+	}
+	return Props{}
+}
+
+func comboboxPlaceholder(p Props) string {
+	if p.Placeholder != "" {
+		return p.Placeholder
+	}
+	return "Search..."
+}
+
+func selectedLabel(options []Option, value string) string {
+	for _, opt := range options {
+		if opt.Value == value {
+			return opt.Label
+		}
+	}
+	return ""
+}
+
+// Combobox renders a searchable select dropdown with keyboard navigation.
+templ Combobox(props ...Props) {
+	{{ p := comboboxDefaults(props) }}
+	<omk-combobox class={ comboboxContainerClasses(p) } { p.Attrs... }>
+		<input type="hidden" name={ p.Name } value={ p.Value } data-combobox-hidden/>
+		<input
+			type="text"
+			data-combobox-input
+			placeholder={ comboboxPlaceholder(p) }
+			value={ selectedLabel(p.Options, p.Value) }
+			autocomplete="off"
+			class="w-full bg-background border border-input rounded-[--radius] text-foreground outline-none transition-colors focus:border-ring h-10 px-3 text-sm"
+		/>
+		<div
+			data-combobox-list
+			role="listbox"
+			class="absolute z-50 mt-1 w-full max-h-60 overflow-y-auto bg-popover text-popover-foreground border border-border rounded-[--radius] shadow-lg py-1"
+		>
+			for _, opt := range p.Options {
+				<div
+					data-combobox-option
+					data-value={ opt.Value }
+					data-label={ opt.Label }
+					role="option"
+					class="px-3 py-2 text-sm cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground"
+				>
+					{ opt.Label }
+				</div>
+			}
+		</div>
+	</omk-combobox>
+}
+
+func comboboxContainerClasses(p Props) string {
+	base := "relative"
+	if p.Class != "" {
+		return base + " " + p.Class
+	}
+	return base
+}

@@ -1,0 +1,64 @@
+package components
+
+// Typography helpers — consistent heading and text styles matching shadcn/ui.
+// These are simple wrappers that ensure visual consistency across generated pages.
+
+templ H1() {
+	<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+		{ children... }
+	</h1>
+}
+
+templ H2() {
+	<h2 class="scroll-m-20 text-3xl font-semibold tracking-tight border-b border-border pb-2 mt-10 first:mt-0">
+		{ children... }
+	</h2>
+}
+
+templ H3() {
+	<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+		{ children... }
+	</h3>
+}
+
+templ H4() {
+	<h4 class="scroll-m-20 text-xl font-semibold tracking-tight">
+		{ children... }
+	</h4>
+}
+
+templ P() {
+	<p class="leading-7 [&:not(:first-child)]:mt-6">
+		{ children... }
+	</p>
+}
+
+templ Lead() {
+	<p class="text-xl text-muted-foreground">
+		{ children... }
+	</p>
+}
+
+templ Large() {
+	<div class="text-lg font-semibold">
+		{ children... }
+	</div>
+}
+
+templ Small() {
+	<small class="text-sm font-medium leading-none">
+		{ children... }
+	</small>
+}
+
+templ Muted() {
+	<p class="text-sm text-muted-foreground">
+		{ children... }
+	</p>
+}
+
+templ InlineCode() {
+	<code class="relative rounded-[calc(var(--radius)-2px)] bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+		{ children... }
+	</code>
+}
