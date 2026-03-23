@@ -270,27 +270,18 @@ templ DesignPage() {
 				<h2 class="text-lg font-semibold mb-4">Toast</h2>
 				@components.Card() {
 					<div class="flex flex-wrap gap-2">
-						<button
-							class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors duration-150 h-10 px-4 text-sm bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer select-none"
-							x-data
-							@click={ toast.Show("default", "This is a default toast", 4000) }
-						>
-							Default Toast
-						</button>
-						<button
-							class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors duration-150 h-10 px-4 text-sm bg-success/10 text-success hover:bg-success/20 cursor-pointer select-none border border-success/20"
-							x-data
-							@click={ toast.Show("success", "Item saved successfully!", 4000) }
-						>
-							Success Toast
-						</button>
-						<button
-							class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors duration-150 h-10 px-4 text-sm bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer select-none"
-							x-data
-							@click={ toast.Show("destructive", "Something went wrong!", 4000) }
-						>
-							Error Toast
-						</button>
+						@components.Button(components.ButtonProps{
+							Attrs: templ.Attributes{"onclick": toast.Show("default", "This is a default toast", 4000)},
+						}) { Default Toast }
+						@components.Button(components.ButtonProps{
+							Variant: "outline",
+							Class: "border-success/20 text-success hover:bg-success/10",
+							Attrs: templ.Attributes{"onclick": toast.Show("success", "Item saved successfully!", 4000)},
+						}) { Success Toast }
+						@components.Button(components.ButtonProps{
+							Variant: "destructive",
+							Attrs: templ.Attributes{"onclick": toast.Show("destructive", "Something went wrong!", 4000)},
+						}) { Error Toast }
 					</div>
 				}
 			</section>

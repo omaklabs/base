@@ -10,53 +10,9 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "fmt"
 
-// Props configures a Toast notification.
-type Props struct {
-	Variant  string // "default", "success", "destructive", "warning"
-	Duration int    // ms, default 4000, 0 = no auto-dismiss
-	Class    string
-	Attrs    templ.Attributes
-}
-
-func toastDefaults(props []Props) Props {
-	if len(props) > 0 {
-		return props[0]
-	}
-	return Props{}
-}
-
-func toastClasses(p Props) string {
-	base := "px-4 py-3 rounded-lg text-sm font-medium border shadow-lg"
-	var variant string
-	switch p.Variant {
-	case "success":
-		variant = "bg-success/10 border-success/20 text-success"
-	case "destructive":
-		variant = "bg-destructive/10 border-destructive/20 text-destructive"
-	case "warning":
-		variant = "bg-warning/10 border-warning/20 text-warning"
-	default:
-		variant = "bg-card border-border text-foreground"
-	}
-	if p.Class != "" {
-		return base + " " + variant + " " + p.Class
-	}
-	return base + " " + variant
-}
-
-func toastDuration(p Props) int {
-	if p.Duration > 0 {
-		return p.Duration
-	}
-	if p.Duration == 0 {
-		return 4000
-	}
-	return 0
-}
-
 var scriptHandle = templ.NewOnceHandle()
 
-// Script registers the toast Alpine.js store. Include once in your layout.
+// Script loads the Lit component + CSS. Include once in layout.
 func Script() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -90,7 +46,7 @@ func Script() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n\t\t\tdocument.addEventListener(\"alpine:init\", () => {\n\t\t\t\tAlpine.store(\"toast\", {\n\t\t\t\t\titems: [],\n\t\t\t\t\tcounter: 0,\n\t\t\t\t\tadd(variant, message, duration) {\n\t\t\t\t\t\tconst id = ++this.counter;\n\t\t\t\t\t\tthis.items.push({ id, variant, message, show: true });\n\t\t\t\t\t\tif (duration > 0) {\n\t\t\t\t\t\t\tsetTimeout(() => this.dismiss(id), duration);\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tdismiss(id) {\n\t\t\t\t\t\tconst item = this.items.find(t => t.id === id);\n\t\t\t\t\t\tif (item) item.show = false;\n\t\t\t\t\t\tsetTimeout(() => {\n\t\t\t\t\t\t\tthis.items = this.items.filter(t => t.id !== id);\n\t\t\t\t\t\t}, 200);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script type=\"module\" src=\"/components/toast/toast.js\"></script> <link rel=\"stylesheet\" href=\"/components/toast/toast.css\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -104,12 +60,13 @@ func Script() templ.Component {
 	})
 }
 
-// Show returns a JS expression to trigger a toast from Alpine.js (e.g., @click).
+// Show returns a JS expression to trigger a toast from an event handler (e.g., @click).
+// Usage: @click={ toast.Show("success", "Saved!", 4000) }
 func Show(variant, message string, duration int) string {
-	return fmt.Sprintf("$store.toast.add('%s', '%s', %d)", variant, message, duration)
+	return fmt.Sprintf(`document.querySelector("omk-toast-container").add("%s","%s",%d)`, variant, message, duration)
 }
 
-// Container renders the fixed toast container. Place before closing </body>.
+// Container renders the fixed toast container. Place before closing </body> in layout.
 func Container() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -131,85 +88,7 @@ func Container() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"toast-container\" class=\"fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm\" x-data><template x-for=\"t in $store.toast.items\" :key=\"t.id\"><div x-show=\"t.show\" x-transition:enter=\"transition ease-out duration-200\" x-transition:enter-start=\"opacity-0 translate-y-2\" x-transition:enter-end=\"opacity-100 translate-y-0\" x-transition:leave=\"transition ease-in duration-150\" x-transition:leave-start=\"opacity-100 translate-y-0\" x-transition:leave-end=\"opacity-0 translate-y-2\" class=\"px-4 py-3 rounded-lg text-sm font-medium border shadow-lg cursor-pointer\" :class=\"{\n\t\t\t\t\t'bg-card border-border text-foreground': t.variant === 'default',\n\t\t\t\t\t'bg-success/10 border-success/20 text-success': t.variant === 'success',\n\t\t\t\t\t'bg-destructive/10 border-destructive/20 text-destructive': t.variant === 'destructive',\n\t\t\t\t\t'bg-warning/10 border-warning/20 text-warning': t.variant === 'warning'\n\t\t\t\t}\" @click=\"$store.toast.dismiss(t.id)\" x-text=\"t.message\"></div></template></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		return nil
-	})
-}
-
-// Toast renders a single server-rendered toast notification (for HTMX OOB swap).
-func Toast(props ...Props) templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		p := toastDefaults(props)
-		var templ_7745c5c3_Var5 = []any{toastClasses(p)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var5).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/toast/toast.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" x-data=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ show: true, init() { if (%d > 0) setTimeout(() => this.show = false, %d) } }", toastDuration(p), toastDuration(p)))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/toast/toast.templ`, Line: 119, Col: 140}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" x-show=\"show\" x-transition:enter=\"transition ease-out duration-200\" x-transition:enter-start=\"opacity-0 translate-y-2\" x-transition:enter-end=\"opacity-100 translate-y-0\" x-transition:leave=\"transition ease-in duration-150\" x-transition:leave-start=\"opacity-100 translate-y-0\" x-transition:leave-end=\"opacity-0 translate-y-2\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, p.Attrs)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, ">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var4.Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<omk-toast-container id=\"toast-container\" class=\"fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm\"></omk-toast-container>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
