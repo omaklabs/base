@@ -22,6 +22,7 @@ const (
 	VariantDestructive Variant = "destructive"
 	VariantGhost       Variant = "ghost"
 	VariantOutline     Variant = "outline"
+	VariantLink        Variant = "link"
 )
 
 // Size controls the dimensions of a Button.
@@ -35,7 +36,7 @@ const (
 
 // Props configures a Button.
 type Props struct {
-	Variant   Variant // VariantPrimary (default), VariantSecondary, VariantDestructive, VariantGhost, VariantOutline
+	Variant   Variant // VariantPrimary (default), VariantSecondary, VariantDestructive, VariantGhost, VariantOutline, VariantLink
 	Size      Size    // SizeSm, SizeMd (default), SizeLg
 	Type      string  // "button" (default), "submit", "reset"
 	IconOnly  bool
@@ -64,11 +65,7 @@ func btnType(p Props) string {
 // Classes computes the CSS class string for a button. Exported so other
 // packages (e.g. pagination) can reuse button styling on non-button elements.
 func Classes(p Props) string {
-	base := "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--radius] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer select-none"
-
-	if p.Disabled {
-		base = shared.Cx(base, "opacity-50 pointer-events-none")
-	}
+	base := "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--radius] text-sm font-medium transition-all cursor-pointer select-none outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 aria-invalid:ring-destructive/20 aria-invalid:border-destructive"
 
 	size := string(p.Size)
 	if size == "" {
@@ -80,19 +77,19 @@ func Classes(p Props) string {
 		if p.IconOnly {
 			sizeClass = "h-9 w-9 p-0"
 		} else {
-			sizeClass = "h-9 px-3 text-sm"
+			sizeClass = "h-9 px-3"
 		}
 	case "lg":
 		if p.IconOnly {
 			sizeClass = "h-11 w-11 p-0"
 		} else {
-			sizeClass = "h-11 px-6 text-base"
+			sizeClass = "h-11 px-6"
 		}
 	default:
 		if p.IconOnly {
 			sizeClass = "h-10 w-10 p-0"
 		} else {
-			sizeClass = "h-10 px-4 text-sm"
+			sizeClass = "h-10 px-4"
 		}
 	}
 
@@ -103,15 +100,17 @@ func Classes(p Props) string {
 	var variantClass string
 	switch variant {
 	case "secondary":
-		variantClass = "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+		variantClass = "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-xs"
 	case "destructive":
-		variantClass = "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+		variantClass = "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-xs"
 	case "ghost":
 		variantClass = "hover:bg-accent hover:text-accent-foreground"
 	case "outline":
-		variantClass = "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+		variantClass = "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground"
+	case "link":
+		variantClass = "text-primary underline-offset-4 hover:underline"
 	default:
-		variantClass = "bg-primary text-primary-foreground hover:bg-primary/90"
+		variantClass = "bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs"
 	}
 
 	var mods string
@@ -160,7 +159,7 @@ func Button(props ...Props) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(btnType(p))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/button/button.templ`, Line: 124, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/button/button.templ`, Line: 123, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -256,7 +255,7 @@ func LinkButton(href string, props ...Props) templ.Component {
 		var templ_7745c5c3_Var7 templ.SafeURL
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/button/button.templ`, Line: 140, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/button/button.templ`, Line: 139, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
