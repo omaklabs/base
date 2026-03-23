@@ -706,6 +706,33 @@ The `<omk-toast-container>` listens for this event automatically.
 | Tooltip | `templates/components/tooltip` | `@tooltip.Tooltip(...)` |
 | Avatar | `templates/components/avatar` | `@avatar.Avatar(...)` |
 
+### Component Selection Guide
+
+| Need | Use | Not |
+|------|-----|----|
+| Text/email/password field | `FormField` | Raw `<input>` |
+| Multi-line text | `TextareaFormField` | Raw `<textarea>` |
+| Boolean in a form | `CheckboxField` | Raw `<input type="checkbox">` |
+| Enum with 2-5 options | `RadioFormField` | SelectField for short lists |
+| Enum with 6+ options | `SelectFormField` | RadioGroup for long lists |
+| Searchable list (10+ items) | `combobox.Combobox` | SelectField without search |
+| Delete/destructive confirmation | `alertdialog.AlertDialog` | `hx-confirm` attribute |
+| Success/error feedback after action | `toast.Show()` via `HX-Trigger` header | Flash (flash is for page-load only) |
+| Page title with actions | `PageHeader` | Raw `<h1>` + flex layout |
+| Empty list/table state | `EmptyState` | Raw centered `<p>` |
+| Side navigation layout | `sidebar.Layout` + `sidebar.Sidebar` | Raw `<aside>` + flex |
+| FAQ / collapsible sections | `accordion.Accordion` | Alpine x-show toggles |
+| Contextual mini-form | `popover.Popover` | Dropdown (dropdown is for menus) |
+| Menu with actions | `dropdown.Dropdown` | Popover (popover is for content) |
+| Tabbed content | `tabs.Tabs` | Alpine x-show with manual tab state |
+| Modal dialog | `dialog.Dialog` | Alpine x-data overlay |
+| Slide-out panel | `sheet.Sheet` | Dialog (dialog is centered) |
+| Dark/light mode toggle | `ThemeToggle` | Manual Alpine toggle |
+| Loading state on button | `Button` with `Loading: true` | Manual spinner + disabled |
+| Loading placeholder | `Skeleton` | Empty div with pulse class |
+| Status label | `Badge` | Raw `<span>` with colors |
+| Persistent info/warning block | `Alert` | Flash (flash auto-dismisses) |
+
 ### Rules
 
 - Always use components for buttons, cards, form fields, badges, flash messages, navigation
