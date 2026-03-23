@@ -489,8 +489,8 @@ import "your-module/templates/components"
 @components.FormField(components.FormFieldProps{Label: "Email", Name: "email", Type: "email", Value: val, ErrMsg: err})
 @components.Label(components.LabelProps{For: "name"}) { Full Name }
 @components.NavItem(components.NavItemProps{Href: "/items", Active: true}) { Items }
-@components.PageHeader("Items") { @components.LinkButton("/items/new") { New } }
-@components.EmptyState("No items yet.") { @icons.Inbox() }
+@components.PageHeader(components.PageHeaderProps{Title: "Items"}) { @components.LinkButton("/items/new") { New } }
+@components.EmptyState(components.EmptyStateProps{Message: "No items yet."}) { @icons.Inbox() }
 @components.ErrorText(errMsg)
 ```
 
